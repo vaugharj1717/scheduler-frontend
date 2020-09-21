@@ -1,0 +1,8 @@
+.example-component-root{
+    width: 30%;
+    height: 30px;
+    color: white;
+    background-color: blue;
+    margin: 20px;
+    text-align: center
+}

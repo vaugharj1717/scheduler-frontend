@@ -1,10 +1,37 @@
 import React, {useState} from 'react';
 import './Meeting-Scheduler-Page.css';
-import ExampleComponent from './components/Example-Component.js'
 
 function MeetingSchedulerPage() {
     //useState: let [trackedValue, setterFuncForTrackedValue] = useState(initialValue)
     let [creatingCandidate, setCreatingCandidate] = useState(false);
+    let [decidingCandidateSelectMode, setDecidingCandidateSelectMode] = useState(false);
+    let [name, setName] = useState('');
+    let [email, setEmail] = useState('');
+
+    //check if valid input
+    let isValidInput;
+    if(name.match('^[a-zA-Z|\\.|\\s]+$') && email.match('^[a-zA-Z|0-9]+@[a-zA-Z|0-9]+$')) isValidInput = true;
+    else isValidInput = false;
+
+    
+    function handleCancel(){
+        //set creatingCandidate to false
+        setCreatingCandidate(false);
+        setDecidingCandidateSelectMode(false);
+        //clear input fields
+        setName('');
+        setEmail('');
+    }
+
+    function handleNewCandidateSelect(){
+        setDecidingCandidateSelectMode(false);
+        setCreatingCandidate(true);
+    }
+
+    function handleAddCandidate(){
+        setDecidingCandidateSelectMode(true);
+        setCreatingCandidate(false);
+    }
     
     return(
         <div className="meeting-scheduler-page-root">
@@ -24,12 +51,12 @@ function MeetingSchedulerPage() {
             </div>
 
 	        {/* PANEL INSTANCE SHOWING OPEN POSITIONS */}
-            <div class="positions-panel">
-                <div class="positions-label">
-                    <span class="b">Assistant Professor</span> for the <span class="b">CS</span> Department (124434345)
+            <div className="positions-panel">
+                <div className="positions-label">
+                    <span className="b">Assistant Professor</span> for the <span className="b">CS</span> Department (124434345)
                 </div>
-                <div class="scrollbox">
-                    <table class="positions-table">
+                <div className="scrollbox">
+                    <table className="positions-table">
                         <tr id="catagories" style={{textTransform: 'uppercase'}}>
                             <td>Name</td>
                             <td>Email</td>
@@ -55,8 +82,12 @@ function MeetingSchedulerPage() {
                         </tr>
                         {creatingCandidate &&
                         <tr id="catagories">
-                            <td style={{padding:'0px',borderWidth:'0px'}}><textarea id="w3review" name="w3review" style={{width: '98%', resize: 'none'}}></textarea></td>
-                            <td style={{padding:'0px',borderWidth:'0px'}}><textarea id="w3review" name="w3review" style={{width: '98%', resize: 'none'}}></textarea></td>
+                            <td style={{padding:'0px',borderWidth:'0px'}}>
+                                <textarea value={name} onChange={e => {setName(e.target.value)}} id="w3review" name="w3review" style={{width: '98%', resize: 'none'}}></textarea>
+                            </td>
+                            <td style={{padding:'0px',borderWidth:'0px'}}>
+                                <textarea value={email} onChange={e => {setEmail(e.target.value)}} id="w3review" name="w3review" style={{width: '98%', resize: 'none'}}></textarea>
+                            </td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -65,23 +96,34 @@ function MeetingSchedulerPage() {
                     </table>
                 </div>
             
-            {creatingCandidate &&
-            <div class="more-buttons-container">
-                <button class="button button2" onClick={()=>setCreatingCandidate(false)} style={{marginLeft: '3%', marginBottom: '10px', backgroundColor:'red', color: '#f2f2f2'}}>CANCEL</button>
-                
-                <button class="button button3" style={{marginRight: '3%', marginBottom: '10px', backgroundColor:'#319838'}}>SAVE</button>
+            {decidingCandidateSelectMode &&
+            <div className="more-buttons-container">
+                    <button className="button button2" onClick={()=> {}} style={{marginLeft: '3%', marginBottom: '10px', backgroundColor:'#0e1826', color: '#f2f2f2'}}>EXISTING CANDIDATE</button>
+                    <button className="button button3" onClick={()=> handleNewCandidateSelect()} style={{marginLeft: '.5%', marginRight:'1.5%', marginBottom: '10px', backgroundColor:'#0e1826', color:'#f2f2f2'}}>NEW CANDIDATE +</button>
+                    <button className="button button2" onClick={()=> handleCancel()} style={{marginRight: '3%', marginBottom: '10px', backgroundColor:'red', color: '#f2f2f2'}}>CANCEL</button>
             </div>
             }
-            {!creatingCandidate &&
-            <div class="positions-button-container">
-                <button class="button button1" onClick={()=>setCreatingCandidate(true)}>Add New Candidate +</button>
+            {creatingCandidate &&
+            <div className="more-buttons-container">
+                    <button className="button button2" onClick={()=> handleCancel()} style={{marginLeft: '3%', marginBottom: '10px', backgroundColor:'red', color: '#f2f2f2'}}>CANCEL</button>
+                {isValidInput &&
+                    <button className="button button3" style={{marginRight: '3%', marginBottom: '10px', backgroundColor:'green'}}>SAVE</button>
+                }
+                {!isValidInput &&
+                    <button className="button button3" style={{marginRight: '3%', marginBottom: '10px', backgroundColor:'gray', cursor:'default'}}>SAVE</button>
+                }
+            </div>
+            }
+            {!creatingCandidate && !decidingCandidateSelectMode &&
+            <div className="positions-button-container">
+                <button className="button button1" onClick={()=> handleAddCandidate()}>Add Candidate +</button>
             </div>
             }
             </div>
 
-            <div class="more-buttons-container">
-                <button class="button button2">Add New Position +</button>
-                <button class="button button3">View All Meetings (EYE)</button>
+            <div className="more-buttons-container">
+                <button className="button button2">Add New Position +</button>
+                <button className="button button3">View All Meetings (EYE)</button>
             </div>
         </div>
         

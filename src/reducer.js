@@ -49,6 +49,12 @@ function reducer(state = initialState, action){
                     })   
                 }})
             }
+        case Action.DeletePosition:
+            return{
+                ...state,
+                positions: state.positions.filter(position => position.id !== action.payload)
+            }
+            
         case Action.GetCandidates:
             return{
                 ...state,

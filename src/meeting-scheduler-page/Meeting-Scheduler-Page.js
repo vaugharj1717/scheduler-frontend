@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './Meeting-Scheduler-Page.css';
 import {useSelector, useDispatch} from 'react-redux';
-import {beginDeletingSchedule, beginSavingCandidate, beginDeletingCandidacy, beginGettingDepartments, beginCreatingPosition,
+import {beginDeletingSchedule, beginSavingCandidate, beginDeletingCandidacy, beginGettingDepartments, beginCreatingPosition, beginDeletingPosition,
     beginGettingPositions, beginGettingCandidates, beginAssigningCandidateToPosition} from '../actions.js';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
@@ -14,6 +14,7 @@ function MeetingSchedulerPage() {
     let [selectedCandidate, setSelectedCandidate] = useState(null);
     let [addingNewPosition, setAddingNewPosition] = useState(false);
     let [selectedDepartment, setSelectedDepartment] = useState(null);
+    let [focusedPositionIndex, setFocusedPositionIndex] = useState(-1);
 
     let [name, setName] = useState('');
     let [email, setEmail] = useState('');
@@ -45,16 +46,22 @@ function MeetingSchedulerPage() {
         setEmail('');
     }
 
+    function handleCancelCreatingPosition(){
+        setAddingNewPosition(false);
+        setSelectedDepartment(null);
+    }
+
     function handleNewCandidateSelect(){
         setDecidingCandidateSelectMode(false);
         setSelectingCandidate(false);
         setCreatingCandidate(true);
     }
 
-    function handleAddCandidate(){
+    function handleAddCandidate(index){
         setDecidingCandidateSelectMode(true);
         setCreatingCandidate(false);
         setSelectingCandidate(false);
+        setFocusedPositionIndex(index)
     }
 
     function handleCandidacyDelete(candidacyId){
@@ -97,7 +104,12 @@ function MeetingSchedulerPage() {
 
     function handleCreatePosition(positionName, departmentId){
         setAddingNewPosition(false);
+        setSelectedDepartment(null);
         dispatch(beginCreatingPosition(positionName, departmentId))
+    }
+
+    function handleDeletePosition(positionId){
+        dispatch(beginDeletingPosition(positionId));
     }
     
     return(
@@ -118,8 +130,9 @@ function MeetingSchedulerPage() {
             </div>
 
 	        {/* PANEL INSTANCE SHOWING OPEN POSITIONS */}
-            {positions.map(position => {return (
-            <div className="positions-panel" key={position.id}>
+            {positions.map((position, i) => {return (
+            <div className="positions-panel" key={i}>
+                <button onClick={()=>handleDeletePosition(position.id)}>DELETE POSITION</button>
                 <div className="positions-label">
                     <span className="b">{position.positionName}</span> for the <span className="b">{position.department.departmentName}</span> Department (124434345)
                 </div>
@@ -154,7 +167,7 @@ function MeetingSchedulerPage() {
                         )})}
                         {/* END OF CANDIDATE INSTANCE */}
 
-                        {creatingCandidate &&
+                        {creatingCandidate && focusedPositionIndex === i &&
                         <tr id="catagories">
                             <td style={{padding:'0px',borderWidth:'0px'}}>
                                 <textarea value={name} onChange={e => {setName(e.target.value)}} id="w3review" name="w3review" style={{width: '98%', resize: 'none'}}></textarea>
@@ -171,14 +184,14 @@ function MeetingSchedulerPage() {
                     </table>
                 </div>
             
-            {decidingCandidateSelectMode &&
+            {decidingCandidateSelectMode && focusedPositionIndex === i && 
             <div className="more-buttons-container">
                     <button className="button button1" onClick={()=> handleExistingCandidateSelect()} style={{marginLeft: '3%', marginBottom: '10px'}}>EXISTING CANDIDATE</button>
                     <button className="button button1" onClick={()=> handleNewCandidateSelect()} style={{marginLeft: '1.5%', marginRight:'1.5%', marginBottom: '10px'}}>NEW CANDIDATE +</button>
                     <button className="button cancel-button" onClick={()=> handleCancel()} style={{marginRight: '3%', marginBottom: '10px'}}>CANCEL</button>
             </div>
             }
-            {creatingCandidate &&
+            {creatingCandidate && focusedPositionIndex === i &&
             <div className="more-buttons-container">
                 {isValidInput &&
                 <button className="button save-button" onClick={()=>handleSaveCandidate(position.id, name, email)} style={{marginLeft: '3%', marginBottom: '10px', backgroundColor:'green'}}>SAVE</button>
@@ -191,7 +204,7 @@ function MeetingSchedulerPage() {
             </div>
             }
 
-            {selectingCandidate &&
+            {selectingCandidate && focusedPositionIndex === i &&
             <div className="more-buttons-container">
                 <Autocomplete
                 value={selectedCandidate}
@@ -214,9 +227,9 @@ function MeetingSchedulerPage() {
             </div>
             }
 
-            {!creatingCandidate && !decidingCandidateSelectMode && !selectingCandidate && 
+            {(focusedPositionIndex !== i || (!creatingCandidate && !decidingCandidateSelectMode && !selectingCandidate)) && 
             <div className="positions-button-container">
-                <button className="button button1" onClick={()=> handleAddCandidate()}>Add Candidate +</button>
+                <button className="button button1" onClick={()=> handleAddCandidate(i)}>Add Candidate +</button>
             </div>
             }
             </div>
@@ -244,8 +257,13 @@ function MeetingSchedulerPage() {
                 style={{ width: '100%' }}
                 renderInput={(params) => <TextField {...params} style={{marginLeft:"10%", width:'95%', marginBottom:'5px'}} label="Select department..." variant="outlined" />}
                 />
+                {selectedDepartment !== null && positionName !== '' &&
                 <button className="button save-button" onClick={()=> handleCreatePosition(positionName, selectedDepartment.id)} style={{marginLeft: '3%', marginBottom: '10px', backgroundColor:'green', cursor:'default'}}>SAVE</button>
-                <button className="button cancel-button" onClick={()=> setAddingNewPosition(false)} style={{marginLeft: '1%', marginRight: '3%', marginBottom: '10px'}}>CANCEL</button>
+                }
+                {(selectedDepartment === null || positionName === '') &&
+                <button className="button save-button" style={{marginLeft: '3%', marginBottom: '10px', backgroundColor:'gray', cursor:'default'}}>SAVE</button>
+                }
+                <button className="button cancel-button" onClick={()=> {handleCancelCreatingPosition()}} style={{marginLeft: '1%', marginRight: '3%', marginBottom: '10px'}}>CANCEL</button>
             </div>
             }
         </div>

@@ -7,6 +7,7 @@ export const Action = Object.freeze({
     AssignCandidateToPosition: "AssignCandidateToPosition",
     GetDepartments: "GetDepartments",
     CreatePosition: "CreatePosition",
+    DeletePosition: "DeletePosition"
 });
 
 const host = 'http://localhost:8444';
@@ -225,5 +226,33 @@ export function finishDeletingSchedule(scheduleId){
     return{
         type: Action.DeleteSchedule,
         payload: scheduleId
+    }
+}
+
+export function beginDeletingPosition(positionId){
+    return dispatch => {
+        const options = {
+            method: "DELETE",
+            headers: {
+                "Content-Type" : "text/plain"
+            },
+            body: JSON.stringify({}),
+        }
+        fetch(`${host}/position/${positionId}`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishDeletingPosition(positionId))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishDeletingPosition(positionId){
+    return{
+        type: Action.DeletePosition,
+        payload: positionId
     }
 }

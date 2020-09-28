@@ -5,8 +5,38 @@ import {beginDeletingSchedule, beginSavingCandidate, beginDeletingCandidacy, beg
     beginGettingPositions, beginGettingCandidates, beginAssigningCandidateToPosition} from '../actions.js';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
+import {makeStyles, createMuiTheme} from "@material-ui/core/styles";
 
-function MeetingSchedulerPage() {
+
+const useStyles = makeStyles({
+    root: {
+      "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+        borderColor: "white",
+        color: "white",
+      },
+      "& .MuiOutlinedInput-input": {
+        color: "white"
+      },
+      "& .MuiInputLabel-outlined": {
+        color: "white"
+      },
+      "& .MuiAutocomplete-popupIndicator": {
+        color: "white",
+      },
+      "& .MuiAutocomplete-clearIndicator": {
+          color: "white"
+      },
+      color: "white !important",
+      borderWidth: '1px',
+      borderColor: "white !important",
+    }
+})
+
+
+
+function MeetingSchedulerPage(props) {
+    const classes = useStyles();
+
     //useState: let [trackedValue, setterFuncForTrackedValue] = useState(initialValue)
     let [creatingCandidate, setCreatingCandidate] = useState(false);
     let [decidingCandidateSelectMode, setDecidingCandidateSelectMode] = useState(false);
@@ -132,7 +162,7 @@ function MeetingSchedulerPage() {
 	        {/* PANEL INSTANCE SHOWING OPEN POSITIONS */}
             {positions.map((position, i) => {return (
             <div className="positions-panel" key={i}>
-                <button onClick={()=>handleDeletePosition(position.id)}>DELETE POSITION</button>
+                <button className="positions-delete-button" onClick={()=>handleDeletePosition(position.id)}>DELETE POSITION</button>
                 <div className="positions-label">
                     <span className="b">{position.positionName}</span> for the <span className="b">{position.department.departmentName}</span> Department (124434345)
                 </div>
@@ -245,18 +275,37 @@ function MeetingSchedulerPage() {
             }
             {addingNewPosition &&
             <div className="more-buttons-container">
-                <TextField value={positionName} onChange={(e)=>setPositionName(e.target.value)} label="Position name..." />
-                <Autocomplete
-                value={selectedDepartment}
-                onChange={(event, selectedDepartment) => {
-                  setSelectedDepartment(selectedDepartment);
-                }}
-                id="department-selection-box"
-                options={departments}
-                getOptionLabel={(option) => option.departmentName}
-                style={{ width: '100%' }}
-                renderInput={(params) => <TextField {...params} style={{marginLeft:"10%", width:'95%', marginBottom:'5px'}} label="Select department..." variant="outlined" />}
+                <TextField value={positionName} 
+                    InputProps={{
+                        classes: {
+                            root: classes.root,
+                            notchedOutline: classes.root
+                        }
+                    }}
+                    InputLabelProps={{
+                        classes: {
+                            root: classes.root
+                        },
+                    }}
+                    style={{width:'100%'}} 
+                    onChange={(e)=>setPositionName(e.target.value)} 
+                    label="Position name..."
+                    variant="outlined" 
                 />
+
+                <Autocomplete
+                    value={selectedDepartment}
+                    className={classes.root}
+                    onChange={(event, selectedDepartment) => {
+                    setSelectedDepartment(selectedDepartment);
+                    }}
+                    id="department-selection-box"
+                    options={departments}
+                    getOptionLabel={(option) => option.departmentName}
+                    style={{ width: '100%' }}
+                    renderInput={(params) => <TextField {...params} style={{marginLeft:"10%", width:'100%', marginBottom:'5px'}} label="Select department..." variant="outlined" />}
+                />
+
                 {selectedDepartment !== null && positionName !== '' &&
                 <button className="button save-button" onClick={()=> handleCreatePosition(positionName, selectedDepartment.id)} style={{marginLeft: '3%', marginBottom: '10px', backgroundColor:'green', cursor:'default'}}>SAVE</button>
                 }

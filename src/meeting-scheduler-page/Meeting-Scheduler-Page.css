@@ -62,9 +62,11 @@ body {
   }
   
   .positions-panel{
+    position: relative;
     background-color: #f2f2f2;
-  
     width: 100%;
+    margin-bottom: 20px;
+    border-radius: 10px;
   }
   
   .positions-label{
@@ -74,6 +76,17 @@ body {
     margin: auto;
     padding: 10px 0;
     text-align: center;
+  }
+
+  .positions-delete-button{
+    position: absolute;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+    left: calc(100% - 128px);
+    top: 5px;
+    width: 80px;
   }
   
   .positions-table{
@@ -130,10 +143,10 @@ body {
   .cancel-button{background-color: red; color: #f2f2f2;}
   .cancel-button:hover{background-color: darkred;}
 
-  .save-button{}
+  .save-button{cursor: pointer}
   .save-button:hover{}
   
-  .positions-table tr:not(#catagories):hover {background-color: #f2f2f2; color: #0e1826;}
+  .positions-table tr:not(#catagories):hover {background-color:  #152338; color: #f2f2f2;}
   
   .positions-button-container {
     align-content: center;

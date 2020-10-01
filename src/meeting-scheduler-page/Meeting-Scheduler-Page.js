@@ -62,7 +62,7 @@ function MeetingSchedulerPage(props) {
       
     //check if valid input
     let isValidInput;
-    if(name.match('^[a-zA-Z|\\.|\\s]+$') && email.match('^[a-zA-Z|0-9]+@[a-zA-Z|0-9]+$')) isValidInput = true;
+    if(name.match('^[a-zA-Z|\\.|\\s]+$') && email.match('^[a-zA-Z|0-9|\\.]+@[a-zA-Z|0-9|\\.]+\\.[a-zA-Z|0-9|\\.]+$')) isValidInput = true;
     else isValidInput = false;
 
     
@@ -164,7 +164,7 @@ function MeetingSchedulerPage(props) {
             <div className="positions-panel" key={i}>
                 <button className="positions-delete-button" onClick={()=>handleDeletePosition(position.id)}>DELETE POSITION</button>
                 <div className="positions-label">
-                    <span className="b">{position.positionName}</span> for the <span className="b">{position.department.departmentName}</span> Department (124434345)
+                    <span className="b">{position.positionName}</span> for the <span className="b">{position.department.departmentName}</span> Department
                 </div>
                 <div className="scrollbox">
                     <table className="positions-table">
@@ -184,11 +184,11 @@ function MeetingSchedulerPage(props) {
                         <tr key={candidacy.id}>
                             <td>{candidacy.candidate.name}</td>
                             <td>{candidacy.candidate.email}</td>
-                            <td><u><b>View Attachments</b></u></td>
-                            {candidacy.schedule != null &&
+                            <td><u><b><input type="file" id="upload-file"></input><label htmlFor="upload-file">Add attachment</label></b></u></td>
+                            {candidacy.schedule.meetings.length != 0 &&
                             <td><u><b>View</b></u> / <u><b>Edit</b></u> / <u><b><div onClick={()=>handleScheduleDelete(candidacy.schedule.id)}>Delete</div></b></u></td>
                             }
-                            {candidacy.schedule == null &&
+                            {candidacy.schedule.meetings.length == 0 &&
                             <td><u><b>Create</b></u></td>
                             }
                             <td><u><b><div onClick={()=>handleCandidacyDelete(candidacy.id)}>Delete</div></b></u></td>

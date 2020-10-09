@@ -44,7 +44,7 @@ function reducer(state = initialState, action){
                 ...state,
                 positions: state.positions.map(position => {
                     return {...position, candidacies: position.candidacies.map(candidacy => {
-                        if(candidacy.schedule.id === action.payload) return {...candidacy, schedule: null}
+                        if(candidacy.schedule.id === action.payload) return {...candidacy, schedule: {id: action.payload, meetings:[]}}
                         else return candidacy;
                     })   
                 }})

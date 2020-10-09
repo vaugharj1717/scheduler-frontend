@@ -210,7 +210,7 @@ export function beginDeletingSchedule(scheduleId){
             },
             body: JSON.stringify({}),
         }
-        fetch(`${host}/schedule/${scheduleId}`, options)
+        fetch(`${host}/schedule/deleteAllMeeting/${scheduleId}`, options)
         .then(checkForErrors)
         .then(response => response.json())
         .then(data => {

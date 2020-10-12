@@ -1,0 +1,177 @@
+.meeting-box{
+    background-color: white;
+    padding: 15px;
+    text: black;
+    margin-top: 30px;
+    margin-left: 5%;
+    margin-right: 5%;
+    border-radius: 15px;
+    border: 3px solid black;
+}
+
+.create-meeting-open{
+    margin-top: 20px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    color: white;
+    background-color: green;
+    border: 1px solid white;
+    cursor: pointer;
+}
+
+.creating-meeting-box{
+    position: relative;
+    background-color: white;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 20px;
+}
+
+.creating-meeting-box::after{
+    position: absolute;
+    content: "";
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid#0e1826;;
+    border-radius: 18px;
+    width: 99.5%;
+    height: 98%;
+    pointer-events: none
+}
+
+.cancel-meeting-btn-container{
+    margin-top: 15px;
+    display: flex;
+    justify-content: center
+}
+
+.cancel-meeting-btn{
+
+}
+
+.meeting-type-container{
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.location-container{
+    margin-top: 20px;
+    margin-left: 20%;
+    margin-right: 20%;
+    display: flex;
+    justify-content: center;
+}
+
+.participants-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.participant-selection-container{
+    display: flex;
+    justify-content: center;
+    width: 50%;
+    margin-bottom: 10px;
+}
+
+.date-picker-container{
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.start-time-container{
+    margin-right: 20px;
+}
+
+.end-time-container{
+    margin-left: 20px;
+}
+
+.create-meeting-btn-container{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 33%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.participant-row{
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+.time-padding{
+    width: 10px;
+}
+
+a{
+    color: white
+}
+a:hover{
+    color: gray
+}
+
+.participant-delete-btn{
+    margin-right: 5px;
+}
+
+.participant-name{
+    margin-right: 10px;
+}
+.can-view-feedback-box{
+    margin-right: 5px;
+}
+
+.meeting-delete-btn{
+    color: red;
+    font-size: 20px;
+    font-family: sans-serif;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.meeting-boxes-header{
+    margin-top: 20px;
+    position: relative;
+    font-size: 40px;
+    color: white;
+    text-align: center;
+}
+
+.meeting-boxes-header::after{
+    position: absolute;
+    width: 88%;
+    content: "";
+    height: 1px;
+    color: white;
+    top: 110%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 1px;
+}
+
+.meeting-delete-btn:hover{
+    font-weight: bold;
+}
+
+.nothing-to-show{
+    margin-top: 60px;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+}

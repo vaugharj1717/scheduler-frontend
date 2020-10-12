@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import './Meeting-Scheduler-Page.css';
+import {Switch, Route, Link} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
 import {beginDeletingSchedule, beginSavingCandidate, beginDeletingCandidacy, beginGettingDepartments, beginCreatingPosition, beginDeletingPosition,
-    beginGettingPositions, beginGettingCandidates, beginAssigningCandidateToPosition} from '../actions.js';
+    beginGettingPositions, beginGettingCandidates, beginAssigningCandidateToPosition, selectCandidacy} from '../actions.js';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import {makeStyles, createMuiTheme} from "@material-ui/core/styles";
@@ -50,13 +51,15 @@ function MeetingSchedulerPage(props) {
     let [email, setEmail] = useState('');
     let [positionName, setPositionName] = useState('');
     
-    //test
-    console.log(selectedDepartment);
+    
 
     const dispatch = useDispatch();
     let positions = useSelector(state => state.positions);
     let candidates = useSelector(state => state.candidates);
     let departments = useSelector(state => state.departments);
+
+    //test
+    console.log(departments);
 
     useEffect(()=>dispatch(beginGettingPositions()), [dispatch]);
       
@@ -102,6 +105,9 @@ function MeetingSchedulerPage(props) {
         dispatch(beginDeletingSchedule(scheduleId));
     }
 
+    function handleCandidacySelect(candidacy){
+        dispatch(selectCandidacy(candidacy));
+    }
     function handleSaveCandidate(positionId, name, email){
         dispatch(beginSavingCandidate(positionId, name, email));
         //set creatingCandidate to false
@@ -186,10 +192,10 @@ function MeetingSchedulerPage(props) {
                             <td>{candidacy.candidate.email}</td>
                             <td><u><b><input type="file" id="upload-file"></input><label htmlFor="upload-file">Add attachment</label></b></u></td>
                             {candidacy.schedule.meetings.length != 0 &&
-                            <td><u><b>View</b></u> / <u><b>Edit</b></u> / <u><b><div onClick={()=>handleScheduleDelete(candidacy.schedule.id)}>Delete</div></b></u></td>
+                            <td><u><b><span>View</span></b></u> / <u><b><span onClick={(e)=>handleCandidacySelect(candidacy)}><Link to="/meeting-scheduler/view-schedule">Edit</Link></span></b></u> / <u><b><span onClick={()=>handleScheduleDelete(candidacy.schedule.id)}>Delete</span></b></u></td>
                             }
                             {candidacy.schedule.meetings.length == 0 &&
-                            <td><u><b>Create</b></u></td>
+                            <td><u><b><div onClick={(e)=>handleCandidacySelect(candidacy)}><Link to="/meeting-scheduler/view-schedule">Create</Link></div></b></u></td>
                             }
                             <td><u><b><div onClick={()=>handleCandidacyDelete(candidacy.id)}>Delete</div></b></u></td>
 

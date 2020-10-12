@@ -1,9 +1,20 @@
 import { Action } from "./actions";
 
+function meetingSorter(x, y){
+    if(x.startTime > y.startTime){
+        return 1;
+    }
+    else return -1;
+}
+
 const initialState = {
     positions: [],
     candidates: [],
-    departments: []
+    departments: [],
+    locations: [],
+    currentSchedule: {},
+    currentCandidacy: {},
+    participants: [],
 };
 
 function reducer(state = initialState, action){
@@ -69,6 +80,39 @@ function reducer(state = initialState, action){
             return{
                 ...state,
                 positions: [...state.positions, {...action.payload, candidacies: []}]
+            }
+        case Action.SelectCandidacy:
+            return{
+                ...state,
+                currentCandidacy: {...action.payload}
+            }
+
+        case Action.GetSchedule:
+            return{
+                ...state,
+                currentSchedule: {...action.payload, meetings: action.payload.meetings.sort(meetingSorter), loaded: true}
+            }
+        case Action.GetLocations:
+            return{
+                ...state,
+                locations: action.payload
+            }
+        case Action.GetParticipants:
+            return{
+                ...state,
+                participants: action.payload
+            }
+        case Action.CreateMeeting:
+            return{
+                ...state,
+                currentSchedule: {...state.currentSchedule, meetings: [...state.currentSchedule.meetings, action.payload].sort(meetingSorter)}
+            }
+        case Action.DeleteMeeting:
+            return{
+                ...state,
+                currentSchedule: {...state.currentSchedule, meetings: state.currentSchedule.meetings.filter(meeting => 
+                    meeting.id !== action.payload    
+                )}
             }
 
         default:

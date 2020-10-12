@@ -7,7 +7,13 @@ export const Action = Object.freeze({
     AssignCandidateToPosition: "AssignCandidateToPosition",
     GetDepartments: "GetDepartments",
     CreatePosition: "CreatePosition",
-    DeletePosition: "DeletePosition"
+    DeletePosition: "DeletePosition",
+    GetSchedule: "GetSchedule",
+    GetLocations: "GetLocations",
+    GetParticipants: "GetParticipants",
+    CreateMeeting: "CreateMeeting",
+    DeleteMeeting: "DeleteMeeting",
+    SelectCandidacy: "SelectCandidacy"
 });
 
 const host = 'http://localhost:8444';
@@ -43,6 +49,48 @@ export function finishGettingPositions(data){
     }
 }
 
+export function beginGettingParticipants(){
+    return dispatch => {
+        fetch(`${host}/user/participant`)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishGettingParticipants(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishGettingParticipants(data){
+    return{
+        type: Action.GetParticipants,
+        payload: data
+    }
+}
+
+export function beginGettingSchedule(scheduleId){
+    return dispatch => {
+        fetch(`${host}/schedule/${scheduleId}`)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishGettingSchedule(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishGettingSchedule(schedule){
+    return{
+        type: Action.GetSchedule,
+        payload: schedule
+    }
+}
+
 export function beginGettingCandidates(){
     return dispatch => {
         fetch(`${host}/user/candidate`)
@@ -60,6 +108,27 @@ export function beginGettingCandidates(){
 export function finishGettingCandidates(data){
     return{
         type: Action.GetCandidates,
+        payload: data
+    }
+}
+
+export function beginGettingLocations(){
+    return dispatch => {
+        fetch(`${host}/location`)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishGettingLocations(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishGettingLocations(data){
+    return{
+        type: Action.GetLocations,
         payload: data
     }
 }
@@ -254,5 +323,70 @@ export function finishDeletingPosition(positionId){
     return{
         type: Action.DeletePosition,
         payload: positionId
+    }
+}
+
+export function selectCandidacy(candidacy){
+    return{
+        type: Action.SelectCandidacy,
+        payload: candidacy,
+    }
+}
+
+export function beginCreatingMeeting(scheduleId, locationId, meetingType, startTime, endTime, participations){
+    console.log(meetingType);
+    return dispatch => {
+        const options = {
+            method: "Post",
+            headers: {
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify({locationId, meetingType, startTime, endTime, participations}),
+        }
+        fetch(`${host}/meeting/${scheduleId}`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            dispatch(finishCreatingMeeting(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishCreatingMeeting(meeting){
+    return{
+        type: Action.CreateMeeting,
+        payload: meeting
+    }
+}
+
+export function beginDeletingMeeting(meetingId){
+    return dispatch => {
+        const options = {
+            method: "DELETE",
+            headers: {
+                "Content-Type" : "text/plain"
+            },
+            body: JSON.stringify({}),
+        }
+        fetch(`${host}/meeting/${meetingId}`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishDeletingMeeting(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishDeletingMeeting(data){
+    return{
+        type: Action.DeleteMeeting,
+        payload: data
     }
 }

@@ -16,7 +16,7 @@ export const Action = Object.freeze({
     SelectCandidacy: "SelectCandidacy"
 });
 
-const host = 'http://localhost:8444';
+const host = 'http://167.172.158.78:8444';
 function checkForErrors(response){
     console.log('success');
     if(response.status >= 200 && response.status < 300){

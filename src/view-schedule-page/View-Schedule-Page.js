@@ -326,7 +326,7 @@ function ViewSchedulePage(props) {
                     <div>
                         <span className="meeting-delete-btn" onClick={()=>handleDeleteMeeting(meeting)}>X</span>
                         Meeting at <b>{meeting.location.buildingName} {meeting.location.roomNumber}</b> on <b>{new moment(meeting.startTime).format('YYYY/DD/MM')}</b> 
-                        &nbsp;from <b>{new moment(meeting.startTime).format('hh:mmA')}</b> to <b>{new moment(meeting.endTime).format('hh:mmA')}</b>
+                        &nbsp;from <b>{new moment(meeting.startTime).utcOffset('+0600').format('hh:mmA')}</b> to <b>{new moment(meeting.endTime).utcOffset('+0600').format('hh:mmA')}</b>
                         <div></div>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Attendees: </b>
                         {meeting.participations.map((participation, i, arr) => 
@@ -340,7 +340,7 @@ function ViewSchedulePage(props) {
                     <div>
                         <span className="meeting-delete-btn" onClick={()=>handleDeleteMeeting(meeting)}>X</span>
                         Presenting to students at <b>{meeting.location.buildingName} {meeting.location.roomNumber}</b> on <b>{new moment(meeting.startTime).format('YYYY/DD/MM')}</b> 
-                        &nbsp;from <b>{new moment(meeting.startTime).format('hh:mmA')}</b> to <b>{new moment(meeting.endTime).format('hh:mmA')}</b>
+                        &nbsp;from <b>{new moment(meeting.startTime).utcOffset('+0600').format('hh:mmA')}</b> to <b>{new moment(meeting.endTime).utcOffset('+0600').format('hh:mmA')}</b>
                         <div></div>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Attendees: </b>
                         {meeting.participations.map((participation, i, arr) => 

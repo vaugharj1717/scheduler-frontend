@@ -72,7 +72,8 @@ function ViewSchedulePage(props) {
 
     //let meetingsGroupedByDate = groupMeetingsByDate(schedule.meetings);
 
-    console.log(props.candidacy);
+    console.log(selectedStartDate);
+    console.log(selectedEndDate);
 
     const dispatch = useDispatch();
     useEffect(()=>{
@@ -87,24 +88,26 @@ function ViewSchedulePage(props) {
         setParticipations([]);
     }
 
-    function handleStartDateChange(startDate){
+    function handleStartDateChange(startDate, isDateChange){
         setSelectedStartDate(startDate);
-        setSelectedEndDate(endDate => {
+        if(isDateChange){
+            setSelectedEndDate(endDate => {
             endDate.date(startDate.date());
             endDate.month(startDate.month());
             endDate.year(startDate.year());
             return endDate;
-        })
+        })}
     }
 
-    function handleEndDateChange(endDate){
+    function handleEndDateChange(endDate, isDateChange){
         setSelectedEndDate(endDate);
-        setSelectedStartDate(startDate => {
-            startDate.date(endDate.date());
-            startDate.month(endDate.month());
-            startDate.year(endDate.year());
-            return startDate;
-        })
+        if(isDateChange){
+            setSelectedStartDate(startDate => {
+                startDate.date(endDate.date());
+                startDate.month(endDate.month());
+                startDate.year(endDate.year());
+                return startDate;
+        })}
     }
 
     function handleParticipantDelete(participantId){
@@ -149,7 +152,7 @@ function ViewSchedulePage(props) {
             return;
         }
         dispatch(beginCreatingMeeting(schedule.id, selectedLocation.id, meetingType, 
-            selectedStartDate.format('YYYY/MM/DD hh:mm:ss'), selectedEndDate.format('YYYY/MM/DD hh:mm:ss'), participations));
+            selectedStartDate.format('YYYY/MM/DD HH:mm:ss'), selectedEndDate.format('YYYY/MM/DD HH:mm:ss'), participations));
         setCreatingMeeting(false);
         setSelectedLocation(null);
         setSelectedEndDate(new moment(new moment().format("YYYY/MM/DD")));
@@ -322,7 +325,7 @@ function ViewSchedulePage(props) {
                     {meeting.meetingType === 'MEET_FACULTY' &&
                     <div>
                         <span className="meeting-delete-btn" onClick={()=>handleDeleteMeeting(meeting)}>X</span>
-                        Meeting at <b>{meeting.location.buildingName} {meeting.location.roomNumber}</b> on <b>{new moment(meeting.startTime).format('YYYY/MM/DD')}</b> 
+                        Meeting at <b>{meeting.location.buildingName} {meeting.location.roomNumber}</b> on <b>{new moment(meeting.startTime).format('YYYY/DD/MM')}</b> 
                         &nbsp;from <b>{new moment(meeting.startTime).format('hh:mmA')}</b> to <b>{new moment(meeting.endTime).format('hh:mmA')}</b>
                         <div></div>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Attendees: </b>
@@ -336,7 +339,7 @@ function ViewSchedulePage(props) {
                     {meeting.meetingType !== 'MEET_FACULTY' &&
                     <div>
                         <span className="meeting-delete-btn" onClick={()=>handleDeleteMeeting(meeting)}>X</span>
-                        Presenting to students at <b>{meeting.location.buildingName} {meeting.location.roomNumber}</b> on <b>{new moment(meeting.startTime).format('YYYY/MM/DD')}</b> 
+                        Presenting to students at <b>{meeting.location.buildingName} {meeting.location.roomNumber}</b> on <b>{new moment(meeting.startTime).format('YYYY/DD/MM')}</b> 
                         &nbsp;from <b>{new moment(meeting.startTime).format('hh:mmA')}</b> to <b>{new moment(meeting.endTime).format('hh:mmA')}</b>
                         <div></div>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Attendees: </b>

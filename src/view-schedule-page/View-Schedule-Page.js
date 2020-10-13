@@ -349,7 +349,7 @@ function ViewSchedulePage(props) {
                     }
                 </div>
             )}
-            {schedule.meetings.length === 0 &&
+            {schedule.meetings && schedule.meetings.length === 0 &&
                 <div className = "nothing-to-show">
                     No meetings...
                 </div>

@@ -115,14 +115,16 @@ function ViewSchedulePage(props) {
     }
 
     function handleParticipantAdd(){
-        for(let i = 0; i < participations.length; i++){
-            if(participations[i].participantId == selectedParticipant.id){
-                return;
+        if(selectedParticipant != null){
+            for(let i = 0; i < participations.length; i++){
+                if(participations[i].participantId == selectedParticipant.id){
+                    return;
+                }
             }
+            setParticipations(participations => 
+                [...participations, {participantId: selectedParticipant.id, name: selectedParticipant.name, canLeaveFeedback: false, canViewFeedback: false}]);
+            setSelectedParticipant(null);
         }
-        setParticipations(participations => 
-            [...participations, {participantId: selectedParticipant.id, name: selectedParticipant.name, canLeaveFeedback: false, canViewFeedback: false}]);
-        setSelectedParticipant(null);
     }
 
     function handleCanViewFeedbackChange(value, i){

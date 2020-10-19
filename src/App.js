@@ -1,23 +1,71 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
-import {Switch, Route, Link} from 'react-router-dom';
+import {Switch, Route, Link, Redirect} from 'react-router-dom';
 import MeetingSchedulerPage from './meeting-scheduler-page/Meeting-Scheduler-Page.js';
 import ViewSchedulePage from './view-schedule-page/View-Schedule-Page.js';
+import LoginPage from './login-page/Login-Page.js';
 import {useSelector, useDispatch} from 'react-redux';
+import {beginLoggingOut, beginRegistering, beginLoggingIn} from './actions.js';
 
 function App() {
+  const dispatch = useDispatch();
+  let currentUser = useSelector(state => state.currentUser)
   let candidacy = useSelector(state => state.currentCandidacy);
-  return (
+
+  function logout(){
+    dispatch(beginLoggingOut());
+  }
+
+  //REDIRECT TO LOGIN IF NOT LOGGED IN
+  if(currentUser == null){
+    return(
+      <div>
+        <Switch>
+          <Route exact path="/login">
+            <LoginPage/>
+          </Route>
+          <Route path="/">
+            <Redirect to="/login"/>
+          </Route>
+        </Switch>
+      </div>
+    )
+  }
+
+  else return (
     <div className="App">
         <Switch>
+
+          {/*HOME SCREENS*/}
           <Route exact path="/">
-            <div><Link to='meeting-scheduler'>To Meeting Scheduler Page</Link></div>
+            {currentUser.role == 'SCHEDULER' && 
+            <div>
+              <div><Link to='meeting-scheduler'>To Meeting Scheduler Page</Link></div> 
+              <button onClick={logout}>Logout</button> 
+            </div>
+            }  
           </Route>
+
+          {/*OTHER PAGES*/}
           <Route exact path="/meeting-scheduler">
-            <MeetingSchedulerPage></MeetingSchedulerPage>
+            {currentUser.role == 'SCHEDULER' ?
+            <MeetingSchedulerPage user={currentUser}></MeetingSchedulerPage>
+            :
+            <Redirect to="/"/>
+            }
           </Route>
+
           <Route exact path="/meeting-scheduler/view-schedule">
-            <ViewSchedulePage candidacy = {candidacy}></ViewSchedulePage>
+            {currentUser.role == 'SCHEDULER' ?
+            <ViewSchedulePage user={currentUser} candidacy = {candidacy}></ViewSchedulePage>
+            :
+            <Redirect to="/"/>
+            }
+          </Route>
+
+          {/*Redirect to home page if no match*/}
+          <Route path="/">
+            <Redirect to="/"></Redirect>
           </Route>
         </Switch>
     </div> 

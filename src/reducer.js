@@ -15,6 +15,7 @@ const initialState = {
     currentSchedule: {},
     currentCandidacy: {},
     participants: [],
+    currentUser: null,
 };
 
 function reducer(state = initialState, action){
@@ -114,6 +115,14 @@ function reducer(state = initialState, action){
                     meeting.id !== action.payload    
                 )}
             }
+        case Action.LogIn:
+            console.log(action.payload);
+            return{
+                ...state,
+                currentUser: {id: action.payload.id, role: action.payload.role, email: action.payload.email}
+            }
+        case Action.LogOut:
+            return initialState;
 
         default:
             return {...state}

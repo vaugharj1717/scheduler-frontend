@@ -1,3 +1,5 @@
+import authHeader from './util/auth-header.js';
+
 export const Action = Object.freeze({
     GetPositions: "GetPositions",
     DeleteCandidacy: "DeleteCandidacy",
@@ -13,13 +15,15 @@ export const Action = Object.freeze({
     GetParticipants: "GetParticipants",
     CreateMeeting: "CreateMeeting",
     DeleteMeeting: "DeleteMeeting",
-    SelectCandidacy: "SelectCandidacy"
+    SelectCandidacy: "SelectCandidacy",
+    LogIn: "LogIn",
+    Register: "Register",
+    LogOut: "LogOut",
 });
 
 const host = 'http://localhost:8444';
 //const host = 'http://167.172.158.78:8444';
 function checkForErrors(response){
-    console.log('success');
     if(response.status >= 200 && response.status < 300){
         return response;
     }
@@ -29,9 +33,87 @@ function checkForErrors(response){
     } 
 }
 
-export function beginGettingPositions(){
+export function beginLoggingIn(email, password){
+    const options = {
+        method: "Post",
+        headers: {
+            "Content-Type" : "application/json"
+        },
+        body: JSON.stringify({email, password}),
+    }
     return dispatch => {
-        fetch(`${host}/position`)
+        fetch(`${host}/auth/login`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            if(data.accessToken){
+                console.log("Logged in successfully");
+                localStorage.setItem("user", JSON.stringify(data));
+                dispatch(finishLoggingIn(data));
+            }
+        })
+        .catch(err => {
+            console.log("Log in failure");
+        })
+    }
+}
+
+export function finishLoggingIn(data){
+    return{
+        type: Action.LogIn,
+        payload: data
+    }
+}
+
+export function beginLoggingOut(){
+    return dispatch => {
+        localStorage.removeItem("user");
+        dispatch(finishLoggingOut());
+    }
+}
+
+export function finishLoggingOut(){
+    return {
+        type: Action.LogOut,
+        payload: null
+    }
+}
+
+export function beginRegistering(email, password){
+    const options = {
+        method: "Post",
+        headers: {
+            "Content-Type" : "application/json"
+        },
+        body: JSON.stringify({email, password}),
+    }
+    return dispatch => {
+        fetch(`${host}/auth/register`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            console.log("Successful registration");
+            dispatch(finishRegistering(data));
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+}
+
+export function finishRegistering(data){
+    return{
+        type: Action.Register,
+        payload: data
+    }
+}
+
+export function beginGettingPositions(){
+    const options = {
+        headers: authHeader()
+    };
+    return dispatch => {
+        fetch(`${host}/position`, options)
         .then(checkForErrors)
         .then(response => response.json())
         .then(data => {
@@ -51,8 +133,11 @@ export function finishGettingPositions(data){
 }
 
 export function beginGettingParticipants(){
+    const options = {
+        headers: authHeader()
+    };
     return dispatch => {
-        fetch(`${host}/user/participant`)
+        fetch(`${host}/user/participant`, options)
         .then(checkForErrors)
         .then(response => response.json())
         .then(data => {
@@ -72,8 +157,11 @@ export function finishGettingParticipants(data){
 }
 
 export function beginGettingSchedule(scheduleId){
+    const options = {
+        headers: authHeader()
+    };
     return dispatch => {
-        fetch(`${host}/schedule/${scheduleId}`)
+        fetch(`${host}/schedule/${scheduleId}`, options)
         .then(checkForErrors)
         .then(response => response.json())
         .then(data => {
@@ -93,8 +181,11 @@ export function finishGettingSchedule(schedule){
 }
 
 export function beginGettingCandidates(){
+    const options = {
+        headers: authHeader()
+    };
     return dispatch => {
-        fetch(`${host}/user/candidate`)
+        fetch(`${host}/user/candidate`, options)
         .then(checkForErrors)
         .then(response => response.json())
         .then(data => {
@@ -114,8 +205,11 @@ export function finishGettingCandidates(data){
 }
 
 export function beginGettingLocations(){
+    const options = {
+        headers: authHeader()
+    };
     return dispatch => {
-        fetch(`${host}/location`)
+        fetch(`${host}/location`, options)
         .then(checkForErrors)
         .then(response => response.json())
         .then(data => {
@@ -135,8 +229,11 @@ export function finishGettingLocations(data){
 }
 
 export function beginGettingDepartments(){
+    const options = {
+        headers: authHeader()
+    };
     return dispatch => {
-        fetch(`${host}/department`)
+        fetch(`${host}/department`, options)
         .then(checkForErrors)
         .then(response => response.json())
         .then(data => {
@@ -159,9 +256,7 @@ export function beginDeletingCandidacy(candidacyId){
     return dispatch => {
         const options = {
             method: "DELETE",
-            headers: {
-                "Content-Type" : "text/plain"
-            },
+            headers: authHeader(),
             body: JSON.stringify({}),
         }
         fetch(`${host}/position/candidacy/${candidacyId}`, options)
@@ -190,6 +285,7 @@ export function beginSavingCandidate(positionId, name, email){
         const options = {
             method: "Post",
             headers: {
+                ...authHeader(),
                 "Content-Type" : "application/json"
             },
             body: JSON.stringify({name, email}),
@@ -219,6 +315,7 @@ export function beginCreatingPosition(positionName, departmentId){
         const options = {
             method: "POST",
             headers: {
+                ...authHeader(),
                 "Content-Type" : "application/json"
             },
             body: JSON.stringify({}),
@@ -248,6 +345,7 @@ export function beginAssigningCandidateToPosition(positionId, candidateId){
         const options = {
             method: "Post",
             headers: {
+                ...authHeader(),
                 "Content-Type" : "application/json"
             },
             body: JSON.stringify({}),
@@ -276,6 +374,7 @@ export function beginDeletingSchedule(scheduleId){
         const options = {
             method: "DELETE",
             headers: {
+                ...authHeader(),
                 "Content-Type" : "text/plain"
             },
             body: JSON.stringify({}),
@@ -304,6 +403,7 @@ export function beginDeletingPosition(positionId){
         const options = {
             method: "DELETE",
             headers: {
+                ...authHeader(),
                 "Content-Type" : "text/plain"
             },
             body: JSON.stringify({}),
@@ -340,6 +440,7 @@ export function beginCreatingMeeting(scheduleId, locationId, meetingType, startT
         const options = {
             method: "Post",
             headers: {
+                ...authHeader(),
                 "Content-Type" : "application/json"
             },
             body: JSON.stringify({locationId, meetingType, startTime, endTime, participations}),
@@ -369,6 +470,7 @@ export function beginDeletingMeeting(meetingId){
         const options = {
             method: "DELETE",
             headers: {
+                ...authHeader(),
                 "Content-Type" : "text/plain"
             },
             body: JSON.stringify({}),

@@ -18,11 +18,14 @@ export default function LoginPage(props){
     }
 
     return(
-        <div>
-            <input type="textbox" value={email} onChange={(e)=>setEmail(e.target.value)}></input>
-            <input type="textbox" value={password} onChange={(e)=>setPassword(e.target.value)}></input>
-            <button onClick={register}>Register</button>
-            <button onClick={login}>Login</button> 
+            <div id="login-container">
+                <div id="login-header">LOGIN</div>
+                <div>
+                <label className="login-label">Email: <input type="textbox" value={email} onChange={(e)=>setEmail(e.target.value)}></input></label>
+                <label className="login-label">Password: <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)}></input></label>
+                <button id="login-btn" onClick={login}>Login</button> 
+                </div>
+                
             </div>
     )
 }

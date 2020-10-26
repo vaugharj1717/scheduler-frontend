@@ -15,11 +15,56 @@ const initialState = {
     currentSchedule: {},
     currentCandidacy: {},
     participants: [],
+    users: [],
     currentUser: null,
 };
 
 function reducer(state = initialState, action){
     switch (action.type) {
+        case Action.ChangeRole:
+            return{
+                ...state,
+                users: state.users.map(user => {
+                    if (user.id = action.payload.id) return {...user, role: action.payload.role}
+                    else return user;
+                })
+            }
+        case Action.GetUsers:
+            return{
+                ...state,
+                users: action.payload
+            }
+        case Action.CreateUser:
+            return{
+                ...state,
+                users: [...state.users, action.payload]
+            }
+        case Action.CreateLocation:
+            return{
+                ...state,
+                locations: [...state.locations, action.payload]
+            }
+        case Action.CreateDepartment:
+            return{
+                ...state,
+                departments: [...state.departments, action.payload]
+            }
+        case Action.DeleteUser:
+            return{
+                ...state,
+                users: state.users.filter(user => user.id !== action.payload)
+            }
+        case Action.DeleteLocation:
+            return{
+                ...state,
+                locations: state.locations.filter(location => location.id !== action.payload)
+            }
+        case Action.DeleteDepartment:
+            return{
+                ...state,
+                departments: state.departments.filter(department => department.id !== action.payload)
+            }
+            
         case Action.GetPositions:
             return {
                 ...state,

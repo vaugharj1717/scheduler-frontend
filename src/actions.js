@@ -19,6 +19,15 @@ export const Action = Object.freeze({
     LogIn: "LogIn",
     Register: "Register",
     LogOut: "LogOut",
+
+    GetUsers: "GetUsers",
+    DeleteUser: "DeleteUser",
+    DeleteLocation: "DeleteLocation",
+    DeleteDepartment: "DeleteDepartment",
+    CreateUser: "CreateUser",
+    CreateLocation: "CreateLocation",
+    CreateDepartment: "CreateDepartment",
+    ChangeRole: "ChangeRole"
 });
 
 const host = 'http://localhost:8444';
@@ -490,6 +499,235 @@ export function beginDeletingMeeting(meetingId){
 export function finishDeletingMeeting(data){
     return{
         type: Action.DeleteMeeting,
+        payload: data
+    }
+}
+
+
+export function beginCreatingDepartment(departmentName){
+    return dispatch => {
+        const options = {
+            method: "Post",
+            headers: {
+                ...authHeader(),
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify({departmentName}),
+        }
+        fetch(`${host}/department`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishCreatingDepartment(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishCreatingDepartment(data){
+    return{
+        type: Action.CreateDepartment,
+        payload: data
+    }
+}
+
+export function beginCreatingUser(name, email, role){
+    console.log(`NAME: ${name}, EMAIL: ${email}, ROLE: ${role}`);
+    return dispatch => {
+        const options = {
+            method: "Post",
+            headers: {
+                ...authHeader(),
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify({name, email, role}),
+        }
+        fetch(`${host}/user`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishCreatingUser(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishCreatingUser(data){
+    return{
+        type: Action.CreateUser,
+        payload: data
+    }
+}
+
+export function beginCreatingLocation(buildingName, roomNumber){
+    return dispatch => {
+        const options = {
+            method: "Post",
+            headers: {
+                ...authHeader(),
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify({buildingName, roomNumber}),
+        }
+        fetch(`${host}/location`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishCreatingLocation(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishCreatingLocation(data){
+    return{
+        type: Action.CreateLocation,
+        payload: data
+    }
+}
+
+export function beginGettingUsers(){
+    const options = {
+        headers: authHeader()
+    };
+    return dispatch => {
+        fetch(`${host}/user`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishGettingUsers(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishGettingUsers(data){
+    return{
+        type: Action.GetUsers,
+        payload: data
+    }
+}
+
+export function beginDeletingDepartment(departmentId){
+    return dispatch => {
+        const options = {
+            method: "DELETE",
+            headers: {
+                ...authHeader(),
+                "Content-Type" : "text/plain"
+            },
+            body: JSON.stringify({}),
+        }
+        fetch(`${host}/department/${departmentId}`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishDeletingDepartment(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishDeletingDepartment(data){
+    return{
+        type: Action.DeleteDepartment,
+        payload: data
+    }
+}
+
+export function beginDeletingLocation(locationId){
+    return dispatch => {
+        const options = {
+            method: "DELETE",
+            headers: {
+                ...authHeader(),
+                "Content-Type" : "text/plain"
+            },
+            body: JSON.stringify({}),
+        }
+        fetch(`${host}/location/${locationId}`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishDeletingLocation(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishDeletingLocation(data){
+    return{
+        type: Action.DeleteLocation,
+        payload: data
+    }
+}
+
+export function beginDeletingUser(userId){
+    return dispatch => {
+        const options = {
+            method: "DELETE",
+            headers: {
+                ...authHeader(),
+                "Content-Type" : "text/plain"
+            },
+            body: JSON.stringify({}),
+        }
+        fetch(`${host}/user/${userId}`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishDeletingUser(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishDeletingUser(data){
+    return{
+        type: Action.DeleteUser,
+        payload: data
+    }
+}
+
+export function beginChangingRole(userId, role){
+    return dispatch => {
+        const options = {
+            method: "PATCH",
+            headers: {
+                ...authHeader(),
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify({role}),
+        }
+        fetch(`${host}/user/${userId}/changeRole`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishChangingRole({id: userId, role: data}))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishChangingRole(data){
+    return{
+        type: Action.ChangeRole,
         payload: data
     }
 }

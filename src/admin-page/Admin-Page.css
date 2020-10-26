@@ -1,0 +1,119 @@
+#admin-header {
+    color: #f2f2f2;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    font-family: 'Open Sans Regular', sans-serif;
+    font-weight: 400;
+    font-size: 35pt;
+    text-align: left;
+  }
+
+#admin-nav{
+    position: relative;
+    display: flex;
+    margin-top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 85%;
+    justify-content: space-evenly;
+}
+
+.admin-nav-btn{
+    color: black;
+    font-size: 15px;
+    font: bold;
+    width: 100%;
+    padding: 10px 0;
+    background-color: white;
+    border: 2px solid black;
+}
+
+.admin-nav-btn-left{
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+}
+
+.admin-nav-btn-right{
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+}
+
+.admin-nav-btn:hover{
+    background-color: gray;
+    cursor: pointer;
+}
+
+#admin-content-wrap{
+    position: relative;
+    width: 85%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+#admin-content{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    min-height: 600px;
+    background-color: white;
+    margin-top: 10px;
+    justify-content: flex-start;
+    align-items: space-evenly;
+    border-radius: 20px;
+}
+
+#admin-content-header{
+    position: relative;
+    width: 100%;
+    text-align: center;
+    font-size: 35px;
+    font-family: 'Open Sans Regular', sans-serif;
+    margin-top: 6px;
+}
+
+#admin-content-header::after{
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 1px;
+    background-color: black;
+    content: "";
+}
+
+#admin-content-create-btn{
+    z-index: 5;
+    position: absolute;
+    top: 5px;
+    left: calc(100% - 70px);
+    width: 60px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#admin-create-new{
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#admin-create-new-text, #admin-create-new-roles{
+    display: flex;
+    align-items: center;
+}
+.userRow{
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+.admin-user-role-btn-grp{
+    margin-left: 20px;
+}
+
+.admin-row-info{
+    margin-left: 20px;
+}

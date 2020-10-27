@@ -192,10 +192,10 @@ function MeetingSchedulerPage(props) {
                             <td>{candidacy.candidate.email}</td>
                             <td><u><b><input type="file" id="upload-file"></input><label htmlFor="upload-file">Add attachment</label></b></u></td>
                             {candidacy.schedule.meetings.length != 0 &&
-                            <td><u><b><span>View</span></b></u> / <u><b><span onClick={(e)=>handleCandidacySelect(candidacy)}><Link to="/meeting-scheduler/view-schedule">Edit</Link></span></b></u> / <u><b><span onClick={()=>handleScheduleDelete(candidacy.schedule.id)}>Delete</span></b></u></td>
+                            <td><u><b><span>View</span></b></u> / <u><b><span onClick={(e)=>handleCandidacySelect(candidacy)}><Link to="/test/meeting-scheduler/view-schedule">Edit</Link></span></b></u> / <u><b><span onClick={()=>handleScheduleDelete(candidacy.schedule.id)}>Delete</span></b></u></td>
                             }
                             {candidacy.schedule.meetings.length == 0 &&
-                            <td><u><b><div onClick={(e)=>handleCandidacySelect(candidacy)}><Link to="/meeting-scheduler/view-schedule">Create</Link></div></b></u></td>
+                            <td><u><b><div onClick={(e)=>handleCandidacySelect(candidacy)}><Link to="/test/meeting-scheduler/view-schedule">Create</Link></div></b></u></td>
                             }
                             <td><u><b><div onClick={()=>handleCandidacyDelete(candidacy.id)}>Delete</div></b></u></td>
 

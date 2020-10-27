@@ -184,7 +184,7 @@ function ViewSchedulePage(props) {
             </div>
 
             <div>
-                <Link to='/meeting-scheduler'>Back to Positions</Link>
+                <Link to='/test/meeting-scheduler'>Back to Positions</Link>
             </div>
 
             {/* NEW MEETINGS */}

@@ -27,7 +27,12 @@ export const Action = Object.freeze({
     CreateUser: "CreateUser",
     CreateLocation: "CreateLocation",
     CreateDepartment: "CreateDepartment",
-    ChangeRole: "ChangeRole"
+    ChangeRole: "ChangeRole",
+
+    GetMessages: "GetMessages",
+    SendMessage: "SendMessage",
+    SetIsViewingMessages: "SetIsViewingMessages",
+    GetRecipients: "GetRecipients",
 });
 
 const host = 'http://localhost:8444';
@@ -728,6 +733,96 @@ export function beginChangingRole(userId, role){
 export function finishChangingRole(data){
     return{
         type: Action.ChangeRole,
+        payload: data
+    }
+}
+
+export function beginGettingMessages(userId, isViewing){
+    const options = {
+        method: "GET",
+        headers: {
+            ...authHeader(),
+        }
+    }
+    return dispatch => {
+        fetch(`${host}/user/${userId}/getMessages/${isViewing}`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishGettingMessages(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishGettingMessages(data){
+    return{
+        type: Action.GetMessages,
+        payload: data
+    }
+}
+
+export function beginSendingMessage(senderId, receiverId, message){
+    const options = {
+        method: "POST",
+        headers: {
+            ...authHeader(),
+            "Content-Type" : "application/json"
+        },
+        body: JSON.stringify({message}),
+    }
+    return dispatch => {
+        fetch(`${host}/user/${senderId}/sendMessage/${receiverId}`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishSendingMessage(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishSendingMessage(data){
+    return{
+        type: Action.SendMessage,
+        payload: data
+    }
+}
+
+export function setIsViewingMessages(val){
+    return{
+        type: Action.SetIsViewingMessages,
+        payload: val
+    }
+}
+
+export function beginGettingRecipients(){
+    const options = {
+        method: "GET",
+        headers: {
+            ...authHeader(),
+        }
+    }
+    return dispatch => {
+        fetch(`${host}/user/getCandidatesAndParticipants`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishGettingRecipients(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishGettingRecipients(data){
+    return{
+        type: Action.GetRecipients,
         payload: data
     }
 }

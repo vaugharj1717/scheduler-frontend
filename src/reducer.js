@@ -17,10 +17,51 @@ const initialState = {
     participants: [],
     users: [],
     currentUser: null,
+    messages: [],
+    isViewingMessages: false,
+    showUnseenMessagesNotifier: false,
+    possibleRecipients: []
 };
 
 function reducer(state = initialState, action){
     switch (action.type) {
+        case Action.GetRecipients:
+            return{
+                ...state,
+                possibleRecipients: action.payload
+            }
+        case Action.SetIsViewingMessages:
+            return{
+                ...state,
+                isViewingMessages: action.payload
+            }
+        
+        case Action.GetMessages:
+            let showUnseenMessages = false;
+            let updatedMessageList = action.payload.map(message => {
+                if(state.currentUser !== null && message.sender.id == state.currentUser.id){
+                    return {...message, userIsSender: true, displayUnseen: false}
+                }
+                else if(state.currentUser !== null && message.receiver.id == state.currentUser.id){
+                    if(message.seen || state.isViewingMessages){
+                        return {...message, userIsSender: false, displayUnseen: false}
+                    }
+                    else{
+                        showUnseenMessages = true;
+                        return {...message, userIsSender: false, displayUnseen: true}
+                    }
+                }
+            })
+            return{
+                ...state,
+                messages: updatedMessageList,
+                showUnseenMessagesNotifier: showUnseenMessages
+            }
+        case Action.SendMessage:
+            return{
+                ...state,
+                messages: [{...action.payload, userIsSender: true, displayUnseen: false}, ...state.messages]
+            }
         case Action.ChangeRole:
             return{
                 ...state,

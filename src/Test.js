@@ -2,20 +2,26 @@ import React, {useState} from 'react';
 import './App.css';
 import {Switch, Route, Link, Redirect} from 'react-router-dom';
 import MeetingSchedulerPage from './meeting-scheduler-page/Meeting-Scheduler-Page.js';
+import MessagingPane from './messaging-pane/Messaging-Pane.js';
 import ViewSchedulePage from './view-schedule-page/View-Schedule-Page.js';
 import AdminPage from './admin-page/Admin-Page.js';
 import LoginPage from './login-page/Login-Page.js';
 import {useSelector, useDispatch} from 'react-redux';
-import {beginLoggingOut, beginRegistering, beginLoggingIn} from './actions.js';
+import {beginLoggingOut, setIsViewingMessages} from './actions.js';
 
 function App() {
   const dispatch = useDispatch();
   let currentUser = useSelector(state => state.currentUser)
   // let currentUser = {role: "ADMIN"};
   let candidacy = useSelector(state => state.currentCandidacy);
+  let showUnseenMessagesNotifier = useSelector(state => state.showUnseenMessagesNotifier);
+  let isViewingMessages = useSelector(state => state.isViewingMessages);
 
   function logout(){
     dispatch(beginLoggingOut());
+  }
+  function viewMessages(){
+    dispatch(setIsViewingMessages(true));
   }
 
   //REDIRECT TO LOGIN IF NOT LOGGED IN
@@ -36,6 +42,9 @@ function App() {
 
   else return (
     <div className="App">
+      {isViewingMessages && 
+      <MessagingPane />
+      }
         <Switch>
 
           {/*HOME SCREENS*/}
@@ -56,21 +65,28 @@ function App() {
 
             {currentUser.role == 'PARTICIPANT' && 
             <div>
+              {showUnseenMessagesNotifier && <div>True</div>}
+              {!showUnseenMessagesNotifier && <div>False</div>}
+              <button onClick={viewMessages}>View Messages</button>
               <div><Link to='test/participant'>To Participant Page</Link></div> 
-              <button onClick={logout}>Logout</button> `
+              <button onClick={logout}>Logout</button>
+              
             </div>
             }  
 
             {currentUser.role == 'CANDIDATE' && 
             <div>
-              <div><Link to='test/candidate'>To Candidate Page</Link></div> 
+              {showUnseenMessagesNotifier && <div>True</div>}
+              {!showUnseenMessagesNotifier && <div>False</div>}
+              <button onClick={viewMessages}>View Messages</button>
+              <div><Link to='/test/candidate'>To Candidate Page</Link></div> 
               <button onClick={logout}>Logout</button> `
             </div>
             }             
           </Route>
 
           {/*SCHEDULER PAGES*/}
-          <Route exact path="test/meeting-scheduler">
+          <Route exact path="/test/meeting-scheduler">
             {currentUser.role == 'SCHEDULER' ?
             <MeetingSchedulerPage user={currentUser}></MeetingSchedulerPage>
             :

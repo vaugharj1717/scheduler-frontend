@@ -1,0 +1,22 @@
+.sent-message-root{
+  font-family: sans-serif;
+  position: relative;
+  max-width: 60%;
+  background-color: lightsteelblue;
+  left: 36%;
+  padding: 10px;
+  margin: 4px;
+  border-radius: 15px;
+  border-bottom-right-radius: 0px;
+  padding-bottom: 20px;
+  border: 1px solid black
+}
+
+.sent-message-header{
+  text-align: right;
+  margin-right: 5px;
+}
+.sent-message-body{
+  margin-top: 10px;
+  font-size: 20px;
+}

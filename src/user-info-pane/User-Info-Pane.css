@@ -1,0 +1,123 @@
+#user-info-pane-root{
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    width: 90vw;
+    min-width: 700px;
+    min-height: 500px;
+    background-color: white;
+    border: 3px solid black;
+    border-radius: 20px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  #user-info-pane-exit{
+    position: absolute;
+    font-family: sans-serif;
+    color: red;
+    font-size: 30px;
+    left: 100%;
+    top: 10px;
+    transform: translateX(-35px);
+    cursor: pointer;
+  }
+  
+  #user-info-pane-exit:hover{
+    font-weight: bold;
+  }
+  
+  #user-info-pane-header{
+    position: relative;
+    font-family: sans-serif;
+    font-size: 30px;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  #user-info-pane-header::after{
+    position: absolute;
+    content:"";
+    background-color: black;
+    width: 300px;
+    height: 1px;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  #user-info-pane-container{
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 98%;
+    height: calc(100% - 10px);
+    margin-top: 10px;
+  }
+
+  .user-info-pane-item{
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    margin: 5px;
+  }
+  .user-info-link{
+    color: black;
+  }
+  .user-info-delete{
+    margin-right: 5px;
+    cursor: pointer;
+  }
+  .upload-user-info-label{
+    margin-left: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    text-decoration: underline;
+  }
+
+  .upload-user-info-label:hover{
+    color: gray;
+  }
+
+  #upload-user-info{
+    width: 0px;
+  }
+
+  .user-info-item{
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    margin: 10px;
+  }
+  .user-info-label{
+    font-weight: bold;
+    width: 150px;
+  }
+
+  .link-to-files{
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .link-to-files:hover{
+    color: rgb(0, 74, 99)
+  }
+
+  .user-info-edit-btn, .user-info-save-btn{
+    margin-left: 8px;
+  }
+
+  .user-info-input{
+    width: 50%;
+  }
+
+  .user-info-bio{
+    height: 200px;
+  }
+
+  .change-password-form{
+    margin-top: 60px;
+  }
+  

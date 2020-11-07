@@ -21,6 +21,7 @@ export const Action = Object.freeze({
     LogOut: "LogOut",
 
     GetUsers: "GetUsers",
+    GetUser: "GetUser",
     DeleteUser: "DeleteUser",
     DeleteLocation: "DeleteLocation",
     DeleteDepartment: "DeleteDepartment",
@@ -32,11 +33,20 @@ export const Action = Object.freeze({
     GetMessages: "GetMessages",
     SendMessage: "SendMessage",
     SetIsViewingMessages: "SetIsViewingMessages",
+    SetIsViewingFiles: "SetIsViewingFiles",
+    SetIsViewingUser: "SetIsViewingUser",
     GetRecipients: "GetRecipients",
+    GetUserFiles: "GetUserFiles",
+    DeleteFile: "DeleteFile",
+    UploadFile: "UploadFile",
+
+    UpdateUserInfo: "UpdateUserInfo",
+    GetUpcomingMeetingsForUser: "GetUpcomingMeetingsForUser",
+    GetPastMeetingsForUser: "GetPastMeetingsForUser",
 });
 
-const host = 'http://localhost:8444';
-//const host = 'http://167.172.158.78:8444';
+export const host = 'http://localhost:8444';
+//export const host = 'http://167.172.158.78:8444';
 function checkForErrors(response){
     if(response.status >= 200 && response.status < 300){
         return response;
@@ -142,6 +152,56 @@ export function beginGettingPositions(){
 export function finishGettingPositions(data){
     return{
         type: Action.GetPositions,
+        payload: data
+    }
+}
+
+export function beginGettingUpcomingMeetingsForUser(id){
+    console.log("here");
+    const options = {
+        headers: authHeader()
+    };
+    return dispatch => {
+        fetch(`${host}/meeting/${id}/getUpcoming`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            dispatch(finishGettingUpcomingMeetingsForUser(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishGettingUpcomingMeetingsForUser(data){
+    return{
+        type: Action.GetUpcomingMeetingsForUser,
+        payload: data
+    }
+}
+
+export function beginGettingPastMeetingsForUser(id){
+    const options = {
+        headers: authHeader()
+    };
+    return dispatch => {
+        fetch(`${host}/meeting/${id}/getPast`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishGettingPastMeetingsForUser(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishGettingPastMeetingsForUser(data){
+    return{
+        type: Action.GetPastMeetingsForUser,
         payload: data
     }
 }
@@ -621,6 +681,30 @@ export function finishGettingUsers(data){
     }
 }
 
+export function beginGettingUser(id){
+    const options = {
+        headers: authHeader()
+    };
+    return dispatch => {
+        fetch(`${host}/${id}/user`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishGettingUser(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishGettingUser(data){
+    return{
+        type: Action.GetUser,
+        payload: data
+    }
+}
+
 export function beginDeletingDepartment(departmentId){
     return dispatch => {
         const options = {
@@ -737,6 +821,66 @@ export function finishChangingRole(data){
     }
 }
 
+export function beginUpdatingUserInfo(userId, address, phone, university, bio){
+    console.log("here1");
+    return dispatch => {
+        const options = {
+            method: "PATCH",
+            headers: {
+                ...authHeader(),
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify({address, phone, university, bio}),
+        }
+        fetch(`${host}/user/${userId}/updateInfo`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishUpdatingUserInfo(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishUpdatingUserInfo(data){
+    return{
+        type: Action.UpdateUserInfo,
+        payload: data
+    }
+}
+
+export function beginUpdatingPassword(userId, oldPassword, newPassword, newPassword2){
+    console.log("here1");
+    return dispatch => {
+        const options = {
+            method: "POST",
+            headers: {
+                ...authHeader(),
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify({userId, oldPassword, newPassword, newPassword2}),
+        }
+        fetch(`${host}/user/changePassword`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishUpdatingPassword("Password successfully changed"));
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishUpdatingPassword(data){
+    return{
+        type: Action.UpdatePassword,
+        payload: data
+    }
+}
+
 export function beginGettingMessages(userId, isViewing){
     const options = {
         method: "GET",
@@ -800,6 +944,76 @@ export function setIsViewingMessages(val){
     }
 }
 
+export function setIsViewingFiles(val, userId){
+    console.log("in setIsViewingFiles");
+    return{
+        type: Action.SetIsViewingFiles,
+        payload: {val, userId}
+    }
+}
+
+export function setIsViewingUser(val, userId){
+    return{
+        type: Action.SetIsViewingUser,
+        payload: {val, userId}
+    }
+}
+
+export function beginGettingFiles(userId){
+    const options = {
+        method: "GET",
+        headers: {
+            ...authHeader(),
+        }
+    }
+    return dispatch => {
+        fetch(`${host}/user/${userId}/files`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishGettingUserFiles(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishGettingUserFiles(data){
+    return{
+        type: Action.GetUserFiles,
+        payload: data
+    }
+}
+
+export function beginDeletingFile(fileId){
+    const options = {
+        method: "DELETE",
+        headers: {
+            ...authHeader(),
+        }
+    }
+    return dispatch => {
+        fetch(`${host}/user/deleteFile/${fileId}`, options)
+        .then(checkForErrors)
+            .then(response => response.json())
+            .then(data => {
+                dispatch(finishDeletingFile(fileId))
+            })
+            .catch(err => {
+                console.error(err);
+            })
+    }
+}
+
+export function finishDeletingFile(data){
+    return{
+        type: Action.DeleteFile,
+        payload: data,
+    }
+}
+
+
 export function beginGettingRecipients(){
     const options = {
         method: "GET",
@@ -824,5 +1038,30 @@ export function finishGettingRecipients(data){
     return{
         type: Action.GetRecipients,
         payload: data
+    }
+}
+
+export function beginUploadingFile(id, formData){
+    return dispatch => {
+        const options = {
+            method: "POST",
+            headers: authHeader(),
+            body: formData,
+        }
+        fetch(`${host}/user/${id}/uploadFile`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishUploadingFile(data))
+        })
+        .catch(err => {
+        })
+    }
+}
+
+export function finishUploadingFile(file){
+    return{
+        type: Action.UploadFile,
+        payload: file
     }
 }

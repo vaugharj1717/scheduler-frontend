@@ -19,23 +19,84 @@ const initialState = {
     currentUser: null,
     messages: [],
     isViewingMessages: false,
+    isViewingFiles: false,
+    userIdOfViewedFiles: null,
+    isViewingUser: false,
+    userIdOfViewedUser: null,
+    viewedUser: {id: 3, name: "Ryan Vaughan", email: "vaugharj@uwec.edu", university: "UWEC", address: "1314 Armstrong Place, Eau Claire, WI, 54701",
+    phone: "715-579-3328", bio: "I put the bio here"},
     showUnseenMessagesNotifier: false,
-    possibleRecipients: []
+    possibleRecipients: [],
+    files: [],
+    pastMeetings: [],
+    upcomingMeetings: []
 };
 
 function reducer(state = initialState, action){
     switch (action.type) {
+        case Action.GetUpcomingMeetingsForUser:
+            return{
+                ...state,
+                upcomingMeetings: action.payload
+            }
+        case Action.GetPastMeetingsForUser:
+            return{
+                ...state,
+                pastMeetings: action.payload
+            }
         case Action.GetRecipients:
             return{
                 ...state,
                 possibleRecipients: action.payload
             }
+        case Action.GetUserFiles:
+            return{
+                ...state,
+                files: action.payload
+            }
+        case Action.DeleteFile:
+            return{
+                ...state,
+                files: state.files.filter(file => file.id !== action.payload)
+            }
+        case Action.UploadFile:
+            return{
+                ...state,
+                files: [...state.files, action.payload]
+            }
         case Action.SetIsViewingMessages:
             return{
                 ...state,
-                isViewingMessages: action.payload
+                isViewingMessages: action.payload,
+                userIdOfViewedFiles: null,
+                isViewingFiles: false,
+                isViewingUser: false,
+                userIdOfViewedUser: null,
             }
-        
+        case Action.SetIsViewingFiles:
+            return{
+                ...state,
+                isViewingFiles: action.payload.val,
+                userIdOfViewedFiles: action.payload.userId,
+                isViewingMessages: false,
+                isViewingUser: false,
+                userIdOfViewedUser: null,
+            }
+        case Action.UpdateUserInfo:
+            return{
+                ...state,
+                viewedUser: action.payload
+            }
+
+        case Action.SetIsViewingUser:
+            return{
+                ...state,
+                isViewingUser: action.payload.val,
+                userIdOfViewedUser: action.payload.userId,
+                isViewingFiles: false,
+                isViewingMessages: false,
+                userIdOfViewedFiles: null,
+            }
         case Action.GetMessages:
             let showUnseenMessages = false;
             let updatedMessageList = action.payload.map(message => {
@@ -74,6 +135,11 @@ function reducer(state = initialState, action){
             return{
                 ...state,
                 users: action.payload
+            }
+        case Action.GetUser:
+            return{
+                ...state,
+                viewedUser: action.payload
             }
         case Action.CreateUser:
             return{

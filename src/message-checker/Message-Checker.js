@@ -9,7 +9,7 @@ export default function MessageChecker(){
 
     useEffect(() => {
         let interval;
-        if(currentUser != null){
+        if(currentUser != null && (currentUser.role === 'PARTICIPANT' || currentUser.role === 'CANDIDATE')){
             dispatch(beginGettingMessages(currentUser.id, isViewingMessages));
             interval = setInterval(() => {
                 dispatch(beginGettingMessages(currentUser.id, isViewingMessages));

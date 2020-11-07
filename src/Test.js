@@ -4,10 +4,13 @@ import {Switch, Route, Link, Redirect} from 'react-router-dom';
 import MeetingSchedulerPage from './meeting-scheduler-page/Meeting-Scheduler-Page.js';
 import MessagingPane from './messaging-pane/Messaging-Pane.js';
 import ViewSchedulePage from './view-schedule-page/View-Schedule-Page.js';
+import ViewMeetingsPage from './view-meetings-page/View-Meetings-Page.js';
 import AdminPage from './admin-page/Admin-Page.js';
 import LoginPage from './login-page/Login-Page.js';
+import FilePane from './file-pane/File-Pane.js';
+import UserInfoPane from './user-info-pane/User-Info-Pane.js';
 import {useSelector, useDispatch} from 'react-redux';
-import {beginLoggingOut, setIsViewingMessages} from './actions.js';
+import {beginLoggingOut, setIsViewingMessages, setIsViewingFiles, setIsViewingUser} from './actions.js';
 
 function App() {
   const dispatch = useDispatch();
@@ -16,12 +19,22 @@ function App() {
   let candidacy = useSelector(state => state.currentCandidacy);
   let showUnseenMessagesNotifier = useSelector(state => state.showUnseenMessagesNotifier);
   let isViewingMessages = useSelector(state => state.isViewingMessages);
+  let isViewingFiles = useSelector(state => state.isViewingFiles);
+  let isViewingUser = useSelector(state => state.isViewingUser);
+  let userIdOfViewedFiles = useSelector(state => state.userIdOfViewedFiles);
+  let userIdOfViewedUser = useSelector(state => state.userIdOfViewedUser);
 
   function logout(){
     dispatch(beginLoggingOut());
   }
   function viewMessages(){
     dispatch(setIsViewingMessages(true));
+  }
+  function viewFiles(id){
+    dispatch(setIsViewingFiles(true, id));
+  }
+  function viewUserInfo(id){
+    dispatch(setIsViewingUser(true, id));
   }
 
   //REDIRECT TO LOGIN IF NOT LOGGED IN
@@ -44,6 +57,12 @@ function App() {
     <div className="App">
       {isViewingMessages && 
       <MessagingPane />
+      }
+      {isViewingFiles &&
+      <FilePane userIdOfViewedFiles={userIdOfViewedFiles}/>
+      }
+      {isViewingUser &&
+      <UserInfoPane userId={userIdOfViewedUser} />
       }
         <Switch>
 
@@ -79,6 +98,8 @@ function App() {
               {showUnseenMessagesNotifier && <div>True</div>}
               {!showUnseenMessagesNotifier && <div>False</div>}
               <button onClick={viewMessages}>View Messages</button>
+              <button onClick={()=>viewFiles(currentUser.id)}>View Files</button>
+              <button onClick={()=>viewUserInfo(currentUser.id)}>View User Info</button>
               <div><Link to='/test/candidate'>To Candidate Page</Link></div> 
               <button onClick={logout}>Logout</button> `
             </div>
@@ -97,6 +118,25 @@ function App() {
           <Route exact path="/test/meeting-scheduler/view-schedule">
             {currentUser.role == 'SCHEDULER' ?
             <ViewSchedulePage user={currentUser} candidacy = {candidacy}></ViewSchedulePage>
+            :
+            <Redirect to="/test"/>
+            }
+          </Route>
+
+          
+          {/*CANDIDATE*/}
+          <Route exact path="/test/candidate">
+            {currentUser.role == 'CANDIDATE' ?
+            <ViewMeetingsPage mode='CANDIDATE' user={currentUser} />
+            :
+            <Redirect to="/test"/>
+            }
+          </Route>
+
+          {/*PARTICIPANT*/}
+          <Route exact path="/test/participant">
+            {currentUser.role == 'PARTICIPANT' ?
+            <ViewMeetingsPage mode='PARTICIPANT' user={currentUser} />
             :
             <Redirect to="/test"/>
             }

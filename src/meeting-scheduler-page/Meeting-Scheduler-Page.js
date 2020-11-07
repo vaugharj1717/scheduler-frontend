@@ -3,7 +3,7 @@ import './Meeting-Scheduler-Page.css';
 import {Switch, Route, Link} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
 import {beginDeletingSchedule, beginSavingCandidate, beginDeletingCandidacy, beginGettingDepartments, beginCreatingPosition, beginDeletingPosition,
-    beginGettingPositions, beginGettingCandidates, beginAssigningCandidateToPosition, selectCandidacy} from '../actions.js';
+    beginGettingPositions, beginGettingCandidates, beginAssigningCandidateToPosition, selectCandidacy, setIsViewingFiles} from '../actions.js';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import {makeStyles, createMuiTheme} from "@material-ui/core/styles";
@@ -190,7 +190,7 @@ function MeetingSchedulerPage(props) {
                         <tr key={candidacy.id}>
                             <td>{candidacy.candidate.name}</td>
                             <td>{candidacy.candidate.email}</td>
-                            <td><u><b><input type="file" id="upload-file"></input><label htmlFor="upload-file">Add attachment</label></b></u></td>
+                            <td><u><b><div onClick={()=>dispatch(setIsViewingFiles(true, candidacy.candidate.id))} htmlFor="upload-file">Manage Attachments</div></b></u></td>
                             {candidacy.schedule.meetings.length != 0 &&
                             <td><u><b><span>View</span></b></u> / <u><b><span onClick={(e)=>handleCandidacySelect(candidacy)}><Link to="/test/meeting-scheduler/view-schedule">Edit</Link></span></b></u> / <u><b><span onClick={()=>handleScheduleDelete(candidacy.schedule.id)}>Delete</span></b></u></td>
                             }

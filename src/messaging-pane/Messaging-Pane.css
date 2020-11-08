@@ -1,3 +1,13 @@
+#messaging-pane-darken-background{
+  position: fixed;
+  background-color: rgba(0, 0, 0, .15);
+  height: 100vh;
+  width: 100vw;
+  z-index: 99;
+  left: 0;
+  top: 0;
+}
+
 #messaging-pane-root{
   position: fixed;
   display: flex;
@@ -12,6 +22,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 100;
 }
 
 #messaging-pane-exit{

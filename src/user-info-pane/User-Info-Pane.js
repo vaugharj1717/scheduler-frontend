@@ -49,6 +49,7 @@ function UserInfoPane(props) {
     }
 
     if(!isEditing && !isChangingPassword) return(
+        <div id="user-info-darken-background">
         <div id="user-info-pane-root">
             <div id="user-info-pane-header">User Info</div>
             <div onClick={()=> dispatch(setIsViewingUser(false))} id="user-info-pane-exit">X</div>
@@ -85,8 +86,10 @@ function UserInfoPane(props) {
                 </div>
             </div>
         </div>
+        </div>
     )
     else if (isEditing) return(
+        <div id="user-info-darken-background">
         <div id="user-info-pane-root">
             <div id="user-info-pane-header">User Info</div>
             <div onClick={()=> dispatch(setIsViewingUser(false))} id="user-info-pane-exit">X</div>
@@ -123,8 +126,10 @@ function UserInfoPane(props) {
                 </div>
             </div>
         </div>
+        </div>
     )
     else if (isChangingPassword) return(
+        <div id="user-info-darken-background">
         <div id="user-info-pane-root">
             <div id="user-info-pane-header">Change Password</div>
             <div onClick={()=> dispatch(setIsViewingUser(false))} id="user-info-pane-exit">X</div>
@@ -146,6 +151,7 @@ function UserInfoPane(props) {
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     )
 }

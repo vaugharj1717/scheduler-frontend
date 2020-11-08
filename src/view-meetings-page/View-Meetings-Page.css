@@ -98,7 +98,7 @@
     margin-bottom: 15px;
 }
 
-.leave-feedback-btn{
+.leave-feedback-btn, .view-feedback-btn, .activate-alert-btn, .deactivate-alert-btn{
     width: 50%;
     border-radius: 30px;
     border-right: 1px solid white;
@@ -110,17 +110,16 @@
     font-family: sans-serif;
 }
 
-.view-feedback-btn{
-    width: 50%;
-    border-radius: 30px;
-    padding: 10px;
-    cursor: pointer;
-    text-align: center;
-    background-color: black;
-    color: white;
-    font-family: sans-serif;
+.view-feedback-btn:hover, .leave-feedback-btn:hover, .activate-alert-btn:hover, .deactivate-alert-btn:hover{
+    background-color: gray;
 }
 
-.view-feedback-btn:hover, .leave-feedback-btn:hover{
-    background-color: gray;
+.submit-btn{
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+.feedback-textarea{
+    width: 50%;
+    height: 125px;
 }

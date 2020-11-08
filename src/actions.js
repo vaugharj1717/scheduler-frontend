@@ -1065,3 +1065,16 @@ export function finishUploadingFile(file){
         payload: file
     }
 }
+
+export function beginSubmittingFeedback(meetingId, participationId, feedback){
+    const options = {
+        method: "POST",
+        headers: authHeader(),
+        body: feedback,
+    };
+    fetch(`${host}/meeting/participation/${participationId}`, options)
+    .then(checkForErrors)
+    .catch(err => {
+        console.error(err);
+    })
+}

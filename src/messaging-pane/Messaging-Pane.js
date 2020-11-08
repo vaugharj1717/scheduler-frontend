@@ -19,6 +19,7 @@ function MessagingPane(props) {
     let currentUser = useSelector(state => state.currentUser);
     console.log(messages);
     return(
+        <div id="messaging-pane-darken-background">
         <div id="messaging-pane-root">
             <div id="messaging-pane-header">Messages</div>
             <div onClick={()=> dispatch(setIsViewingMessages(false))} id="messaging-pane-exit">X</div>
@@ -34,6 +35,7 @@ function MessagingPane(props) {
                 })}
                 
             </div>
+        </div>
         </div>
     )
 }

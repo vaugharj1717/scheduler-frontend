@@ -54,8 +54,13 @@ function UserInfoPane(props) {
             <div id="user-info-pane-header">User Info</div>
             <div onClick={()=> dispatch(setIsViewingUser(false))} id="user-info-pane-exit">X</div>
             <div id="user-info-pane-container">
+                {currentUser.id === viewedUser.id &&
                 <button className="user-info-edit-btn" onClick={()=>handleEdit()}>Edit</button>
+                }
+                {currentUser.id === viewedUser.id &&
                 <button className="user-info-edit-btn" onClick={()=>setIsChangingPassword(true)}>Change Password</button>
+                }
+                
                 <div className="user-info-item">
                     <span className="user-info-label">Name:</span> 
                     <span className="user-info-data">{viewedUser.name}</span>

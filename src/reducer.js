@@ -22,22 +22,69 @@ const initialState = {
     isViewingFiles: false,
     userIdOfViewedFiles: null,
     isViewingUser: false,
+    isViewingFeedback: false,
+    meetingIdOfFeedback: null,
     userIdOfViewedUser: null,
-    viewedUser: {id: 3, name: "Ryan Vaughan", email: "vaugharj@uwec.edu", university: "UWEC", address: "1314 Armstrong Place, Eau Claire, WI, 54701",
-    phone: "715-579-3328", bio: "I put the bio here"},
+    viewedUser: {},
     showUnseenMessagesNotifier: false,
     possibleRecipients: [],
     files: [],
     pastMeetings: [],
-    upcomingMeetings: []
+    upcomingMeetings: [],
+    feedback: [],
 };
 
 function reducer(state = initialState, action){
     switch (action.type) {
+        case Action.SetAlert:
+            if(action.payload.which === 'upcoming'){
+                return{
+                    ...state,
+                    upcomingMeetings: state.upcomingMeetings.map(meeting => {
+                        if(meeting.id === action.payload.meeting.id){
+                            return {
+                                ...meeting,
+                                participations: meeting.participations.map(participation => {
+                                    if(participation.id === action.payload.participationId){
+                                        return {
+                                            ...participation,
+                                            alert: action.payload.val
+                                        }
+                                    } else return participation;
+                                })
+                            }
+                        }
+                        else return meeting;
+                    })
+                }
+            } else return{
+                ...state,
+                    pastMeetings: state.pastMeetings.map(meeting => {
+                        if(meeting.id === action.payload.meeting.id){
+                            return {
+                                ...meeting,
+                                participations: meeting.participations.map(participation => {
+                                    if(participation.id === action.payload.participationId){
+                                        return {
+                                            ...participation,
+                                            alert: action.payload.val
+                                        }
+                                    } else return participation;
+                                })
+                            }
+                        }
+                        else return meeting;
+                    })
+            }
         case Action.GetUpcomingMeetingsForUser:
             return{
                 ...state,
                 upcomingMeetings: action.payload
+            }
+        case Action.GetFeedback:
+            return{
+                ...state,
+                feedback: action.payload
             }
         case Action.GetPastMeetingsForUser:
             return{
@@ -71,6 +118,19 @@ function reducer(state = initialState, action){
                 userIdOfViewedFiles: null,
                 isViewingFiles: false,
                 isViewingUser: false,
+                isViewingFeedback: false,
+                userIdOfViewedUser: null,
+                meetingIdOfFeedback: null,
+            }
+        case Action.SetIsViewingFeedback:
+            return{
+                ...state,
+                isViewingFeedback: action.payload.val,
+                meetingIdOfFeedback: action.payload.meetingId,
+                userIdOfViewedFiles: null,
+                isViewingFiles: false,
+                isViewingUser: false,
+                isViewingMessages: false,
                 userIdOfViewedUser: null,
             }
         case Action.SetIsViewingFiles:
@@ -80,7 +140,9 @@ function reducer(state = initialState, action){
                 userIdOfViewedFiles: action.payload.userId,
                 isViewingMessages: false,
                 isViewingUser: false,
+                isViewingFeedback: false,
                 userIdOfViewedUser: null,
+                meetingIdOfFeedback: null,
             }
         case Action.UpdateUserInfo:
             return{
@@ -95,7 +157,9 @@ function reducer(state = initialState, action){
                 userIdOfViewedUser: action.payload.userId,
                 isViewingFiles: false,
                 isViewingMessages: false,
+                isViewingFeedback: false,
                 userIdOfViewedFiles: null,
+                meetingIdOfFeedback: null,
             }
         case Action.GetMessages:
             let showUnseenMessages = false;

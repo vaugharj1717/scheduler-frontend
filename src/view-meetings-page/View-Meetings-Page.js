@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import './View-Meetings-Page.css';
-import {beginGettingUpcomingMeetingsForUser, beginGettingPastMeetingsForUser, setIsViewingUser, beginSubmittingFeedback} from '../actions.js';
+import {setIsViewingFeedback, beginSettingAlert, beginGettingUpcomingMeetingsForUser, beginGettingPastMeetingsForUser, setIsViewingUser, beginSubmittingFeedback} from '../actions.js';
 
 import moment from 'moment';
 import MomentUtils from "@date-io/moment";
 
-
+function getParticipationId(meeting, user){
+    for(let i = 0; i < meeting.participations.length; i++){
+        if(meeting.participations[i].participant.id === user.id){
+            return meeting.participations[i].id;
+        }
+    }
+    return -1;
+}
 function canLeaveFeedback(meeting, user){
     for(let i = 0; i < meeting.participations.length; i++){
-        console.log('in loop')
         if(meeting.participations[i].participant.id === user.id && meeting.participations[i].canLeaveFeedback){
             return true;
         }
@@ -56,8 +62,8 @@ function ViewMeetingsPage(props){
         setFocusedMeetingIndex(-1);        
     }
 
-    function handleSubmit(){
-        beginSubmittingFeedback(feedback);
+    function handleSubmit(participationId){
+        beginSubmittingFeedback(feedback, participationId);
         setFocusedMeetingIndex(-1);
         setFeedback("");
     }
@@ -66,6 +72,12 @@ function ViewMeetingsPage(props){
         setWhichMeetings(which);
         setFocusedMeetingIndex(-1);
         setFeedback("");
+    }
+
+    function handleAlert(val, participationId, meeting){
+        if(participationId !== -1){
+            dispatch(beginSettingAlert(val, participationId, whichMeetings, meeting));
+        }
     }
 
     return (
@@ -93,12 +105,12 @@ function ViewMeetingsPage(props){
                         <div onClick={handleCancel} className="leave-feedback-btn">Cancel</div>
                     }
                     {mode === 'PARTICIPANT' && canViewFeedback(meeting, currentUser) &&
-                        <div className="view-feedback-btn">View Feedback</div>
+                        <div onClick={()=>dispatch(setIsViewingFeedback(true, meeting.id))} className="view-feedback-btn">View Feedback</div>
                     }
                     {alertIsActivated(meeting, currentUser) ?
-                        <div className="deactivate-alert-btn">Turn Off Alert</div>
+                        <div onClick={()=>handleAlert(false, getParticipationId(meeting, currentUser), meeting)} className="deactivate-alert-btn">Turn Off Alert</div>
                         :
-                        <div className="activate-alert-btn">Turn On Alert</div>
+                        <div onClick={()=>handleAlert(true, getParticipationId(meeting, currentUser), meeting)} className="activate-alert-btn">Turn On Alert</div>
                     }
                     </div>
                     {/*********************************/}
@@ -113,7 +125,7 @@ function ViewMeetingsPage(props){
                     {i === focusedMeetingIndex &&
                     <div className="meeting-box-item">
                         <div className="meeting-item-label"></div>
-                        <button onClick={()=>handleSubmit()} className="submit-btn">Submit</button>
+                        <button onClick={()=>handleSubmit(getParticipationId(meeting, currentUser))} className="submit-btn">Submit</button>
                     </div>
                     }
                     <div className="meeting-box-item">
@@ -162,12 +174,12 @@ function ViewMeetingsPage(props){
                             <div onClick={handleCancel} className="leave-feedback-btn">Cancel</div>
                         }
                         {mode === 'PARTICIPANT' && canViewFeedback(meeting, currentUser) &&
-                            <div className="view-feedback-btn">View Feedback</div>
+                            <div onClick={()=>dispatch(setIsViewingFeedback(true, meeting.id))} className="view-feedback-btn">View Feedback</div>
                         }
                         {alertIsActivated(meeting, currentUser) ?
-                            <div className="deactivate-alert-btn">Turn Off Alert</div>
-                            :
-                            <div className="activate-alert-btn">Turn On Alert</div>
+                        <div onClick={()=>handleAlert(false, getParticipationId(meeting, currentUser), meeting)} className="deactivate-alert-btn">Turn Off Alert</div>
+                        :
+                        <div onClick={()=>handleAlert(true, getParticipationId(meeting, currentUser), meeting)} className="activate-alert-btn">Turn On Alert</div>
                         }
                         </div>
                         {/*********************************/}
@@ -182,7 +194,7 @@ function ViewMeetingsPage(props){
                         {i === focusedMeetingIndex &&
                         <div className="meeting-box-item">
                             <div className="meeting-item-label"></div>
-                            <button onClick={()=>handleSubmit()} className="submit-btn">Submit</button>
+                            <button onClick={()=>handleSubmit(getParticipationId(meeting, currentUser))} className="submit-btn">Submit</button>
                         </div>
                         }
                         <div className="meeting-box-item">

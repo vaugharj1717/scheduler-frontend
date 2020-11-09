@@ -9,8 +9,9 @@ import AdminPage from './admin-page/Admin-Page.js';
 import LoginPage from './login-page/Login-Page.js';
 import FilePane from './file-pane/File-Pane.js';
 import UserInfoPane from './user-info-pane/User-Info-Pane.js';
+import FeedbackPane from './feedback-pane/Feedback-Pane.js';
 import {useSelector, useDispatch} from 'react-redux';
-import {beginLoggingOut, setIsViewingMessages, setIsViewingFiles, setIsViewingUser} from './actions.js';
+import {beginLoggingOut, setIsViewingMessages, setIsViewingFiles, setIsViewingUser, setIsViewingFeedback} from './actions.js';
 
 function App() {
   const dispatch = useDispatch();
@@ -21,8 +22,10 @@ function App() {
   let isViewingMessages = useSelector(state => state.isViewingMessages);
   let isViewingFiles = useSelector(state => state.isViewingFiles);
   let isViewingUser = useSelector(state => state.isViewingUser);
+  let isViewingFeedback = useSelector(state => state.isViewingFeedback);
   let userIdOfViewedFiles = useSelector(state => state.userIdOfViewedFiles);
   let userIdOfViewedUser = useSelector(state => state.userIdOfViewedUser);
+  let meetingIdOfFeedback = useSelector(state => state.meetingIdOfFeedback);
 
   function logout(){
     dispatch(beginLoggingOut());
@@ -63,6 +66,9 @@ function App() {
       }
       {isViewingUser &&
       <UserInfoPane userId={userIdOfViewedUser} />
+      }
+      {isViewingFeedback &&
+      <FeedbackPane meetingId={meetingIdOfFeedback} />
       }
         <Switch>
 

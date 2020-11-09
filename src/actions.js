@@ -35,6 +35,7 @@ export const Action = Object.freeze({
     SetIsViewingMessages: "SetIsViewingMessages",
     SetIsViewingFiles: "SetIsViewingFiles",
     SetIsViewingUser: "SetIsViewingUser",
+    SetIsViewingFeedback: "SetIsViewingFeedback",
     GetRecipients: "GetRecipients",
     GetUserFiles: "GetUserFiles",
     DeleteFile: "DeleteFile",
@@ -43,6 +44,8 @@ export const Action = Object.freeze({
     UpdateUserInfo: "UpdateUserInfo",
     GetUpcomingMeetingsForUser: "GetUpcomingMeetingsForUser",
     GetPastMeetingsForUser: "GetPastMeetingsForUser",
+    SetAlert: "SetAlert",
+    GetFeedback: "GetFeedback",
 });
 
 export const host = 'http://localhost:8444';
@@ -686,7 +689,7 @@ export function beginGettingUser(id){
         headers: authHeader()
     };
     return dispatch => {
-        fetch(`${host}/${id}/user`, options)
+        fetch(`${host}/user/getUserWithDepart/${id}`, options)
         .then(checkForErrors)
         .then(response => response.json())
         .then(data => {
@@ -1066,15 +1069,79 @@ export function finishUploadingFile(file){
     }
 }
 
-export function beginSubmittingFeedback(meetingId, participationId, feedback){
+export function beginSubmittingFeedback(feedback, participationId){
     const options = {
         method: "POST",
-        headers: authHeader(),
-        body: feedback,
+        headers: {
+            ...authHeader(),
+            "Content-Type" : "application/json"
+        },
+        body: JSON.stringify({feedback})
     };
-    fetch(`${host}/meeting/participation/${participationId}`, options)
+    fetch(`${host}/participation/setFeedback/${participationId}`, options)
     .then(checkForErrors)
     .catch(err => {
         console.error(err);
     })
+}
+
+export function beginSettingAlert(val, participationId, which, meeting){
+    console.log(participationId);
+    return dispatch => {
+        const options = {
+            method: "PATCH",
+            headers: {
+                ...authHeader(),
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify({alert: val, participationId}),
+        }
+        fetch(`${host}/participation/patchParticipantAlert`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishSettingAlert(val, participationId, which, meeting));
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishSettingAlert(val, participationId, which, meeting){
+    return{
+        type: Action.SetAlert,
+        payload: {val, participationId, which, meeting}
+    }
+}
+
+export function setIsViewingFeedback(val, meetingId){
+    return{
+        type: Action.SetIsViewingFeedback,
+        payload: {val, meetingId}
+    }
+}
+
+export function beginGettingFeedback(meetingId){
+    const options = {
+        headers: authHeader()
+    };
+    return dispatch => {
+        fetch(`${host}/participation/getAllParticipation/${meetingId}`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishGettingFeedback(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function finishGettingFeedback(data){
+    return{
+        type: Action.GetFeedback,
+        payload: data
+    }
 }

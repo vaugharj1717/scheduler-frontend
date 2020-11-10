@@ -52,6 +52,8 @@ function ViewMeetingsPage(props){
     let [focusedMeetingIndex, setFocusedMeetingIndex] = useState(-1);
     let [feedback, setFeedback] = useState("");
 
+    console.log(upcomingMeetings);
+
     useEffect(()=>{
         dispatch(beginGettingUpcomingMeetingsForUser(currentUser.id));
         dispatch(beginGettingPastMeetingsForUser(currentUser.id));

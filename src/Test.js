@@ -78,6 +78,7 @@ function App() {
             <div>
               <div><Link to='test/meeting-scheduler'>To Meeting Scheduler Page</Link></div> 
               <button onClick={logout}>Logout</button> 
+              <button onClick={()=>viewUserInfo(currentUser.id)}>View User Info</button>
             </div>
             }  
 
@@ -85,6 +86,7 @@ function App() {
             <div>
               <div><Link to='test/admin'>To Admin Page</Link></div> 
               <button onClick={logout}>Logout</button> 
+              <button onClick={()=>viewUserInfo(currentUser.id)}>View User Info</button>
             </div>
             }  
 
@@ -93,6 +95,7 @@ function App() {
               {showUnseenMessagesNotifier && <div>True</div>}
               {!showUnseenMessagesNotifier && <div>False</div>}
               <button onClick={viewMessages}>View Messages</button>
+              <button onClick={()=>viewUserInfo(currentUser.id)}>View User Info</button>
               <div><Link to='test/participant'>To Participant Page</Link></div> 
               <button onClick={logout}>Logout</button>
               

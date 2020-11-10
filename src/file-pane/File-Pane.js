@@ -40,7 +40,7 @@ function FilePane(props) {
                 <div onClick={handleGoToUserInfo} className="user-info-link">See user info</div>
                 {(currentUser.id === userId || currentUser.role === 'SCHEDULER') &&
                 <div>
-                    <input onChange={(e)=>{handleFileUpload(currentUser.id, e)}}type="file" id="upload-file"></input>
+                    <input onChange={(e)=>{handleFileUpload(userId, e)}}type="file" id="upload-file"></input>
                     <label htmlFor="upload-file" className="upload-file-label">Add File</label>
                 </div>
                 }

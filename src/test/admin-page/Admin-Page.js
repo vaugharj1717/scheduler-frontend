@@ -3,7 +3,7 @@ import './Admin-Page.css';
 import {Switch, Route, Link} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
 import {beginGettingUsers, beginGettingLocations, beginGettingDepartments, beginDeletingLocation, beginDeletingUser,
-beginDeletingDepartment, beginCreatingUser, beginCreatingLocation, beginCreatingDepartment, beginChangingRole} from '../actions.js';
+beginDeletingDepartment, beginCreatingUser, beginCreatingLocation, beginCreatingDepartment, beginChangingRole} from '../../actions.js';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import {makeStyles, createMuiTheme} from "@material-ui/core/styles";

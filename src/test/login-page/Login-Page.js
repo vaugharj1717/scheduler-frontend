@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {beginLoggingOut, beginRegistering, beginLoggingIn} from '../actions.js';
+import {beginLoggingOut, beginRegistering, beginLoggingIn} from '../../actions.js';
 import './Login-Page.css';
 
 

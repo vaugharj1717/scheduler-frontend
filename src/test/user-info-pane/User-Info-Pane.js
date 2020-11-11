@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './User-Info-Pane.css';
 import {useSelector, useDispatch} from 'react-redux';
-import {setIsViewingUser, beginGettingUser, setIsViewingFiles, beginUpdatingUserInfo, beginUpdatingPassword} from '../actions.js';
+import {setIsViewingUser, beginGettingUser, setIsViewingFiles, beginUpdatingUserInfo, beginUpdatingPassword} from '../../actions.js';
 
 
 

@@ -3,7 +3,7 @@ import './Meeting-Scheduler-Page.css';
 import {Switch, Route, Link} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
 import {beginDeletingSchedule, beginSavingCandidate, beginDeletingCandidacy, beginGettingDepartments, beginCreatingPosition, beginDeletingPosition,
-    beginGettingPositions, beginGettingCandidates, beginAssigningCandidateToPosition, selectCandidacy, setIsViewingFiles} from '../actions.js';
+    beginGettingPositions, beginGettingCandidates, beginAssigningCandidateToPosition, selectCandidacy, setIsViewingFiles} from '../../actions.js';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import {makeStyles, createMuiTheme} from "@material-ui/core/styles";

@@ -5,7 +5,7 @@ import SentMessage from './components/Sent-Message.js';
 import MessageToSend from './components/Message-To-Send.js';
 import {Switch, Route, Link} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
-import {setIsViewingMessages} from '../actions.js';
+import {setIsViewingMessages} from '../../actions.js';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import {makeStyles, createMuiTheme} from "@material-ui/core/styles";

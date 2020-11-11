@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef} from 'react';
 import './Message-To-Send.css';
-import {beginSendingMessage, beginGettingRecipients} from '../../actions.js';
+import {beginSendingMessage, beginGettingRecipients} from '../../../actions.js';
 import {Switch, Route, Link} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';

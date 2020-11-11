@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import './View-Meetings-Page.css';
-import {setIsViewingFeedback, beginSettingAlert, beginGettingUpcomingMeetingsForUser, beginGettingPastMeetingsForUser, setIsViewingUser, beginSubmittingFeedback} from '../actions.js';
+import {setIsViewingFeedback, beginSettingAlert, beginGettingUpcomingMeetingsForUser, 
+    beginGettingPastMeetingsForUser, setIsViewingUser, beginSubmittingFeedback} from '../../actions.js';
 
 import moment from 'moment';
 import MomentUtils from "@date-io/moment";

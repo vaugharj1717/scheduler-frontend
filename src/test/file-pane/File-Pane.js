@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './File-Pane.css';
 import {useSelector, useDispatch} from 'react-redux';
-import {host, setIsViewingFiles, setIsViewingUser, beginGettingFiles, beginDeletingFile, beginUploadingFile} from '../actions.js';
+import {host, setIsViewingFiles, setIsViewingUser, beginGettingFiles, beginDeletingFile, beginUploadingFile} from '../../actions.js';
 
 
 

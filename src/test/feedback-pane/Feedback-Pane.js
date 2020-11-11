@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './Feedback-Pane.css';
 import {useSelector, useDispatch} from 'react-redux';
-import {beginGettingFeedback, setIsViewingFeedback} from '../actions.js';
+import {beginGettingFeedback, setIsViewingFeedback} from '../../actions.js';
 
 
 

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {Switch, Route, Link} from 'react-router-dom';
 import './View-Schedule-Page.css';
-import {beginDeletingMeeting, beginCreatingMeeting, beginGettingSchedule, beginGettingLocations, beginGettingParticipants} from '../actions.js';
+import {beginDeletingMeeting, beginCreatingMeeting, beginGettingSchedule, 
+    beginGettingLocations, beginGettingParticipants} from '../../actions.js';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import moment from 'moment';

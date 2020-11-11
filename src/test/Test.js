@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import './App.css';
 import {Switch, Route, Link, Redirect} from 'react-router-dom';
+// import './Test.css'
 import MeetingSchedulerPage from './meeting-scheduler-page/Meeting-Scheduler-Page.js';
 import MessagingPane from './messaging-pane/Messaging-Pane.js';
 import ViewSchedulePage from './view-schedule-page/View-Schedule-Page.js';
@@ -11,7 +11,7 @@ import FilePane from './file-pane/File-Pane.js';
 import UserInfoPane from './user-info-pane/User-Info-Pane.js';
 import FeedbackPane from './feedback-pane/Feedback-Pane.js';
 import {useSelector, useDispatch} from 'react-redux';
-import {beginLoggingOut, setIsViewingMessages, setIsViewingFiles, setIsViewingUser, setIsViewingFeedback} from './actions.js';
+import {beginLoggingOut, setIsViewingMessages, setIsViewingFiles, setIsViewingUser, setIsViewingFeedback} from '../actions.js';
 
 function App() {
   const dispatch = useDispatch();

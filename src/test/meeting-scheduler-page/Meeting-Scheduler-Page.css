@@ -1,21 +1,4 @@
-body {
-    background-color: #0e1826;
-    margin-top: 0px;
-    margin-left: 3%;
-    margin-right: 3%;
-  }
-  
-  h1 {
-    color: #f2f2f2;
-  }
-  
-  .b {
-    font-family: 'Open Sans', sans-serif;
-  }
-  
-  u{
-    cursor: pointer;
-  }
+
   
   #menu-nav {
     position: fixed;

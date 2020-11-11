@@ -2,19 +2,21 @@ import React, {useState} from 'react';
 import './App.css';
 import {Switch, Route, Link, Redirect} from 'react-router-dom';
 import Test from './test/Test.js';
+import LoginPage from './login-page/Login-Page.js';
+import {beginLoggingOut} from './actions.js'
 import {useSelector, useDispatch} from 'react-redux';
 
 function App() {
   const dispatch = useDispatch();
   let currentUser = useSelector(state => state.currentUser)
-
+  
   {/* If user is not logged in... */}
   if(currentUser == null){
     return(
       <div>
         <Switch>
           <Route exact path="/login">
-            {/* <LoginPage /> goes here */}
+            <LoginPage />
           </Route>
 
           {/* Redirect user to /login if not logged in */}
@@ -65,6 +67,17 @@ function App() {
               {/* <ComponentGoesHere mode='ADMIN' /> */}
             </div>
             }
+          </Route>
+
+          {/*Logout URL. Only here for development purposes (visit this URL manually to logout) */}
+          {/*Can be deleted as soon as the actual logout button is implemented, but we need a way to logout until then */}
+          <Route exact path ='/logout'>
+            <div style={{color: 'red', cursor: 'pointer'}} onClick={()=>dispatch(beginLoggingOut())}>LOGOUT</div>
+          </Route>
+
+          {/*Redirect to home page if no URL match */}
+          <Route path="/">
+            <Redirect to="/"></Redirect>
           </Route>
     </Switch>
     </div>

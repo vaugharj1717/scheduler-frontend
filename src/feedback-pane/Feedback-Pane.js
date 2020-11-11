@@ -21,15 +21,18 @@ function FeedbackPane(props) {
             <div id="feedback-pane-header">Feedback</div>
             <div onClick={()=> dispatch(setIsViewingFeedback(false))} id="feedback-pane-exit">X</div>
             <div id="feedback-pane-container">
-                {feedback.map((feedback, i) => 
-                    <div key={i} className="feedback-item">
-                    {feedback.feedback !== null && feedback.feedback !== '' &&
-                        <div className="feedback-label"><b>{feedback.participant.name}</b> says:</div>
-                    }
-                    {feedback.feedback !== null && feedback.feedback !== '' &&
-                        <div className="feedback-text">{feedback.feedback}</div>
-                    }
-                    </div>
+                {feedback.map((feedback, i) => {
+                    if (feedback.feedback !== null && feedback.feedback !== ''){
+                    return (
+                        <div key={i} className="feedback-item">
+                            <div className="feedback-label"><b>{feedback.participant.name}</b> says:</div>
+                        
+                            <div className="feedback-text">{feedback.feedback}</div>
+                        </div>
+                    )} else return (
+                        <div></div>
+                    )
+                }
                 )}
             </div>
         </div>

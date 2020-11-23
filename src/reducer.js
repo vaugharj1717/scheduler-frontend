@@ -7,6 +7,13 @@ function meetingSorter(x, y){
     else return -1;
 }
 
+function meetingSorterDesc(x, y){
+    if(x.startTime < y.startTime){
+        return 1;
+    }
+    else return -1;
+}
+
 const initialState = {
     positions: [],
     candidates: [],
@@ -14,6 +21,7 @@ const initialState = {
     locations: [],
     currentSchedule: {},
     currentCandidacy: {},
+    currentPosition: {},
     participants: [],
     users: [],
     currentUser: null,
@@ -32,10 +40,30 @@ const initialState = {
     pastMeetings: [],
     upcomingMeetings: [],
     feedback: [],
+    isSpinning: false,
+    errorMessage: "",
+    selectedUser: null,
+    isCreatingMeeting: false,
 };
 
 function reducer(state = initialState, action){
     switch (action.type) {
+        case Action.SetErrorMessage:
+            return{
+                ...state,
+                errorMessage: action.payload
+            }
+        case Action.SetCreatingMeeting:
+            return{
+                ...state,
+                isCreatingMeeting: action.payload,
+            }
+        case Action.SetSpinner:
+            return{
+                ...state,
+                isSpinning: action.payload,
+                errorMessage: action.payload === true ? "" : state.errorMessage,
+            }
         case Action.SetAlert:
             if(action.payload.which === 'upcoming'){
                 return{
@@ -77,20 +105,23 @@ function reducer(state = initialState, action){
                     })
             }
         case Action.GetUpcomingMeetingsForUser:
+            let sortedMeetings = action.payload.sort(meetingSorter);
             return{
                 ...state,
-                upcomingMeetings: action.payload
+                upcomingMeetings: sortedMeetings
+            }
+        case Action.GetPastMeetingsForUser:
+            let sortedMeetingsDesc = action.payload.sort(meetingSorterDesc);
+            return{
+                ...state,
+                pastMeetings: sortedMeetingsDesc
             }
         case Action.GetFeedback:
             return{
                 ...state,
                 feedback: action.payload
             }
-        case Action.GetPastMeetingsForUser:
-            return{
-                ...state,
-                pastMeetings: action.payload
-            }
+        
         case Action.GetRecipients:
             return{
                 ...state,
@@ -121,6 +152,7 @@ function reducer(state = initialState, action){
                 isViewingFeedback: false,
                 userIdOfViewedUser: null,
                 meetingIdOfFeedback: null,
+                errorMessage: "",
             }
         case Action.SetIsViewingFeedback:
             return{
@@ -132,6 +164,7 @@ function reducer(state = initialState, action){
                 isViewingUser: false,
                 isViewingMessages: false,
                 userIdOfViewedUser: null,
+                errorMessage: "",
             }
         case Action.SetIsViewingFiles:
             return{
@@ -143,6 +176,7 @@ function reducer(state = initialState, action){
                 isViewingFeedback: false,
                 userIdOfViewedUser: null,
                 meetingIdOfFeedback: null,
+                errorMessage: "",
             }
         case Action.UpdateUserInfo:
             return{
@@ -160,6 +194,13 @@ function reducer(state = initialState, action){
                 isViewingFeedback: false,
                 userIdOfViewedFiles: null,
                 meetingIdOfFeedback: null,
+            }
+        case Action.SetCandidateAlert:
+            return{
+                ...state,
+                viewedUser: {...state.viewedUser, alert: action.payload},
+                currentUser: {...state.currentUser, alert: action.payload}
+
             }
         case Action.GetMessages:
             let showUnseenMessages = false;
@@ -301,9 +342,14 @@ function reducer(state = initialState, action){
         case Action.SelectCandidacy:
             return{
                 ...state,
-                currentCandidacy: {...action.payload}
+                currentCandidacy: {...action.payload.candidacy},
+                currentPosition: {...action.payload.position}
             }
-
+        case Action.SelectUser:
+            return{
+                ...state,
+                selectedUser: action.payload
+            }
         case Action.GetSchedule:
             return{
                 ...state,

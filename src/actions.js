@@ -46,17 +46,27 @@ export const Action = Object.freeze({
     GetPastMeetingsForUser: "GetPastMeetingsForUser",
     SetAlert: "SetAlert",
     GetFeedback: "GetFeedback",
+    SetSpinner: "SetSpinner",
+    SetErrorMessage: "SetErrorMessage",
+    SetCandidateAlert: "SetCandidateAlert",
+    SelectUser: "SelectUser",
+    SetCreatingMeeting: "SetCreatingMeeting",
 });
 
 export const host = 'http://localhost:8444';
 //export const host = 'http://167.172.158.78:8444';
-function checkForErrors(response){
+async function checkForErrors(response){
     if(response.status >= 200 && response.status < 300){
         return response;
     }
     else{
-        console.log('error');
-        throw Error(`${response.status}: ${response.statusText}`)
+        let jsonResponse = await response.json();
+        if(jsonResponse.message !== undefined && jsonResponse.message !== null){
+            throw Error(`${jsonResponse.message}`);
+        }
+        else{
+            throw Error(`There was an error processing your request`);
+        }
     } 
 }
 
@@ -69,6 +79,7 @@ export function beginLoggingIn(email, password){
         body: JSON.stringify({email, password}),
     }
     return dispatch => {
+        dispatch(setSpinner(true));
         fetch(`${host}/auth/login`, options)
         .then(checkForErrors)
         .then(response => response.json())
@@ -77,10 +88,14 @@ export function beginLoggingIn(email, password){
                 console.log("Logged in successfully");
                 localStorage.setItem("user", JSON.stringify(data));
                 dispatch(finishLoggingIn(data));
+                dispatch(setErrorMessage(""));
             }
         })
         .catch(err => {
-            console.log("Log in failure");
+            dispatch(setErrorMessage("Login failed."));
+        })
+        .finally(result => {
+            dispatch(setSpinner(false));
         })
     }
 }
@@ -115,6 +130,7 @@ export function beginRegistering(email, password){
         body: JSON.stringify({email, password}),
     }
     return dispatch => {
+        dispatch(setSpinner(true));
         fetch(`${host}/auth/register`, options)
         .then(checkForErrors)
         .then(response => response.json())
@@ -125,6 +141,7 @@ export function beginRegistering(email, password){
         .catch(err => {
             console.log(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -140,6 +157,7 @@ export function beginGettingPositions(){
         headers: authHeader()
     };
     return dispatch => {
+        dispatch(setSpinner(true));
         fetch(`${host}/position`, options)
         .then(checkForErrors)
         .then(response => response.json())
@@ -149,6 +167,7 @@ export function beginGettingPositions(){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -165,6 +184,7 @@ export function beginGettingUpcomingMeetingsForUser(id){
         headers: authHeader()
     };
     return dispatch => {
+        dispatch(setSpinner(true));
         fetch(`${host}/meeting/${id}/getUpcoming`, options)
         .then(checkForErrors)
         .then(response => response.json())
@@ -175,6 +195,7 @@ export function beginGettingUpcomingMeetingsForUser(id){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -190,6 +211,7 @@ export function beginGettingPastMeetingsForUser(id){
         headers: authHeader()
     };
     return dispatch => {
+        dispatch(setSpinner(true));
         fetch(`${host}/meeting/${id}/getPast`, options)
         .then(checkForErrors)
         .then(response => response.json())
@@ -199,6 +221,7 @@ export function beginGettingPastMeetingsForUser(id){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -214,6 +237,7 @@ export function beginGettingParticipants(){
         headers: authHeader()
     };
     return dispatch => {
+        dispatch(setSpinner(true));
         fetch(`${host}/user/participant`, options)
         .then(checkForErrors)
         .then(response => response.json())
@@ -223,6 +247,7 @@ export function beginGettingParticipants(){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -238,6 +263,7 @@ export function beginGettingSchedule(scheduleId){
         headers: authHeader()
     };
     return dispatch => {
+        dispatch(setSpinner(true));
         fetch(`${host}/schedule/${scheduleId}`, options)
         .then(checkForErrors)
         .then(response => response.json())
@@ -247,6 +273,7 @@ export function beginGettingSchedule(scheduleId){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -262,6 +289,7 @@ export function beginGettingCandidates(){
         headers: authHeader()
     };
     return dispatch => {
+        dispatch(setSpinner(true));
         fetch(`${host}/user/candidate`, options)
         .then(checkForErrors)
         .then(response => response.json())
@@ -271,6 +299,7 @@ export function beginGettingCandidates(){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -331,6 +360,7 @@ export function finishGettingDepartments(data){
 
 export function beginDeletingCandidacy(candidacyId){
     return dispatch => {
+        dispatch(setSpinner(true));
         const options = {
             method: "DELETE",
             headers: authHeader(),
@@ -347,6 +377,7 @@ export function beginDeletingCandidacy(candidacyId){
             console.log("error");
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -359,6 +390,7 @@ export function finishDeletingCandidacy(candidacyId){
 
 export function beginSavingCandidate(positionId, name, email){
     return dispatch => {
+        dispatch(setSpinner(true));
         const options = {
             method: "Post",
             headers: {
@@ -377,6 +409,7 @@ export function beginSavingCandidate(positionId, name, email){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -389,6 +422,7 @@ export function finishSavingCandidate(candidacy){
 
 export function beginCreatingPosition(positionName, departmentId){
     return dispatch => {
+        dispatch(setSpinner(true));
         const options = {
             method: "POST",
             headers: {
@@ -407,6 +441,7 @@ export function beginCreatingPosition(positionName, departmentId){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -419,6 +454,7 @@ export function finishCreatingPosition(position){
 
 export function beginAssigningCandidateToPosition(positionId, candidateId){
     return dispatch => {
+        dispatch(setSpinner(true));
         const options = {
             method: "Post",
             headers: {
@@ -436,6 +472,7 @@ export function beginAssigningCandidateToPosition(positionId, candidateId){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -448,6 +485,7 @@ export function finishAssigningCandidateToPosition(candidacy){
 
 export function beginDeletingSchedule(scheduleId){
     return dispatch => {
+        dispatch(setSpinner(true));
         const options = {
             method: "DELETE",
             headers: {
@@ -465,6 +503,7 @@ export function beginDeletingSchedule(scheduleId){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -477,6 +516,7 @@ export function finishDeletingSchedule(scheduleId){
 
 export function beginDeletingPosition(positionId){
     return dispatch => {
+        dispatch(setSpinner(true));
         const options = {
             method: "DELETE",
             headers: {
@@ -494,6 +534,7 @@ export function beginDeletingPosition(positionId){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -504,16 +545,17 @@ export function finishDeletingPosition(positionId){
     }
 }
 
-export function selectCandidacy(candidacy){
+export function selectCandidacy(candidacy, position){
     return{
         type: Action.SelectCandidacy,
-        payload: candidacy,
+        payload: {candidacy, position},
     }
 }
 
 export function beginCreatingMeeting(scheduleId, locationId, meetingType, startTime, endTime, participations){
     console.log(meetingType);
     return dispatch => {
+        dispatch(setSpinner(true));
         const options = {
             method: "Post",
             headers: {
@@ -528,10 +570,14 @@ export function beginCreatingMeeting(scheduleId, locationId, meetingType, startT
         .then(data => {
             console.log(data);
             dispatch(finishCreatingMeeting(data))
+            dispatch(setCreatingMeeting(false));
+            dispatch(setErrorMessage(""));
         })
         .catch(err => {
-            console.error(err);
+            console.log(err.message);
+            dispatch(setErrorMessage(err.message));
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -544,6 +590,7 @@ export function finishCreatingMeeting(meeting){
 
 export function beginDeletingMeeting(meetingId){
     return dispatch => {
+        dispatch(setSpinner(true));
         const options = {
             method: "DELETE",
             headers: {
@@ -561,6 +608,7 @@ export function beginDeletingMeeting(meetingId){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -574,6 +622,7 @@ export function finishDeletingMeeting(data){
 
 export function beginCreatingDepartment(departmentName){
     return dispatch => {
+        dispatch(setSpinner(true));
         const options = {
             method: "Post",
             headers: {
@@ -591,6 +640,7 @@ export function beginCreatingDepartment(departmentName){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -604,6 +654,7 @@ export function finishCreatingDepartment(data){
 export function beginCreatingUser(name, email, role){
     console.log(`NAME: ${name}, EMAIL: ${email}, ROLE: ${role}`);
     return dispatch => {
+        dispatch(setSpinner(true));
         const options = {
             method: "Post",
             headers: {
@@ -621,6 +672,7 @@ export function beginCreatingUser(name, email, role){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -633,6 +685,7 @@ export function finishCreatingUser(data){
 
 export function beginCreatingLocation(buildingName, roomNumber){
     return dispatch => {
+        dispatch(setSpinner(true));
         const options = {
             method: "Post",
             headers: {
@@ -650,6 +703,7 @@ export function beginCreatingLocation(buildingName, roomNumber){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -689,6 +743,7 @@ export function beginGettingUser(id){
         headers: authHeader()
     };
     return dispatch => {
+        dispatch(setSpinner(true));
         fetch(`${host}/user/getUserWithDepart/${id}`, options)
         .then(checkForErrors)
         .then(response => response.json())
@@ -698,6 +753,7 @@ export function beginGettingUser(id){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -710,6 +766,7 @@ export function finishGettingUser(data){
 
 export function beginDeletingDepartment(departmentId){
     return dispatch => {
+        dispatch(setSpinner(true));
         const options = {
             method: "DELETE",
             headers: {
@@ -727,6 +784,7 @@ export function beginDeletingDepartment(departmentId){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)))
     }
 }
 
@@ -739,6 +797,7 @@ export function finishDeletingDepartment(data){
 
 export function beginDeletingLocation(locationId){
     return dispatch => {
+        dispatch(setSpinner(true));
         const options = {
             method: "DELETE",
             headers: {
@@ -756,6 +815,7 @@ export function beginDeletingLocation(locationId){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -768,6 +828,7 @@ export function finishDeletingLocation(data){
 
 export function beginDeletingUser(userId){
     return dispatch => {
+        dispatch(setSpinner(true));
         const options = {
             method: "DELETE",
             headers: {
@@ -785,6 +846,7 @@ export function beginDeletingUser(userId){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -797,6 +859,7 @@ export function finishDeletingUser(data){
 
 export function beginChangingRole(userId, role){
     return dispatch => {
+        dispatch(setSpinner(true));
         const options = {
             method: "PATCH",
             headers: {
@@ -814,6 +877,8 @@ export function beginChangingRole(userId, role){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
+
     }
 }
 
@@ -825,8 +890,8 @@ export function finishChangingRole(data){
 }
 
 export function beginUpdatingUserInfo(userId, address, phone, university, bio){
-    console.log("here1");
     return dispatch => {
+        dispatch(setSpinner(true));
         const options = {
             method: "PATCH",
             headers: {
@@ -844,6 +909,8 @@ export function beginUpdatingUserInfo(userId, address, phone, university, bio){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
+
     }
 }
 
@@ -855,8 +922,8 @@ export function finishUpdatingUserInfo(data){
 }
 
 export function beginUpdatingPassword(userId, oldPassword, newPassword, newPassword2){
-    console.log("here1");
     return dispatch => {
+        dispatch(setSpinner(true));
         const options = {
             method: "POST",
             headers: {
@@ -869,11 +936,16 @@ export function beginUpdatingPassword(userId, oldPassword, newPassword, newPassw
         .then(checkForErrors)
         .then(response => response.json())
         .then(data => {
-            dispatch(finishUpdatingPassword("Password successfully changed"));
+            // dispatch(finishUpdatingPassword("Password successfully changed"));
+            console.log("in success");
+            dispatch(setErrorMessage("Password change successful"));
         })
         .catch(err => {
-            console.error(err);
+            console.log(err.message);
+            console.log(err.stack);
+            dispatch(setErrorMessage(err.message));
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -970,6 +1042,7 @@ export function beginGettingFiles(userId){
         }
     }
     return dispatch => {
+        dispatch(setSpinner(true));
         fetch(`${host}/user/${userId}/files`, options)
         .then(checkForErrors)
         .then(response => response.json())
@@ -979,6 +1052,7 @@ export function beginGettingFiles(userId){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -997,15 +1071,17 @@ export function beginDeletingFile(fileId){
         }
     }
     return dispatch => {
+        dispatch(setSpinner(true));
         fetch(`${host}/user/deleteFile/${fileId}`, options)
         .then(checkForErrors)
-            .then(response => response.json())
-            .then(data => {
-                dispatch(finishDeletingFile(fileId))
-            })
-            .catch(err => {
-                console.error(err);
-            })
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishDeletingFile(fileId))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -1046,6 +1122,7 @@ export function finishGettingRecipients(data){
 
 export function beginUploadingFile(id, formData){
     return dispatch => {
+        dispatch(setSpinner(true));
         const options = {
             method: "POST",
             headers: authHeader(),
@@ -1059,6 +1136,8 @@ export function beginUploadingFile(id, formData){
         })
         .catch(err => {
         })
+        .finally(result => dispatch(setSpinner(false)));
+
     }
 }
 
@@ -1070,24 +1149,29 @@ export function finishUploadingFile(file){
 }
 
 export function beginSubmittingFeedback(feedback, participationId){
-    const options = {
+    return dispatch => {
+        dispatch(setSpinner(true));
+        const options = {
         method: "POST",
         headers: {
             ...authHeader(),
             "Content-Type" : "application/json"
         },
         body: JSON.stringify({feedback})
-    };
-    fetch(`${host}/participation/setFeedback/${participationId}`, options)
-    .then(checkForErrors)
-    .catch(err => {
-        console.error(err);
-    })
+        };
+        fetch(`${host}/participation/setFeedback/${participationId}`, options)
+        .then(checkForErrors)
+        .catch(err => {
+            console.error(err);
+        })
+        .finally(result => dispatch(setSpinner(false)));
+    }
 }
 
 export function beginSettingAlert(val, participationId, which, meeting){
     console.log(participationId);
     return dispatch => {
+        dispatch(setSpinner(true));
         const options = {
             method: "PATCH",
             headers: {
@@ -1105,6 +1189,7 @@ export function beginSettingAlert(val, participationId, which, meeting){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
     }
 }
 
@@ -1127,6 +1212,7 @@ export function beginGettingFeedback(meetingId){
         headers: authHeader()
     };
     return dispatch => {
+        dispatch(setSpinner(true));
         fetch(`${host}/participation/getAllParticipation/${meetingId}`, options)
         .then(checkForErrors)
         .then(response => response.json())
@@ -1136,6 +1222,8 @@ export function beginGettingFeedback(meetingId){
         .catch(err => {
             console.error(err);
         })
+        .finally(result => dispatch(setSpinner(false)));
+
     }
 }
 
@@ -1143,5 +1231,64 @@ export function finishGettingFeedback(data){
     return{
         type: Action.GetFeedback,
         payload: data
+    }
+}
+
+export function setSpinner(val){
+    return{
+        type: Action.SetSpinner,
+        payload: val,
+    }
+}
+
+export function setErrorMessage(msg){
+    return{
+        type: Action.SetErrorMessage,
+        payload: msg,
+    }
+}
+
+export function setCandidateAlerts(id, val){
+    const options = {
+        method: "PATCH",
+        headers: {
+            "Content-Type" : "application/json"
+        },
+        body: JSON.stringify({value: val}),
+    }
+    return dispatch => {
+        dispatch(setSpinner(true));
+        fetch(`${host}/user/${id}/setAlerts`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishSettingCandidateAlert(val));
+        })
+        .catch(err => {
+        })
+        .finally(result => {
+            dispatch(setSpinner(false));
+        })
+    }
+}
+
+export function finishSettingCandidateAlert(val){
+    return{
+        type: Action.SetCandidateAlert,
+        payload: val
+    }
+}
+
+export function selectUser(user){
+    return{
+        type: Action.SelectUser,
+        payload: user
+    }
+}
+
+export function setCreatingMeeting(val){
+    return{
+        type: Action.SetCreatingMeeting,
+        payload: val
     }
 }

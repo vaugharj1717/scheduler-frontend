@@ -5,12 +5,14 @@ import {useSelector, useDispatch} from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import {makeStyles, createMuiTheme} from "@material-ui/core/styles";
+import {setIsViewingUser} from '../../../actions.js';
 import moment from 'moment';
 
 
 
 
 export default function ReceivedMessage(props) {
+    let dispatch = useDispatch();
     let message = props.message;
 
     function wasSentToday(message){
@@ -21,11 +23,11 @@ export default function ReceivedMessage(props) {
         <div className="received-message-root">
             {wasSentToday(message) ?
             <div className="received-message-header">
-                Sent by <b>{message.sender.name}</b> at <b>{new moment(message.sentTime).utcOffset('+0000').format('hh:mmA')}</b>
+                Sent by <b className="message-receive-name" onClick={() => dispatch(setIsViewingUser(true, message.sender.id))}>{message.sender.name}</b> at <b>{new moment(message.sentTime).utcOffset('+0000').format('hh:mmA')}</b>
             </div>
             :
             <div className="received-message-header">
-                Sent by <b>{message.sender.name}</b> on <b>{new moment(message.sentTime).utcOffset('+0000').format('MM/DD hh:mmA')}</b>
+                Sent by <b className="message-receive-name" onClick={() => dispatch(setIsViewingUser(true, message.sender.id))}>{message.sender.name}</b> on <b>{new moment(message.sentTime).utcOffset('+0000').format('MM/DD hh:mmA')}</b>
             </div>
             }
             <div className="received-message-body">

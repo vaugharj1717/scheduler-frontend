@@ -1,5 +1,8 @@
 .meetings-page-root{
-    
+    background-image: linear-gradient( rgba(0, 0, 0, 0.3), rgba(156, 66, 66, 0.3) ), url("../uwec2.jpg");
+    background-size: cover;
+    min-height: 100vh;
+
 }
 
 .meetings-page-header{
@@ -8,9 +11,11 @@
     text-align: center;
     color: white;
     cursor: default;
-    margin-top: 40px;
+    padding-top: 70px;
     font-size: 40px;
     font-family: sans-serif;
+    text-shadow: 2px 2px 1px black, -2px 2px 1px black, -2px -2px 1px black, 2px -2px 1px black;
+
 }
 
 .meetings-page-header::after{
@@ -28,7 +33,7 @@
     position: relative;
     display: flex;
     width: 75%;
-    color: white;
+    color:rgba(0, 0, 0, .8);
     font-family: sans-serif;
     text-align: center;
     left: 50%;
@@ -38,15 +43,18 @@
 
 .past-meetings-selector, .upcoming-meetings-selector{
     width: 50%;
-    background-color: white;
-    color: black;
+    background-color: rgba(0, 0, 0, .8);
+    color: white;
+    font-family: sans-serif;
     padding: 10px;
-    border-right: 1px solid black;
+    border: 1px solid rgba(255, 255, 255, .9);
     cursor: pointer;
 }
 
 .past-meetings-selector:hover, .upcoming-meetings-selector:hover{
-    background-color: gray;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: black;
+    border: 1px solid black;
 }
 
 .past-meetings-selector{
@@ -61,23 +69,26 @@
 
 .meeting-box-item{
     display: flex;
+    color: white;
+    font-family: sans-serif;
 }
 
 .meeting-item-label{
     width: 200px;
     font-weight: bold;
+    color: white;
+    font-family: sans-serif;
 }
 
-.meeting-box{
+.view-meetings-meeting-box{
     position: relative;
-    background-color: white;
+    background-color: rgba(0, 0, 0, .85);
     padding: 15px;
-    text: black;
-    margin-top: 30px;
+    /* margin-top: 30px; */
     margin-left: 5%;
     margin-right: 5%;
     border-radius: 15px;
-    border: 3px solid black;
+    border: 3px solid rgba(255, 255, 255, .75);
 }
 
 .meeting-candidate, .meeting-participation{
@@ -87,31 +98,34 @@
 }
 
 .meeting-candidate:hover, .meeting-participation:hover{
-    color: gray;
+    color: white;
+    text-decoration: underline;
 }
 
 .meeting-box-feedback-btns-container{
     display: flex;
     position: relative;
     flex-direction: row;
-    width: 300px;
     margin-bottom: 15px;
 }
 
 .leave-feedback-btn, .view-feedback-btn, .activate-alert-btn, .deactivate-alert-btn{
     width: 50%;
+    width: 125px;
+    margin-left: 5px;
     border-radius: 30px;
-    border-right: 1px solid white;
+    border: 1px solid white;
     padding: 10px;
     cursor: pointer;
     text-align: center;
-    background-color: black;
+    background-color: rgba(0,0,0, .3);
     color: white;
     font-family: sans-serif;
 }
 
 .view-feedback-btn:hover, .leave-feedback-btn:hover, .activate-alert-btn:hover, .deactivate-alert-btn:hover{
-    background-color: gray;
+    background-color: white;
+    color: black;
 }
 
 .submit-btn{
@@ -122,4 +136,80 @@
 .feedback-textarea{
     width: 50%;
     height: 125px;
+}
+
+.meetings-date-header{
+    position: relative;
+    color: white;
+    width: 400px;
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 24px;
+    margin-top: 30px;
+    margin-bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 0 5px 0;
+    text-shadow: 2px 2px 1px black, -2px 2px 1px black, -2px -2px 1px black, 2px -2px 1px black;
+    background-color: rgba(0, 0, 0, .75);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, .75);
+
+}
+
+.meetings-page-nothing{
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, .8);
+    color: white;
+    font-family: sans-serif;
+    width: 50%;
+    margin-top: 200px;
+    text-align: center;
+    padding: 20px 0 20px 0;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, .8);
+    cursor: default;
+}
+
+/* .meetings-date-header::after{
+    position: absolute;
+    content:"";
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 25%;
+    min-width: 150px;
+    height: 1px;
+    background-color: white;
+} */
+
+.meetings-page-disclaimer{
+    position: absolute;
+    top: 66px;
+    left: 5px;
+    background-color: rgba(0,0,0,.75);
+    border: 2px solid rgba(255,255,255,.7);
+    border-radius: 5px;
+    color: white;
+    font-family: sans-serif;
+    width: 260px;
+    font-size: 14px;
+    padding: 5px 0 5px 0;
+}
+
+@media only screen and (max-width: 1100px) {
+    .meetings-page-header{
+        font-size: 28px;
+        margin-top: 20px;
+    }
+}
+@media only screen and (max-width: 875px) {
+    .meetings-page-disclaimer{
+
+    }
+    .meetings-page-header{
+        margin-top: 45px;
+    }
 }

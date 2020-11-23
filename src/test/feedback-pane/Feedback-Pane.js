@@ -30,7 +30,7 @@ function FeedbackPane(props) {
                             <div className="feedback-text">{feedback.feedback}</div>
                         </div>
                     )} else return (
-                        <div></div>
+                        <div key={i}></div>
                     )
                 }
                 )}

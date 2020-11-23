@@ -1,3 +1,14 @@
+.schedule-header{
+    margin-top: 80px;
+    color: white;
+    text-align: center;
+}
+
+.schedule-page-title{
+    font-family: sans-serif;
+    font-size: 34px;
+}
+
 .meeting-box{
     background-color: white;
     padding: 15px;
@@ -16,7 +27,7 @@
     transform: translateX(-50%);
     width: 200px;
     color: white;
-    background-color: green;
+    background-color: darkgreen;
     border: 1px solid white;
     cursor: pointer;
 }
@@ -29,7 +40,7 @@
     flex-direction: column;
     margin-left: 5%;
     margin-right: 5%;
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
 .creating-meeting-box::after{
@@ -147,9 +158,10 @@ a:hover{
 .meeting-boxes-header{
     margin-top: 20px;
     position: relative;
-    font-size: 40px;
+    font-size: 24px;
     color: white;
     text-align: center;
+    font-family: sans-serif;
 }
 
 .meeting-boxes-header::after{
@@ -175,4 +187,74 @@ a:hover{
     font-size: 20px;
     color: white;
     text-align: center;
+}
+
+.schedule-candidate:hover{
+    color: lightgray;
+}
+
+/* .to-positions-link-container{
+    display: flex;
+    justify-content: center;
+} */
+.to-positions-link{
+    position: absolute;
+    top: 120px;
+    left: 10px;
+    text-decoration: none;
+}
+
+.meeting-box-participant-name{
+    font-family: sans-serif;
+    color: blue;
+    cursor: pointer;
+}
+
+.meeting-box-participant-name:hover, .meeting-box-participant-name:focus{
+    text-decoration: underline;
+}
+
+.positions-back-arrow{
+    text-decoration: none;
+}
+
+.meeting-date{
+    position: relative;
+    color: white;
+    font-family: sans-serif;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+.scheduler-delete-meeting-btn{
+    border-radius: 10px;
+    border: 1px solid white;
+    cursor: pointer;
+}
+
+/* .meeting-date:after{
+    content:"";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 1px;
+    background-color: white;
+    width: 200px;
+} */
+
+.create-meeting-btn-scheduler-page{
+    background-color: black;
+}
+
+.meeting-creation-error-msg{
+    font-family: sans-serif;
+    color: red;
+}
+
+@media only screen and (max-width: 1000px){
+    .to-positions-link{
+        top: 120px;
+    }
 }

@@ -1,6 +1,6 @@
 #feedback-pane-darken-background{
   position: fixed;
-  background-color: rgba(0, 0, 0, .15);
+  background-color: rgba(0, 0, 0, .5);
   height: 100vh;
   width: 100vw;
   z-index: 99;

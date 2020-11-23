@@ -37,7 +37,7 @@ function FilePane(props) {
             <div id="file-pane-header">Files</div>
             <div onClick={()=> dispatch(setIsViewingFiles(false))} id="file-pane-exit">X</div>
             <div id="file-pane-container">
-                <div onClick={handleGoToUserInfo} className="user-info-link">See user info</div>
+                <div onClick={handleGoToUserInfo} className="files-user-info-link">See user info</div>
                 {(currentUser.id === userId || currentUser.role === 'SCHEDULER') &&
                 <div>
                     <input onChange={(e)=>{handleFileUpload(userId, e)}}type="file" id="upload-file"></input>

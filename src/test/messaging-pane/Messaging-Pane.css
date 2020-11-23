@@ -1,6 +1,6 @@
 #messaging-pane-darken-background{
   position: fixed;
-  background-color: rgba(0, 0, 0, .15);
+  background-color: rgba(0, 0, 0, .25);
   height: 100vh;
   width: 100vw;
   z-index: 99;
@@ -16,14 +16,15 @@
   height: 90vh;
   min-width: 600px;
   min-height: 600px;
-  background-color: white;
-  border: 3px solid black;
+  background-color: rgba(0,0,0,.85);
+  border: 3px solid white;
   border-radius: 20px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 100;
 }
+
 
 #messaging-pane-exit{
   position: absolute;
@@ -46,12 +47,13 @@
   font-size: 30px;
   text-align: center;
   margin-top: 10px;
+  color: white;
 }
 
 #messaging-pane-header::after{
   position: absolute;
   content:"";
-  background-color: black;
+  background-color: white;
   width: 300px;
   height: 1px;
   top: 100%;
@@ -103,4 +105,13 @@
   display: unset;
   background: #aaaaaaaa;
   cursor: pointer;
+}
+
+.messaging-pane-filter{
+  display: flex;
+  margin-top: 15px;
+  margin-left: 25px;
+  background-color: white;
+  width: 50%;
+  padding: 10px;
 }

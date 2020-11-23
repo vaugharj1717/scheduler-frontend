@@ -10,6 +10,7 @@ import LoginPage from './login-page/Login-Page.js';
 import FilePane from './file-pane/File-Pane.js';
 import UserInfoPane from './user-info-pane/User-Info-Pane.js';
 import FeedbackPane from './feedback-pane/Feedback-Pane.js';
+import Spinner from './spinner/Spinner.js';
 import {useSelector, useDispatch} from 'react-redux';
 import {beginLoggingOut, setIsViewingMessages, setIsViewingFiles, setIsViewingUser, setIsViewingFeedback} from '../actions.js';
 
@@ -18,6 +19,8 @@ function App() {
   let currentUser = useSelector(state => state.currentUser)
   // let currentUser = {role: "ADMIN"};
   let candidacy = useSelector(state => state.currentCandidacy);
+  let position = useSelector(state => state.currentPosition);
+  let selectedUser = useSelector(state => state.selectedUser);
   let showUnseenMessagesNotifier = useSelector(state => state.showUnseenMessagesNotifier);
   let isViewingMessages = useSelector(state => state.isViewingMessages);
   let isViewingFiles = useSelector(state => state.isViewingFiles);
@@ -26,7 +29,9 @@ function App() {
   let userIdOfViewedFiles = useSelector(state => state.userIdOfViewedFiles);
   let userIdOfViewedUser = useSelector(state => state.userIdOfViewedUser);
   let meetingIdOfFeedback = useSelector(state => state.meetingIdOfFeedback);
-
+  let isSpinning = useSelector(state => state.isSpinning);
+  // console.log(isSpinning);
+  
   function logout(){
     dispatch(beginLoggingOut());
   }
@@ -44,6 +49,9 @@ function App() {
   if(currentUser == null){
     return(
       <div>
+        {isSpinning &&
+          <Spinner/>
+        }
         <Switch>
           <Route exact path="/test/login">
             <LoginPage/>
@@ -70,16 +78,15 @@ function App() {
       {isViewingFeedback &&
       <FeedbackPane meetingId={meetingIdOfFeedback} />
       }
+      {isSpinning &&
+      <Spinner/>
+      }
         <Switch>
 
           {/*HOME SCREENS*/}
           <Route exact path="/test">
             {currentUser.role == 'SCHEDULER' && 
-            <div>
-              <div><Link to='test/meeting-scheduler'>To Meeting Scheduler Page</Link></div> 
-              <button onClick={logout}>Logout</button> 
-              <button onClick={()=>viewUserInfo(currentUser.id)}>View User Info</button>
-            </div>
+              <Redirect to="/test/meeting-scheduler"/>
             }  
 
             {currentUser.role == 'ADMIN' && 
@@ -91,27 +98,11 @@ function App() {
             }  
 
             {currentUser.role == 'PARTICIPANT' && 
-            <div>
-              {showUnseenMessagesNotifier && <div>True</div>}
-              {!showUnseenMessagesNotifier && <div>False</div>}
-              <button onClick={viewMessages}>View Messages</button>
-              <button onClick={()=>viewUserInfo(currentUser.id)}>View User Info</button>
-              <div><Link to='test/participant'>To Participant Page</Link></div> 
-              <button onClick={logout}>Logout</button>
-              
-            </div>
+            <Redirect to="/test/participant"/>
             }  
 
             {currentUser.role == 'CANDIDATE' && 
-            <div>
-              {showUnseenMessagesNotifier && <div>True</div>}
-              {!showUnseenMessagesNotifier && <div>False</div>}
-              <button onClick={viewMessages}>View Messages</button>
-              <button onClick={()=>viewFiles(currentUser.id)}>View Files</button>
-              <button onClick={()=>viewUserInfo(currentUser.id)}>View User Info</button>
-              <div><Link to='/test/candidate'>To Candidate Page</Link></div> 
-              <button onClick={logout}>Logout</button> `
-            </div>
+            <Redirect to="/test/candidate"/>
             }             
           </Route>
 
@@ -124,9 +115,13 @@ function App() {
             }
           </Route>
 
+          <Route exact path="/test/logout">
+            <button onClick={()=>dispatch(beginLoggingOut())}>Logout</button>
+          </Route>
+
           <Route exact path="/test/meeting-scheduler/view-schedule">
             {currentUser.role == 'SCHEDULER' ?
-            <ViewSchedulePage user={currentUser} candidacy = {candidacy}></ViewSchedulePage>
+            <ViewSchedulePage user={currentUser} candidacy={candidacy} position={position}></ViewSchedulePage>
             :
             <Redirect to="/test"/>
             }
@@ -136,7 +131,7 @@ function App() {
           {/*CANDIDATE*/}
           <Route exact path="/test/candidate">
             {currentUser.role == 'CANDIDATE' ?
-            <ViewMeetingsPage mode='CANDIDATE' user={currentUser} />
+            <ViewMeetingsPage viewingOther={false} mode='CANDIDATE' user={currentUser} />
             :
             <Redirect to="/test"/>
             }
@@ -145,7 +140,7 @@ function App() {
           {/*PARTICIPANT*/}
           <Route exact path="/test/participant">
             {currentUser.role == 'PARTICIPANT' ?
-            <ViewMeetingsPage mode='PARTICIPANT' user={currentUser} />
+            <ViewMeetingsPage viewingOther={false} mode='PARTICIPANT' user={currentUser} />
             :
             <Redirect to="/test"/>
             }
@@ -158,6 +153,15 @@ function App() {
             :
             <Redirect to="/test"/>
             }
+          </Route>
+
+          {/*SEE ALL MEETINGS FOR A USER */}
+          <Route exact path="/test/user/view-all-meetings">
+          {selectedUser !== null ?
+          <ViewMeetingsPage viewingOther={selectedUser.id !== currentUser.id} mode={currentUser.role} user={selectedUser} />
+          :
+          <Redirect to="/test"></Redirect>
+          }
           </Route>
 
           {/*Redirect to home page if no match*/}

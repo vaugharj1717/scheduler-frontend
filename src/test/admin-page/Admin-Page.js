@@ -73,8 +73,10 @@ export default function AdminPage(props){
     }
 
     function handleDeleteDepartment(departmentId){
-        dispatch(beginDeletingDepartment(departmentId));
-        resetPageState();
+        if(window.confirm("Are you sure you want to delete this department?")){
+            dispatch(beginDeletingDepartment(departmentId));
+            resetPageState();
+        }
     }
 
     function handleCreateUser(){
@@ -83,8 +85,10 @@ export default function AdminPage(props){
     }
 
     function handleDeleteUser(userId){
-        dispatch(beginDeletingUser(userId));
-        resetPageState();
+        if(window.confirm("Are you sure you want to delete this user?")){
+            dispatch(beginDeletingUser(userId));
+            resetPageState();
+        }
     }
     
     function handleCreateLocation(){
@@ -93,8 +97,10 @@ export default function AdminPage(props){
     }
 
     function handleDeleteLocation(locationId){
-        dispatch(beginDeletingLocation(locationId));
-        resetPageState();
+        if(window.confirm("Are you sure you want to delete this location?")){
+            dispatch(beginDeletingLocation(locationId));
+            resetPageState();
+        }
     }
 
     function handleNameChange(name){

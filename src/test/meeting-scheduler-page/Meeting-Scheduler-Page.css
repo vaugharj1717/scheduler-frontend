@@ -1,4 +1,9 @@
 
+
+  
+  .meeting-scheduler-page-root{
+    margin: 0 30px 0 30px;
+  }
   
   #menu-nav {
     position: fixed;
@@ -11,9 +16,23 @@
   }
   
   #header {
+    position: relative;
     color: #f2f2f2;
-    margin-top: 10px;
+    margin-top: 75px;
     margin-bottom: 10px;
+    width: 100%;
+    text-align: center;
+  }
+
+  #header:after{
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 1px;
+    width: 50%;
+    background-color: white;
+    content: "";
   }
   
   #page-title {
@@ -21,24 +40,33 @@
     text-transform: uppercase;
     font-family: 'Open Sans Regular', sans-serif;
     font-weight: 400;
-    font-size: 35pt;
+    font-size: 28pt;
     text-align: left;
     
   }
   
   #sorting-label {
+    position: relative;
     color: #f2f2f2;
     text-transform: uppercase;
     font-family: 'Open Sans Regular', sans-serif;
-    text-decoration: underline;
     font-size: 10pt;
+    text-align: center;
+  }
+
+  .sorting-type{
+    text-decoration: underline;
     cursor: pointer;
-    text-align: left;
+  }
+
+  .sorting-dir{
+    cursor: pointer;
+    font-size: 20px;
   }
   
   
   #minimize-trigger {
-    color: #0e1826;
+    color: #0a1420;
     margin-right: 3%;
     font-size: 30pt;
     text-align: right;
@@ -126,10 +154,19 @@
   .cancel-button{background-color: red; color: #f2f2f2;}
   .cancel-button:hover{background-color: darkred;}
 
-  .save-button{cursor: pointer}
-  .save-button:hover{}
+  .save-button{cursor: pointer; background-color: green}
+  .save-button:hover{background-color: darkgreen}
   
+  .top-button{
+    margin-bottom: 20px;
+    margin-left: 10px;
+    border-radius: 5px;
+  }
   .positions-table tr:not(#catagories):hover {background-color:  #152338; color: #f2f2f2;}
+
+  .meeting-scheduler-candidacy-delete-btn:hover, .meeting-scheduler-candidacy-delete-btn:focus{
+    color: gray;
+  }
   
   .positions-button-container {
     align-content: center;
@@ -182,4 +219,27 @@
     opacity: 0;
     position: absolute;
     z-index: -1;
+ }
+
+ .meeting-scheduler-candidate-name{
+   text-decoration: underline;
+   cursor: pointer;
+ }
+ .meeting-scheduler-candidate-name:hover, .meeting-scheduler-candidate-name:focus{
+    text-decoration: underline;
+    color: gray;
+ }
+
+ .meeting-scheduler-manage-attachments-btn:hover, .meeting-scheduler-manage-attachments-btn:focus{
+   color: gray;
+ }
+
+ .position-nothing-to-show{
+   text-align: center;
+   padding: 20px;
+   background-color: #f2f2f2;
+   color: black;
+   font-size: 20px;
+   border-top: 1px solid black;
+   border-bottom: 1px solid black;
  }

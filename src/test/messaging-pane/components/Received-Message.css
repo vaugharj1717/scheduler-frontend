@@ -19,3 +19,11 @@
   margin-top: 10px;
   font-size: 20px;
 }
+
+.message-receive-name{
+  cursor: pointer
+}
+
+.message-receive-name:hover, .message-receive-name:focus{
+  text-decoration: underline;
+}

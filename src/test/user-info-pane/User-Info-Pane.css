@@ -1,6 +1,6 @@
 #user-info-darken-background{
   position: fixed;
-  background-color: rgba(0, 0, 0, .15);
+  background-color: rgba(0, 0, 0, .25);
   height: 100vh;
   width: 100vw;
   z-index: 99;
@@ -15,19 +15,34 @@
     width: 90vw;
     min-width: 700px;
     min-height: 500px;
-    background-color: white;
-    border: 3px solid black;
+    background-color :rgba(0, 0, 0, .9);
+    border: 3px solid  black;
     border-radius: 20px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 100;
   }
+
+#user-info-pane-root:after{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 99.5%;
+  height: 98%;
+  border: 3px solid rgba(255,255,255,.75);
+  border-radius: 15px;
+  background-color: transparent;
+  content:"";
+  pointer-events: none;
+}
+
   
   #user-info-pane-exit{
     position: absolute;
     font-family: sans-serif;
-    color: red;
+    color: white;
     font-size: 30px;
     left: 100%;
     top: 10px;
@@ -45,12 +60,13 @@
     font-size: 30px;
     text-align: center;
     margin-top: 10px;
+    color: white;
   }
   
   #user-info-pane-header::after{
     position: absolute;
     content:"";
-    background-color: black;
+    background-color: white;
     width: 300px;
     height: 1px;
     top: 100%;
@@ -100,6 +116,8 @@
     justify-content: flex-start;
     flex-direction: row;
     margin: 10px;
+    color: white;
+    font-family: sans-serif;
   }
   .user-info-label{
     font-weight: bold;
@@ -118,6 +136,7 @@
 
   .user-info-edit-btn, .user-info-save-btn{
     margin-left: 8px;
+    cursor: pointer;
   }
 
   .user-info-input{
@@ -130,5 +149,12 @@
 
   .change-password-form{
     margin-top: 60px;
+  }
+
+  .password-change-error-msg{
+    width: 100%;
+    text-align: center;
+    color: red;
+    font-family: sans-serif;
   }
   

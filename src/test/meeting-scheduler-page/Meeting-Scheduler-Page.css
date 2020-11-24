@@ -30,28 +30,32 @@
     left: 50%;
     transform: translateX(-50%);
     height: 1px;
-    width: 50%;
+    width: 80%;
     background-color: white;
     content: "";
   }
   
   #page-title {
+    position: relative;
     color: #f2f2f2;
     text-transform: uppercase;
     font-family: 'Open Sans Regular', sans-serif;
     font-weight: 400;
     font-size: 28pt;
     text-align: left;
-    
   }
   
   #sorting-label {
-    position: relative;
+    position: absolute;
     color: #f2f2f2;
     text-transform: uppercase;
     font-family: 'Open Sans Regular', sans-serif;
     font-size: 10pt;
-    text-align: center;
+    text-align: left;
+    left: 102%;
+    top: 92%;
+    transform: translateY(-100%);
+    width: 200px;
   }
 
   .sorting-type{

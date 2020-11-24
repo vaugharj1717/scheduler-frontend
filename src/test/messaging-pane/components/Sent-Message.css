@@ -20,3 +20,10 @@
   margin-top: 10px;
   font-size: 20px;
 }
+
+.message-send-name{
+  cursor:pointer
+}
+.message-send-name:hover, .message-send-name:focus{
+  text-decoration: underline;
+}

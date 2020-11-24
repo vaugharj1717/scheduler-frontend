@@ -12,6 +12,9 @@ import moment from 'moment';
 
 
 export default function MessageToSend(props) {
+    let userToMessage = props.userToMessage;
+    console.log("printing user to message");
+    console.log(userToMessage);
     let dispatch = useDispatch();
     let possibleRecipients = useSelector(state => state.possibleRecipients);
     let [selectedRecipient, setSelectedRecipient] = useState(null);
@@ -21,6 +24,13 @@ export default function MessageToSend(props) {
     useEffect(()=>{
         dispatch(beginGettingRecipients());
     }, [])
+
+    useEffect(()=>{
+        if(userToMessage !== undefined && userToMessage !== null)
+        setSelectedRecipient(userToMessage);
+        else
+        setSelectedRecipient(null);
+    }, [userToMessage]);
 
     function handleSendMessage(){
         if(selectedRecipient !== null && sendMessageBodyRef.current.innerText !== ''){

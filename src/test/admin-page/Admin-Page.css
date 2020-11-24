@@ -6,7 +6,7 @@
     font-family: 'Open Sans Regular', sans-serif;
     font-weight: 400;
     font-size: 35pt;
-    text-align: left;
+    text-align: center;
   }
 
 #admin-nav{
@@ -54,12 +54,14 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    min-height: 600px;
+    height: 600px;
     background-color: white;
     margin-top: 10px;
     justify-content: flex-start;
     align-items: space-evenly;
     border-radius: 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #admin-content-header{
@@ -86,7 +88,7 @@
     z-index: 5;
     position: absolute;
     top: 5px;
-    left: calc(100% - 70px);
+    left: calc(100% - 100px);
     width: 60px;
     cursor: pointer;
     border-radius: 5px;
@@ -116,4 +118,56 @@
 
 .admin-row-info{
     margin-left: 20px;
+}
+
+.admin-user-name{
+    font-family: sans-serif;
+    width: 160px;
+    color: blue;
+    cursor: pointer;
+}
+
+.admin-user-name:hover{
+    text-decoration: underline;
+}
+
+.admin-user-email{
+    width: 220px;
+    font-family: sans-serif;
+}
+
+.admin-user-role{
+    font-family: sans-serif;
+}
+
+.admin-error-msg{
+    text-align: center;
+    font-family: sans-serif;
+    color: red;
+    margin-top: 8px;
+}
+
+.admin-btn-end{
+    margin-top: 5px;
+    margin-right: 2px;
+    margin-left: 2px;
+}
+
+.admin-logout-btn{
+    position: fixed;
+    width: 100px;
+    left: calc(100% - 250px);
+    top: 20px;
+    color: black;
+    font-family: sans-serif;
+    background-color: white;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 20px;
+    border: 2px solid black;
+}
+
+.admin-logout-btn:hover{
+    background-color: darkgray;
 }

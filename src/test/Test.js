@@ -18,9 +18,11 @@ function App() {
   const dispatch = useDispatch();
   let currentUser = useSelector(state => state.currentUser)
   // let currentUser = {role: "ADMIN"};
+  let userToMessage = useSelector(state => state.userToMessage);
   let candidacy = useSelector(state => state.currentCandidacy);
   let position = useSelector(state => state.currentPosition);
   let selectedUser = useSelector(state => state.selectedUser);
+  console.log(selectedUser);
   let showUnseenMessagesNotifier = useSelector(state => state.showUnseenMessagesNotifier);
   let isViewingMessages = useSelector(state => state.isViewingMessages);
   let isViewingFiles = useSelector(state => state.isViewingFiles);
@@ -67,7 +69,7 @@ function App() {
   else return (
     <div className="App">
       {isViewingMessages && 
-      <MessagingPane />
+      <MessagingPane userToMessage = {userToMessage} />
       }
       {isViewingFiles &&
       <FilePane userIdOfViewedFiles={userIdOfViewedFiles}/>
@@ -89,11 +91,9 @@ function App() {
               <Redirect to="/test/meeting-scheduler"/>
             }  
 
-            {currentUser.role == 'ADMIN' && 
+            {(currentUser.role == 'ADMIN' || currentUser.role == 'SUPER_ADMIN') && 
             <div>
-              <div><Link to='test/admin'>To Admin Page</Link></div> 
-              <button onClick={logout}>Logout</button> 
-              <button onClick={()=>viewUserInfo(currentUser.id)}>View User Info</button>
+              <Redirect to="/test/admin"/>
             </div>
             }  
 
@@ -103,7 +103,11 @@ function App() {
 
             {currentUser.role == 'CANDIDATE' && 
             <Redirect to="/test/candidate"/>
-            }             
+            } 
+
+            {currentUser.role == 'DEPARTMENT_ADMIN' && 
+            <Redirect to="/test/department-admin"/>
+            }                
           </Route>
 
           {/*SCHEDULER PAGES*/}
@@ -146,9 +150,26 @@ function App() {
             }
           </Route>
 
+          {/*DEPARTMENT ADMIN*/}
+          <Route exact path="/test/department-admin">
+            {currentUser.role == 'DEPARTMENT_ADMIN' ?
+            <ViewMeetingsPage viewingOther={false} mode='DEPARTMENT_ADMIN' user={currentUser} />
+            :
+            <Redirect to="/test"/>
+            }
+          </Route>
+
+          <Route exact path="/test/department-admin/admin">
+            {currentUser.role == 'DEPARTMENT_ADMIN' ?
+            <AdminPage viewingOther={false} mode='DEPARTMENT_ADMIN' user={currentUser} />
+            :
+            <Redirect to="/test"/>
+            }
+          </Route>
+
           {/*ADMIN PAGES*/}
           <Route exact path="/test/admin">
-            {currentUser.role == 'ADMIN' ?
+            {(currentUser.role == 'ADMIN' || currentUser.role == 'SUPER_ADMIN') ?
             <AdminPage user={currentUser} />
             :
             <Redirect to="/test"/>

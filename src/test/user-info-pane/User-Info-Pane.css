@@ -13,7 +13,7 @@
     display: flex;
     flex-direction: column;
     width: 90vw;
-    min-width: 700px;
+    min-width: 400px;
     min-height: 500px;
     background-color :rgba(0, 0, 0, .9);
     border: 3px solid  black;
@@ -81,6 +81,10 @@
     width: 98%;
     height: calc(100% - 10px);
     margin-top: 10px;
+    margin-bottom: 10px;
+    max-height: 600px;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .user-info-pane-item{
@@ -158,3 +162,6 @@
     font-family: sans-serif;
   }
   
+  .bio-para{
+    margin: 0;
+  }

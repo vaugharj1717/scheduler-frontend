@@ -52,7 +52,11 @@ function FilePane(props) {
                         <a href={`${host}/user/downloadFile/${file.id}`} download className="file-link">Download {file.filename}</a>
                     </div>
                 ))}
+                
             </div>
+            {files.length === 0 &&
+                    <div className="file-pane-nothing">This user has no files uploaded...</div>
+            }
         </div>
         </div>
     )

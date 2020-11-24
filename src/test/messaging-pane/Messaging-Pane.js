@@ -38,6 +38,7 @@ const useStyles = makeStyles({
 function MessagingPane(props) {
     const classes = useStyles;
     const dispatch = useDispatch();
+    const userToMessage = props.userToMessage;
     let messages = useSelector(state => state.messages);
     let currentUser = useSelector(state => state.currentUser);
     let possibleRecipients = useSelector(state => state.possibleRecipients);
@@ -53,7 +54,7 @@ function MessagingPane(props) {
             <div id="messaging-pane-header">Messages</div>
             <div onClick={()=> dispatch(setIsViewingMessages(false))} id="messaging-pane-exit">X</div>
             <div id="messaging-pane-message-container">
-                <MessageToSend />
+                <MessageToSend userToMessage={userToMessage}/>
                 {messages.map((message, i) => {
                     if(message.sender.id === currentUser.id){
                         return <SentMessage key={i} message={message} />

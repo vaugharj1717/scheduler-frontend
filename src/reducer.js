@@ -44,10 +44,16 @@ const initialState = {
     errorMessage: "",
     selectedUser: null,
     isCreatingMeeting: false,
+    userToMessage: null,
 };
 
 function reducer(state = initialState, action){
     switch (action.type) {
+        case Action.SetUserToMessage:
+            return{
+                ...state,
+                userToMessage: action.payload,
+            }
         case Action.SetErrorMessage:
             return{
                 ...state,
@@ -381,7 +387,7 @@ function reducer(state = initialState, action){
             console.log(action.payload);
             return{
                 ...state,
-                currentUser: {id: action.payload.id, role: action.payload.role, email: action.payload.email}
+                currentUser: {id: action.payload.id, role: action.payload.role, email: action.payload.email, department: action.payload.department}
             }
         case Action.LogOut:
             return initialState;

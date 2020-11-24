@@ -143,7 +143,9 @@ function ViewSchedulePage(props) {
                 }
             }
             setParticipations(participations => 
-                [...participations, {participantId: selectedParticipant.id, name: selectedParticipant.name, canLeaveFeedback: false, canViewFeedback: false}]);
+                [...participations, {role: selectedParticipant.role, participantId: selectedParticipant.id, name: selectedParticipant.name, 
+                    canLeaveFeedback: selectedParticipant.role === 'DEPARTMENT_ADMIN' ? true : false, 
+                    canViewFeedback: selectedParticipant.role === 'DEPARTMENT_ADMIN' ? true : false}]);
             setSelectedParticipant(null);
         }
     }
@@ -329,11 +331,25 @@ function ViewSchedulePage(props) {
                         <div className="participant-row" key={i}>
                             <button className="participant-delete-btn" onClick={()=>handleParticipantDelete(participation.participantId)}>Delete</button>
                             <span className="participant-name">{participation.name}</span>
-                            <input className="can-view-feedback-box" type="checkbox" onChange={(e) => handleCanViewFeedbackChange(e.target.value, participation.participantId)} id={`canViewFeedback${i}`} name="canViewFeedback"></input>
-                            <span>Can view feedback</span>
-                            <input type="checkbox" onChange={(e) => handleCanLeaveFeedbackChange(e.target.value, participation.participantId)} id={`canLeaveFeedback${i}`} name="canLeaveFeedback"></input>
-                            <span>Can leave feedback</span>
-                            <span>{participation.canViewFeedback}</span>
+                            
+                            {participation.role !== 'DEPARTMENT_ADMIN' &&
+                            <span>
+                                <input className="can-view-feedback-box" type="checkbox" onChange={(e) => handleCanViewFeedbackChange(e.target.value, participation.participantId)} id={`canViewFeedback${i}`} name="canViewFeedback"></input>
+                                <span>Can view feedback</span>
+                                <input type="checkbox" onChange={(e) => handleCanLeaveFeedbackChange(e.target.value, participation.participantId)} id={`canLeaveFeedback${i}`} name="canLeaveFeedback"></input>
+                                <span>Can leave feedback</span>
+                                <span>{participation.canViewFeedback}</span>
+                            </span>
+                            }
+                            {participation.role === 'DEPARTMENT_ADMIN' &&
+                            <span>
+                                <input disabled checked className="can-view-feedback-box" type="checkbox"  id={`canViewFeedback${i}`} name="canViewFeedback"></input>
+                                <span>Can view feedback</span>
+                                <input disabled checked type="checkbox" id={`canLeaveFeedback${i}`} name="canLeaveFeedback"></input>
+                                <span>Can leave feedback</span>
+                                <span>{participation.canViewFeedback}</span>
+                            </span>
+                            }
                         </div>
                         )} 
                         <div className="meeting-creation-error-msg">
@@ -376,7 +392,7 @@ function ViewSchedulePage(props) {
                         </div>
                         <div className="meeting-box-item">
                             <div className="meeting-item-label">Location: </div>
-                            <div className="meeting-item-value">{meeting.location.buildingName} {meeting.location.roomNumber}</div>
+                            <div className="meeting-item-value">{meeting.location.buildingName} {meeting.location.roomNumber.toString().padStart(3, '0')}</div>
                         </div>
                         <div className="meeting-box-item">
                             <div className="meeting-item-label">Participants: </div>

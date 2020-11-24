@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react';
 import './User-Info-Pane.css';
 import {useSelector, useDispatch} from 'react-redux';
 import {Link} from 'react-router-dom';
-import {setCandidateAlerts, setIsViewingUser, beginGettingUser, selectUser,
-    setIsViewingFiles, beginUpdatingUserInfo, beginUpdatingPassword} from '../../actions.js';
+import {setCandidateAlerts, setIsViewingUser, beginGettingUser, selectUser, setUserToMessage,
+    setIsViewingFiles, beginUpdatingUserInfo, beginUpdatingPassword, setIsViewingMessages} from '../../actions.js';
 
 
 
@@ -74,6 +74,9 @@ function UserInfoPane(props) {
                 {currentUser.id === viewedUser.id && !viewedUser.alert && viewedUser.role === 'CANDIDATE' && 
                 <button className="user-info-edit-btn" onClick={()=>dispatch(setCandidateAlerts(currentUser.id, true))}>Turn on Alerts</button>
                 }
+                {currentUser.role !== 'ADMIN' && currentUser.role !== 'SUPER_ADMIN' && currentUser.id !== viewedUser.id && 
+                <button className="user-info-edit-btn" onClick={()=>{dispatch(setUserToMessage(viewedUser)); dispatch(setIsViewingMessages(true))}}>Message</button>
+                }
                 
                 <div className="user-info-item">
                     <span className="user-info-label">Name:</span> 
@@ -83,6 +86,12 @@ function UserInfoPane(props) {
                     <span className="user-info-label">Email:</span> 
                     <span className="user-info-data">{viewedUser.email}</span>
                 </div>
+                {viewedUser.department !== null && viewedUser.department !== undefined &&
+                <div className="user-info-item">
+                    <span className="user-info-label">Department:</span> 
+                    <span className="user-info-data">{viewedUser.department.departmentName}</span>
+                </div>
+                }
                 <div className="user-info-item">
                     <span className="user-info-label">Address:</span> 
                     <span className="user-info-data">{viewedUser.address}</span>
@@ -99,13 +108,17 @@ function UserInfoPane(props) {
                     <span className="user-info-label">Uploaded Files:</span> 
                     <span onClick={handleViewFiles} className="user-info-data link-to-files">Click to view</span>
                 </div>
+                {(viewedUser.role === 'PARTICIPANT' || viewedUser.role === 'CANDIDATE' || viewedUser.role === 'DEPARTMENT_ADMIN') &&
                 <div className="user-info-item">
                     <span className="user-info-label">View all meetings:</span> 
                     <Link to="/test/user/view-all-meetings" className="user-info-data link-to-files" onClick={()=>handleViewAllMeetings(viewedUser)}>Click to view</Link>
                 </div>
+                }
                 <div className="user-info-item">
                     <span className="user-info-label">About:</span> 
-                    <span className="user-info-data">{viewedUser.bio}</span>
+                    {viewedUser.bio !== null && viewedUser.bio !== undefined &&
+                    <div className="user-info-data">{viewedUser.bio.split('\n').map(str => <p className="bio-para">{str}</p>)}</div>
+                    }
                 </div>
             </div>
         </div>

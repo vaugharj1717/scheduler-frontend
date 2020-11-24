@@ -12,7 +12,7 @@
     position: fixed;
     display: flex;
     flex-direction: column;
-    min-width: 500px;
+    min-width: 400px;
     min-height: 400px;
     background-color: rgba(0, 0, 0, .85);
     border: 3px solid white;;
@@ -108,4 +108,14 @@
 
   .files-user-info-link:hover{
     color: gray;
+  }
+
+  .file-pane-nothing{
+    position: absolute;
+    color: white;
+    font-family: sans-serif;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
   }

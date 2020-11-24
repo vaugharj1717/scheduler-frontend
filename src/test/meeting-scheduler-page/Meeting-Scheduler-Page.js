@@ -220,19 +220,20 @@ function MeetingSchedulerPage(props) {
             <div id="header">
                 <span id="page-title">
                     All Positions
+                    <div id="sorting-label">
+                        Sort By <span className="sorting-type" onClick={()=>handleSortChange()}>{sortType}</span> 
+                        {asc &&
+                        <span className="sorting-dir" onClick={()=>setAsc(false)}> &uarr;</span>
+                        }
+                        {!asc &&
+                        <span className="sorting-dir" onClick={()=>setAsc(true)}> &darr;</span>
+                        }
+                    </div>
                 </span>
                 
             </div>
 
-            <div id="sorting-label">
-                    Sort By <span className="sorting-type" onClick={()=>handleSortChange()}>{sortType}</span> 
-                    {asc &&
-                    <span className="sorting-dir" onClick={()=>setAsc(false)}> &uarr;</span>
-                    }
-                    {!asc &&
-                    <span className="sorting-dir" onClick={()=>setAsc(true)}> &darr;</span>
-                    }
-            </div>
+            
 
             {!addingNewPosition &&
             <div className="more-buttons-container">

@@ -51,6 +51,7 @@ export const Action = Object.freeze({
     SetCandidateAlert: "SetCandidateAlert",
     SelectUser: "SelectUser",
     SetCreatingMeeting: "SetCreatingMeeting",
+    SetUserToMessage: "SetUserToMessage",
 });
 
 export const host = 'http://localhost:8444';
@@ -651,8 +652,7 @@ export function finishCreatingDepartment(data){
     }
 }
 
-export function beginCreatingUser(name, email, role){
-    console.log(`NAME: ${name}, EMAIL: ${email}, ROLE: ${role}`);
+export function beginCreatingUser(name, email, role, departmentId){
     return dispatch => {
         dispatch(setSpinner(true));
         const options = {
@@ -661,7 +661,7 @@ export function beginCreatingUser(name, email, role){
                 ...authHeader(),
                 "Content-Type" : "application/json"
             },
-            body: JSON.stringify({name, email, role}),
+            body: JSON.stringify({name, email, role, departmentId}),
         }
         fetch(`${host}/user`, options)
         .then(checkForErrors)
@@ -1101,7 +1101,7 @@ export function beginGettingRecipients(){
         }
     }
     return dispatch => {
-        fetch(`${host}/user/getCandidatesAndParticipants`, options)
+        fetch(`${host}/user/getPossibleRecipients`, options)
         .then(checkForErrors)
         .then(response => response.json())
         .then(data => {
@@ -1290,5 +1290,12 @@ export function setCreatingMeeting(val){
     return{
         type: Action.SetCreatingMeeting,
         payload: val
+    }
+}
+
+export function setUserToMessage(user){
+    return{
+        type: Action.SetUserToMessage,
+        payload: user,
     }
 }

@@ -42,6 +42,15 @@ function alertIsActivated(meeting, user){
     return false;
 }
 
+function isParticipant(meeting, user){
+    for(let i = 0; i < meeting.participations.length; i++){
+        if(meeting.participations[i].participant.id === user.id){
+            return true;
+        }
+    }
+    return false;
+}
+
 function groupMeetingsByDate(meetings){
     return meetings.reduce((acc, curr) => {
         let dateString = new moment(curr.startTime).utcOffset('+0000').format('dddd MMM D, YYYY');
@@ -139,7 +148,7 @@ function ViewMeetingsPage(props){
                                     {(mode === 'PARTICIPANT' || mode === 'DEPARTMENT_ADMIN') && alertIsActivated(meeting, currentUser) &&
                                         <div onClick={()=>handleAlert(false, getParticipationId(meeting, currentUser), meeting)} className="deactivate-alert-btn">Turn Off Alert</div>
                                     }
-                                    {(mode === 'PARTICIPANT' || mode === 'DEPARTMENT_ADMIN') && !alertIsActivated(meeting, currentUser) &&
+                                    {(mode === 'PARTICIPANT' || mode === 'DEPARTMENT_ADMIN') && !alertIsActivated(meeting, currentUser) && isParticipant(meeting, currentUser) &&
                                         <div onClick={()=>handleAlert(true, getParticipationId(meeting, currentUser), meeting)} className="activate-alert-btn">Turn On Alert</div>
                                     }
                                     </div>
@@ -232,7 +241,7 @@ function ViewMeetingsPage(props){
                                     {(mode === 'PARTICIPANT' || mode === 'DEPARTMENT_ADMIN') && alertIsActivated(meeting, currentUser) &&
                                         <div onClick={()=>handleAlert(false, getParticipationId(meeting, currentUser), meeting)} className="deactivate-alert-btn">Turn Off Alert</div>
                                     }
-                                    {(mode === 'PARTICIPANT' || mode === 'DEPARTMENT_ADMIN') && !alertIsActivated(meeting, currentUser) &&
+                                    {(mode === 'PARTICIPANT' || mode === 'DEPARTMENT_ADMIN') && !alertIsActivated(meeting, currentUser) && isParticipant(meeting, currentUser) &&
                                         <div onClick={()=>handleAlert(true, getParticipationId(meeting, currentUser), meeting)} className="activate-alert-btn">Turn On Alert</div>
                                     }
                                     </div>

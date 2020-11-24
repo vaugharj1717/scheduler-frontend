@@ -312,8 +312,8 @@ function MeetingSchedulerPage(props) {
                         {/* CANDIDATE INSTANCE */}
                         {position.candidacies.map(candidacy => {return (
                         <tr key={candidacy.id}>
-                            <td><span onClick={()=> dispatch(setIsViewingUser(true, candidacy.candidate.id))} className="meeting-scheduler-candidate-name"><b>{candidacy.candidate.name}</b></span></td>
-                            <td>{candidacy.candidate.email}</td>
+                            <td className="td-name"><span onClick={()=> dispatch(setIsViewingUser(true, candidacy.candidate.id))} className="meeting-scheduler-candidate-name"><b>{candidacy.candidate.name}</b></span></td>
+                            <td className="td-email">{candidacy.candidate.email}</td>
                             <td><u><b><div className="meeting-scheduler-manage-attachments-btn" onClick={()=>dispatch(setIsViewingFiles(true, candidacy.candidate.id))} htmlFor="upload-file">Manage Attachments</div></b></u></td>
                             {candidacy.schedule.meetings.length != 0 &&
                             <td><u><b><span onClick={(e)=>handleCandidacySelect(candidacy, position)}><Link to="/test/meeting-scheduler/view-schedule">Edit</Link></span></b></u> / <u><b><span onClick={()=>handleScheduleDelete(candidacy.schedule.id)}>Delete</span></b></u></td>

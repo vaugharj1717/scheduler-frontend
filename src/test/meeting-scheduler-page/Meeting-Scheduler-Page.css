@@ -247,3 +247,11 @@
    border-top: 1px solid black;
    border-bottom: 1px solid black;
  }
+
+ .td-name{
+   width: 300px;
+ }
+
+ .td-email{
+   width: 300px;
+ }

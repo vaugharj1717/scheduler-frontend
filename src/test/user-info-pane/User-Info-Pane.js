@@ -37,10 +37,18 @@ function UserInfoPane(props) {
     }
 
     function handleEdit(){
-        setAddress(viewedUser.address);
-        setPhone(viewedUser.phone);
-        setUniversity(viewedUser.university);
-        setBio(viewedUser.bio);
+        if(viewedUser.address === null)
+            setAddress('');
+        else setAddress(viewedUser.address);
+        if(viewedUser.phone === null)
+            setPhone('');
+        else setPhone(viewedUser.phone);
+        if(viewedUser.university === null)
+            setUniversity('');
+        else setUniversity(viewedUser.university);
+        if(viewedUser.bio === null)
+            setBio('');
+        else setBio(viewedUser.bio);
         setIsEditing(true);
     }
 
@@ -62,7 +70,7 @@ function UserInfoPane(props) {
             <div id="user-info-pane-header">User Info</div>
             <div onClick={()=> dispatch(setIsViewingUser(false))} id="user-info-pane-exit">X</div>
             <div id="user-info-pane-container">
-                {currentUser.id === viewedUser.id &&
+                {(currentUser.id === viewedUser.id || currentUser.role === 'SCHEDULER' || (currentUser.role === 'DEPARTMENT_ADMIN' && (viewedUser.role === 'CANDIDATE' || viewedUser.department === currentUser.department)) ) &&
                 <button className="user-info-edit-btn" onClick={()=>handleEdit()}>Edit</button>
                 }
                 {currentUser.id === viewedUser.id &&
@@ -108,7 +116,7 @@ function UserInfoPane(props) {
                     <span className="user-info-label">Uploaded Files:</span> 
                     <span onClick={handleViewFiles} className="user-info-data link-to-files">Click to view</span>
                 </div>
-                {(viewedUser.role === 'PARTICIPANT' || viewedUser.role === 'CANDIDATE' || viewedUser.role === 'DEPARTMENT_ADMIN') &&
+                {((viewedUser.role === 'PARTICIPANT' || viewedUser.role === 'CANDIDATE' || viewedUser.role === 'DEPARTMENT_ADMIN') && currentUser.role !== 'CANDIDATE') &&
                 <div className="user-info-item">
                     <span className="user-info-label">View all meetings:</span> 
                     <Link to="/test/user/view-all-meetings" className="user-info-data link-to-files" onClick={()=>handleViewAllMeetings(viewedUser)}>Click to view</Link>

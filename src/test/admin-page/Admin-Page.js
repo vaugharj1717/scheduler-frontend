@@ -21,8 +21,13 @@ export default function AdminPage(props){
     let currentUser = useSelector(state => state.currentUser);
 
     let users = currentUser.role !== 'DEPARTMENT_ADMIN' ? usersFromSelector : usersFromSelector.filter(
-        user => user.department !== undefined && user.department !== null && user.department.id === currentUser.department.id
+        user => (user.department !== undefined && user.department !== null && user.department.id === currentUser.department.id) || user.role === 'CANDIDATE'
     )
+
+    users = users.sort((x, y) => {
+        if(x.name.toUpperCase() > y.name.toUpperCase()) return 1;
+        else return -1;
+    });
 
     let errorMsg = useSelector(state => state.errorMessage);
     let [usersState, setUsersState] = useState(users);

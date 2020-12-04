@@ -25,12 +25,16 @@ const initialState = {
     participants: [],
     users: [],
     currentUser: null,
+    currentUserLat: 0,
+    currentUserLng: 0,
     messages: [],
     isViewingMessages: false,
     isViewingFiles: false,
     userIdOfViewedFiles: null,
     isViewingUser: false,
     isViewingFeedback: false,
+    isViewingMap: false,
+    isViewingSelfMap: false,
     meetingIdOfFeedback: null,
     userIdOfViewedUser: null,
     viewedUser: {},
@@ -49,6 +53,13 @@ const initialState = {
 
 function reducer(state = initialState, action){
     switch (action.type) {
+        case Action.SetMap:
+
+            return{
+                ...state,
+                isViewingMap: action.payload.val,
+                isViewingSelfMap: action.payload.self,
+            }
         case Action.SetUserToMessage:
             return{
                 ...state,
@@ -147,6 +158,12 @@ function reducer(state = initialState, action){
             return{
                 ...state,
                 files: [...state.files, action.payload]
+            }
+        case Action.SetUserPosition:
+            return{
+                ...state,
+                currentUserLat: action.payload.lat,
+                currentUserLng: action.payload.lng
             }
         case Action.SetIsViewingMessages:
             return{

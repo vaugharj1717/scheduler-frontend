@@ -61,6 +61,37 @@ function groupMeetingsByDate(meetings){
     }, {});
 }
 
+function getMeetingStatus(meeting){
+    let nowTime = new moment();
+    let startTime = new moment(meeting.startTime);
+    let endTime = new moment(meeting.endTime);
+    if(nowTime > startTime && nowTime < endTime){
+        const diff = endTime.diff(nowTime);
+        const diffDuration = moment.duration(diff);
+        const diffHours = Math.floor(diffDuration / 60);
+        const diffMinutes = diffDuration % 60;
+        const hours = diffDuration.hours() === 0 ? '' : diffDuration.hours() + ' hours';
+        const minutes = diffDuration.minutes() === 0 ? '' : diffDuration.minutes() + ' minutes';
+        return "In progress. " + hours + ' ' + minutes + ' remaining.';
+    }
+    else if(nowTime > endTime){
+        return "Meeting has ended."
+    }
+    else{
+        // get the difference between the moments
+        const diff = startTime.diff(nowTime);
+        const diffDuration = moment.duration(diff);
+        const diffHours = Math.floor(diffDuration / 60);
+        const diffMinutes = diffDuration % 60;
+        const days = diffDuration.days() === 0 ? '' : diffDuration.days() + ' days';
+        const hours = diffDuration.hours() === 0 ? '' : diffDuration.hours() + ' hours';
+        const minutes = diffDuration.minutes() === 0 ? '' : diffDuration.minutes() + ' minutes';
+        if(diffDuration.days() > 1) return "Meeting starts in " + days;
+        else if (diffDuration.days() === 1) return "Meeting starts in " + days + ' ' + hours;
+        else return "Meeting starts in " + days + ' ' + hours + ' ' + minutes;
+    }
+}
+
 function ViewMeetingsPage(props){
     let dispatch = useDispatch();
     let mode = props.mode;
@@ -110,6 +141,7 @@ function ViewMeetingsPage(props){
 
     return (
         <div className="meetings-page-root">
+            {/* <div className="meetings-page-background"></div> */}
             <Nav/>
             {whichMeetings === "upcoming" ?
             <div className="meetings-page-header">UPCOMING MEETINGS</div>
@@ -189,7 +221,7 @@ function ViewMeetingsPage(props){
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Time: </div>
-                                        <div className="meeting-item-value">{new moment(meeting.startTime).utcOffset('+0000').format('h:mmA')} - {new moment(meeting.endTime).utcOffset('+0000').format('h:mmA')}</div>
+                                        <div className="meeting-item-value">{new moment(meeting.startTime).utcOffset('+1800').format('h:mmA')} - {new moment(meeting.endTime).utcOffset('+1800').format('h:mmA')}</div>
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Location: </div>
@@ -207,6 +239,10 @@ function ViewMeetingsPage(props){
                                             </span>
                                             ))}
                                         </div>
+                                    </div>
+                                    <div className="meeting-box-item">
+                                        <div className="meeting-item-label">Status: </div>
+                                        <div className="meeting-item-value">{getMeetingStatus(meeting)}</div>
                                     </div>
                                     {/*********************************/}
                                 </div>
@@ -282,7 +318,7 @@ function ViewMeetingsPage(props){
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Time: </div>
-                                        <div className="meeting-item-value">{new moment(meeting.startTime).utcOffset('+0000').format('h:mmA')} - {new moment(meeting.endTime).utcOffset('+0000').format('h:mmA')}</div>
+                                        <div className="meeting-item-value">{new moment(meeting.startTime).utcOffset('+1800').format('h:mmA')} - {new moment(meeting.endTime).utcOffset('+1800').format('h:mmA')}</div>
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Location: </div>
@@ -300,6 +336,10 @@ function ViewMeetingsPage(props){
                                             </span>
                                             ))}
                                         </div>
+                                    </div>
+                                    <div className="meeting-box-item">
+                                        <div className="meeting-item-label">Status: </div>
+                                        <div className="meeting-item-value">{getMeetingStatus(meeting)}</div>
                                     </div>
                                     {/*********************************/}
                                 </div>

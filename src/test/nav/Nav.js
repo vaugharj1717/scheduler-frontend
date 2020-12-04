@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {Link, Redirect} from 'react-router-dom';
-import {beginLoggingOut, setIsViewingMessages, setIsViewingUser} from '../../actions.js';
+import {setMap, beginLoggingOut, setIsViewingMessages, setIsViewingUser} from '../../actions.js';
 import './Nav.css';
 
 
@@ -67,6 +67,8 @@ export default function LoginPage(props){
                 <Link to='/test/department-admin' className="nav-btn"><span className="nav-txt">Schedule</span></Link>
                 }
                 <div className="nav-btn" onClick={()=>handleAccount()  }><span className="nav-txt">Account</span></div>
+                <div className="nav-btn" onClick={()=>dispatch(setMap(true, true))}><span className="nav-txt">Map</span></div>
+
                 <div className="nav-btn" onClick={()=>handleMessenger()}>
                     <span className="nav-txt">Messenger
                     {showNotifier &&

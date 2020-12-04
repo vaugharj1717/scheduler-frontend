@@ -52,6 +52,9 @@ export const Action = Object.freeze({
     SelectUser: "SelectUser",
     SetCreatingMeeting: "SetCreatingMeeting",
     SetUserToMessage: "SetUserToMessage",
+    SetUserPosition: "SetUserPosition",
+
+    SetMap: "SetMap",
 });
 
 export const host = 'http://localhost:8444';
@@ -757,6 +760,24 @@ export function beginGettingUser(id){
     }
 }
 
+export function beginGettingUserCoords(id){
+    const options = {
+        headers: authHeader()
+    };
+    return dispatch => {
+        fetch(`${host}/user/getUserWithDepart/${id}`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            dispatch(finishGettingUser(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
 export function finishGettingUser(data){
     return{
         type: Action.GetUser,
@@ -1298,4 +1319,40 @@ export function setUserToMessage(user){
         type: Action.SetUserToMessage,
         payload: user,
     }
+}
+
+export function beginSettingUserPosition(userId, lat, lng){
+    return dispatch => {
+        dispatch(setUserPosition(lat, lng));
+        const options = {
+            method: "PATCH",
+            headers: {
+                ...authHeader(),
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify({lat, lng}),
+        }
+        fetch(`${host}/user/${userId}/updatePosition`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .catch(err => {
+            console.error(err);
+        })
+    }
+}
+
+export function setUserPosition(lat, lng){
+    return {
+        type: Action.SetUserPosition,
+        payload: {lat, lng}
+    }
+}
+
+export function setMap(val, self){
+    
+        return{
+            type: Action.SetMap,
+            payload: {val, self}
+        }
+    
 }

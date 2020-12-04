@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import './User-Info-Pane.css';
 import {useSelector, useDispatch} from 'react-redux';
 import {Link} from 'react-router-dom';
-import {setCandidateAlerts, setIsViewingUser, beginGettingUser, selectUser, setUserToMessage,
+import {setMap, setCandidateAlerts, setIsViewingUser, beginGettingUser, selectUser, setUserToMessage,
     setIsViewingFiles, beginUpdatingUserInfo, beginUpdatingPassword, setIsViewingMessages} from '../../actions.js';
 
 
@@ -85,6 +85,9 @@ function UserInfoPane(props) {
                 {currentUser.role !== 'ADMIN' && currentUser.role !== 'SUPER_ADMIN' && currentUser.id !== viewedUser.id && 
                 <button className="user-info-edit-btn" onClick={()=>{dispatch(setUserToMessage(viewedUser)); dispatch(setIsViewingMessages(true))}}>Message</button>
                 }
+                {currentUser.id !== viewedUser.id &&
+                <button className="user-info-edit-btn" onClick={()=>dispatch(setMap(true, false))}>See location</button>
+                }
                 
                 <div className="user-info-item">
                     <span className="user-info-label">Name:</span> 
@@ -159,10 +162,6 @@ function UserInfoPane(props) {
                 <div className="user-info-item">
                     <span className="user-info-label">Graduated from:</span> 
                     <input type="text" value={university} onChange={(e) => setUniversity(e.target.value)} className="user-info-input" />
-                </div>
-                <div className="user-info-item">
-                    <span className="user-info-label">Uploaded Files:</span> 
-                    <span onClick={handleViewFiles} className="user-info-data link-to-files">Click to view</span>
                 </div>
                 <div className="user-info-item">
                     <span className="user-info-label">About:</span> 

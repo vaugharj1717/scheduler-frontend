@@ -11,6 +11,8 @@ import FilePane from './file-pane/File-Pane.js';
 import UserInfoPane from './user-info-pane/User-Info-Pane.js';
 import FeedbackPane from './feedback-pane/Feedback-Pane.js';
 import Spinner from './spinner/Spinner.js';
+import PositionWatcher from './map/PositionWatcher.js';
+import Map from './map/Map.js';
 import {useSelector, useDispatch} from 'react-redux';
 import {beginLoggingOut, setIsViewingMessages, setIsViewingFiles, setIsViewingUser, setIsViewingFeedback} from '../actions.js';
 
@@ -22,18 +24,17 @@ function App() {
   let candidacy = useSelector(state => state.currentCandidacy);
   let position = useSelector(state => state.currentPosition);
   let selectedUser = useSelector(state => state.selectedUser);
-  console.log(selectedUser);
   let showUnseenMessagesNotifier = useSelector(state => state.showUnseenMessagesNotifier);
   let isViewingMessages = useSelector(state => state.isViewingMessages);
   let isViewingFiles = useSelector(state => state.isViewingFiles);
   let isViewingUser = useSelector(state => state.isViewingUser);
   let isViewingFeedback = useSelector(state => state.isViewingFeedback);
+  let isViewingMap = useSelector(state => state.isViewingMap);
   let userIdOfViewedFiles = useSelector(state => state.userIdOfViewedFiles);
   let userIdOfViewedUser = useSelector(state => state.userIdOfViewedUser);
   let meetingIdOfFeedback = useSelector(state => state.meetingIdOfFeedback);
   let isSpinning = useSelector(state => state.isSpinning);
-  // console.log(isSpinning);
-  
+
   function logout(){
     dispatch(beginLoggingOut());
   }
@@ -83,6 +84,11 @@ function App() {
       {isSpinning &&
       <Spinner/>
       }
+      {isViewingMap &&
+      <Map selectedUser={selectedUser}/>
+      }
+      <PositionWatcher/>
+
         <Switch>
 
           {/*HOME SCREENS*/}

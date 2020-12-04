@@ -6,7 +6,8 @@ import {Provider} from 'react-redux';
 import storeExport from './store.js';
 import {BrowserRouter} from 'react-router-dom'
 import {PersistGate} from 'redux-persist/integration/react'
-import MessageChecker from './message-checker/Message-Checker.js'
+import MessageChecker from './message-checker/Message-Checker.js';
+import PositionWatcher from './test/map/PositionWatcher.js';
 import store from './store.js';
 
 let storeExportVals = storeExport();

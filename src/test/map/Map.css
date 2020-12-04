@@ -1,0 +1,68 @@
+.map-root{
+    position: fixed;
+    left: 50%;
+    top: 52%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    height: 85vh;
+    background-color: rgba(0, 0, 0, .95);
+    z-index: 5000;
+    border: 5px solid black;
+}
+
+.map-exit{
+    color: red;
+    font-weight: bold;
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 20px;
+    font-family: sans-serif;
+    background-color: white;
+    width: 100px;
+    height: 20px;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    border: 2px solid black;
+}
+.map-exit:hover, .map-exit:focus{
+    color: darkred;
+    background-color: gray;
+}
+
+.map-disclaimer{
+    position: absolute;
+    left: calc(100% + 15px);
+    top: 0px;
+    width: 300px;
+    background-color: white;
+    font-size: 14px;
+    border: 1px solid black;
+    pointer-events: none;
+}
+
+.map-exit:hover .map-disclaimer, .map-exit:focus .map-disclaimer{
+    color: red;
+}
+
+@media only screen and (max-width: 650px) {
+    .map-exit{
+        color: red;
+        font-weight: bold;
+        position: absolute;
+        top: -50px;
+        left: 60px;
+        transform: translateX(-50%);
+        font-size: 20px;
+        font-family: sans-serif;
+        background-color: white;
+        width: 100px;
+        height: 20px;
+        text-align: center;
+        padding: 10px;
+        cursor: pointer;
+        border: 2px solid black;
+    }
+}

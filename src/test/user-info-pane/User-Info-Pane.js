@@ -16,6 +16,8 @@ function UserInfoPane(props) {
     let userId = props.userId
     let [isEditing, setIsEditing] = useState(false);
     let [isChangingPassword, setIsChangingPassword] = useState(false);
+    let [name, setName] = useState(viewedUser.name);
+    let [email, setEmail] = useState(viewedUser.email);
     let [address, setAddress] = useState(viewedUser.address);
     let [phone, setPhone] = useState(viewedUser.phone);
     let [university, setUniversity] = useState(viewedUser.university);
@@ -37,6 +39,12 @@ function UserInfoPane(props) {
     }
 
     function handleEdit(){
+        if(viewedUser.name === null)
+            setAddress('');
+        else setName(viewedUser.name);
+        if(viewedUser.email === null)
+            setAddress('');
+        else setName(viewedUser.email);
         if(viewedUser.address === null)
             setAddress('');
         else setAddress(viewedUser.address);
@@ -53,7 +61,7 @@ function UserInfoPane(props) {
     }
 
     function handleSave(){
-        dispatch(beginUpdatingUserInfo(userId, address, phone, university, bio));
+        dispatch(beginUpdatingUserInfo(userId, name, email, address, phone, university, bio));
         setIsEditing(false);
     }
 
@@ -145,11 +153,11 @@ function UserInfoPane(props) {
                 <button className="user-info-save-btn" onClick={handleSave}>Save</button>
                 <div className="user-info-item">
                     <span className="user-info-label">Name:</span> 
-                    <span className="user-info-data">{viewedUser.name}</span>
+                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="user-info-input" />
                 </div>
                 <div className="user-info-item">
                     <span className="user-info-label">Email:</span> 
-                    <span className="user-info-data">{viewedUser.email}</span>
+                    <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} className="user-info-input" />
                 </div>
                 <div className="user-info-item">
                     <span className="user-info-label">Address:</span> 

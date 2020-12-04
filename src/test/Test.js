@@ -118,19 +118,15 @@ function App() {
 
           {/*SCHEDULER PAGES*/}
           <Route exact path="/test/meeting-scheduler">
-            {currentUser.role == 'SCHEDULER' ?
+            {(currentUser.role == 'SCHEDULER' || currentUser.role == 'DEPARTMENT_ADMIN') ?
             <MeetingSchedulerPage user={currentUser}></MeetingSchedulerPage>
             :
             <Redirect to="/test"/>
             }
           </Route>
 
-          <Route exact path="/test/logout">
-            <button onClick={()=>dispatch(beginLoggingOut())}>Logout</button>
-          </Route>
-
           <Route exact path="/test/meeting-scheduler/view-schedule">
-            {currentUser.role == 'SCHEDULER' ?
+            {(currentUser.role == 'SCHEDULER' || currentUser.role == 'DEPARTMENT_ADMIN') ?
             <ViewSchedulePage user={currentUser} candidacy={candidacy} position={position}></ViewSchedulePage>
             :
             <Redirect to="/test"/>

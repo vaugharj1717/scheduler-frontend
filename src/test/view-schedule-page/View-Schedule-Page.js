@@ -12,6 +12,7 @@ import {makeStyles, createMuiTheme} from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import {ThemeProvider, withStyles } from "@material-ui/core/styles";
 import MomentUtils from "@date-io/moment";
+import {DatePicker as DatePicker2} from "react-datepicker";
 import {
   MuiPickersUtilsProvider,
   TimePicker,
@@ -28,7 +29,6 @@ function groupMeetingsByDate(meetings){
         })
     }, [])
 }*/
-
 
 
 const useStyles = makeStyles({
@@ -56,18 +56,19 @@ const useStyles = makeStyles({
 })
 function groupMeetingsByDate(meetings){
     return meetings.reduce((acc, curr) => {
-        let dateString = new moment(curr.startTime).utcOffset('+0000').format('dddd MMM D, YYYY');
+        let dateString = new moment(curr.startTime).utc(curr.startTime).local().format('dddd MMM D, YYYY');
         if(!(dateString in acc))
             acc[dateString] = []
         acc[dateString].push(curr);
+        acc[dateString].sort();
         return acc;
     }, {});
 }
 
 function getMeetingStatus(meeting){
     let nowTime = new moment();
-    let startTime = new moment(meeting.startTime);
-    let endTime = new moment(meeting.endTime);
+    let startTime = new moment(meeting.startTime).utc(meeting.startTime).local();
+    let endTime = new moment(meeting.endTime).utc(meeting.endTime).local();
     if(nowTime > startTime && nowTime < endTime){
         const diff = endTime.diff(nowTime);
         const diffDuration = moment.duration(diff);
@@ -117,6 +118,13 @@ function ViewSchedulePage(props) {
     let [selectedEditEndDate, setSelectedEditEndDate] = useState(new moment(new moment().format("YYYY/MM/DD")));
     let [editParticipations, setEditParticipations] = useState([]);
 
+    let [selectedDate, setSelectedDate] = useState(new moment(new moment().format("YYYY/MM/DD")));
+    let [selectedStartTime, setSelectedStartTime] = useState(new moment(new moment().format("YYYY/MM/DD")));
+    let [selectedEndTime, setSelectedEndTime] = useState(new moment(new moment().format("YYYY/MM/DD")));
+
+    let [selectedEditDate, setSelectedEditDate] = useState(new moment(new moment().format("YYYY/MM/DD")));
+    let [selectedEditStartTime, setSelectedEditStartTime] = useState(new moment(new moment().format("YYYY/MM/DD")));
+    let [selectedEditEndTime, setSelectedEditEndTime] = useState(new moment(new moment().format("YYYY/MM/DD")));
 
     // let [isCreatingMeeting, setCreatingMeeting] = useState(false);
     let isCreatingMeeting = useSelector(state => state.isCreatingMeeting);
@@ -140,24 +148,26 @@ function ViewSchedulePage(props) {
 
     useEffect(()=>{
         setSelectedLocation(null);
-        setSelectedEndDate(new moment(new moment().format("YYYY/MM/DD")));
-        setSelectedStartDate(new moment(new moment().format("YYYY/MM/DD")));
+        setSelectedDate(new moment(new moment().format("YYYY/MM/DD")));
+        setSelectedStartTime(new moment(new moment().format("YYYY/MM/DD")));
+        setSelectedEndTime(new moment(new moment().format("YYYY/MM/DD")));
         setParticipations([]);
     }, [schedule]);
 
     function handleCancelMeetingCreation(){
         dispatch(setCreatingMeeting(false, false));
         setSelectedLocation(null);
-        setSelectedStartDate(new moment());
-        setSelectedEndDate(new moment());
+        setSelectedStartTime(new moment(new moment().format("YYYY/MM/DD")));
+        setSelectedEndTime(new moment(new moment().format("YYYY/MM/DD")));
         setParticipations([]);
     }
 
     function handleCancelMeetingEdit(){
         dispatch(setCreatingMeeting(false, false));
         setSelectedEditLocation(null);
-        setSelectedEditStartDate(new moment());
-        setSelectedEditEndDate(new moment());
+        setSelectedEditDate(new moment(new moment().format("YYYY/MM/DD")));
+        setSelectedEditStartTime(new moment(new moment().format("YYYY/MM/DD")));
+        setSelectedEditEndTime(new moment(new moment().format("YYYY/MM/DD")));
         setEditParticipations([]);
     }
 
@@ -168,8 +178,9 @@ function ViewSchedulePage(props) {
         setIsEditingIndex2(j);
 
         setSelectedEditLocation(meeting.location);
-        setSelectedEditStartDate(new moment(meeting.startTime));
-        setSelectedEditEndDate(new moment(meeting.endTime));
+        setSelectedEditDate(moment(meeting.startTime).utc(meeting.startTime).local());
+        setSelectedEditStartTime(moment(meeting.startTime).utc(meeting.startTime).local());
+        setSelectedEditEndTime(moment(meeting.endTime).utc(meeting.endTime).local());
         setEditMeetingType(meeting.meetingType);
         // setEditParticipations(meeting.participations);
 
@@ -183,32 +194,58 @@ function ViewSchedulePage(props) {
 
 
     function handleStartDateChange(startDate, isDateChange){
-        console.log(startDate.date());
         setSelectedStartDate(startDate);
-        // if(isDateChange){
-            setSelectedEndDate(endDate => {
-            endDate.date(startDate.date());
-            endDate.month(startDate.month());
-            endDate.year(startDate.year());
-            return endDate;
-        })
+        // if(startDate !== null){
+        //     setSelectedEndDate(endDate => {
+        //         endDate.date(startDate.date());
+        //         endDate.month(startDate.month());
+        //         endDate.year(startDate.year());
+        //         return endDate;
+        //     })
+        // }
     }
+
 
     function handleEndDateChange(endDate, isDateChange){
         setSelectedEndDate(endDate);
-        // if(isDateChange){
-            setSelectedStartDate(startDate => {
-                startDate.date(endDate.date());
-                startDate.month(endDate.month());
-                startDate.year(endDate.year());
-                return startDate;
-        })
+        // if(endDate !== null){
+        //     setSelectedStartDate(startDate => {
+        //         startDate.date(endDate.date());
+        //         startDate.month(endDate.month());
+        //         startDate.year(endDate.year());
+        //         return startDate;
+        //     })
+        // }
+    }
+
+    function handleDateChange(date){
+        setSelectedDate(date);
+    }
+
+    function handleStartTimeChange(time){
+        setSelectedStartTime(time);
+    }
+
+    function handleEndTimeChange(time){
+        setSelectedEndTime(time);
+    }
+
+    function handleEditDateChange(date){
+        setSelectedEditDate(date);
+    }
+
+    function handleEditStartTimeChange(time){
+        setSelectedEditStartTime(time);
+    }
+
+    function handleEditEndTimeChange(time){
+        setSelectedEditEndTime(time);
     }
 
     function handleEditStartDateChange(startDate, isDateChange){
         setSelectedEditStartDate(startDate);
 
-        // if(isDateChange){
+        if(startDate !== null){
             setSelectedEditEndDate(endDate => {
             console.log(endDate);
             endDate.date(startDate.date());
@@ -216,17 +253,19 @@ function ViewSchedulePage(props) {
             endDate.year(startDate.year());
             return endDate;
             });
+        }
     }
 
     function handleEditEndDateChange(endDate, isDateChange){
         setSelectedEditEndDate(endDate);
-        // if(isDateChange){
+        if(endDate !== null){
             setSelectedEditStartDate(startDate => {
                 startDate.date(endDate.date());
                 startDate.month(endDate.month());
                 startDate.year(endDate.year());
                 return startDate;
             });
+        }
     }
 
     
@@ -314,18 +353,34 @@ function ViewSchedulePage(props) {
     }
 
     function handleCreateMeeting(){
+        let composedStartDate = new moment();
+        composedStartDate.seconds(0);
+        composedStartDate.minute(selectedStartTime.minute());
+        composedStartDate.hours(selectedStartTime.hours());
+        composedStartDate.date(selectedDate.date());
+        composedStartDate.month(selectedDate.month());
+        composedStartDate.year(selectedDate.year());
+
+        let composedEndDate = new moment();
+        composedEndDate.seconds(0);
+        composedEndDate.minute(selectedEndTime.minute());
+        composedEndDate.hours(selectedEndTime.hours());
+        composedEndDate.date(selectedDate.date());
+        composedEndDate.month(selectedDate.month());
+        composedEndDate.year(selectedDate.year());
+
         if(selectedLocation === null || selectedLocation === '' || selectedLocation === undefined){
             dispatch(setErrorMessage("Error: Must select a location."))
         }
         else if(participations.length == 0){
             dispatch(setErrorMessage("Error: Must select at least one participant."))
         }
-        else if(selectedStartDate.valueOf() >= selectedEndDate.valueOf()){
+        else if(selectedDate === null || composedStartDate.valueOf() >= composedEndDate.valueOf()){
             dispatch(setErrorMessage("Error: Start time must be before end time."))
         }
         else{
             dispatch(beginCreatingMeeting(schedule.id, selectedLocation.id, meetingType, 
-            selectedStartDate.format('YYYY/MM/DD HH:mm:ss'), selectedEndDate.format('YYYY/MM/DD HH:mm:ss'), participations));
+            composedStartDate.utc().format('YYYY/MM/DD HH:mm:ss'), composedEndDate.utc().format('YYYY/MM/DD HH:mm:ss'), participations));
         }
         // setSelectedLocation(null);
         // setSelectedEndDate(new moment(new moment().format("YYYY/MM/DD")));
@@ -334,18 +389,34 @@ function ViewSchedulePage(props) {
     }
 
     function handleSendEditMeeting(meeting){
+        let composedStartDate = new moment();
+        composedStartDate.seconds(0);
+        composedStartDate.minute(selectedEditStartTime.minute());
+        composedStartDate.hours(selectedEditStartTime.hours());
+        composedStartDate.date(selectedEditDate.date());
+        composedStartDate.month(selectedEditDate.month());
+        composedStartDate.year(selectedEditDate.year());
+
+        let composedEndDate = new moment();
+        composedEndDate.seconds(0);
+        composedEndDate.minute(selectedEditEndTime.minute());
+        composedEndDate.hours(selectedEditEndTime.hours());
+        composedEndDate.date(selectedEditDate.date());
+        composedEndDate.month(selectedEditDate.month());
+        composedEndDate.year(selectedEditDate.year());
+
         if(selectedEditLocation === null || selectedEditLocation === '' || selectedEditLocation === undefined){
             dispatch(setErrorMessage("Error: Must select a location."))
         }
         else if(editParticipations.length == 0){
             dispatch(setErrorMessage("Error: Must select at least one participant."))
         }
-        else if(selectedEditStartDate.valueOf() >= selectedEditEndDate.valueOf()){
+        else if(selectedEditDate === null || composedStartDate.valueOf() >= composedEndDate.valueOf()){
             dispatch(setErrorMessage("Error: Start time must be before end time."))
         }
         else{
             dispatch(beginEditingMeeting(meeting.id, selectedEditLocation.id, editMeetingType, 
-            selectedEditStartDate.format('YYYY/MM/DD HH:mm:ss'), selectedEditEndDate.format('YYYY/MM/DD HH:mm:ss'), editParticipations));
+            composedStartDate.format('YYYY/MM/DD HH:mm:ss'), composedEndDate.format('YYYY/MM/DD HH:mm:ss'), editParticipations));
         }
         // setSelectedLocation(null);
         // setSelectedEndDate(new moment(new moment().format("YYYY/MM/DD")));
@@ -426,8 +497,8 @@ function ViewSchedulePage(props) {
                                         //     ? [/\d/, /\d/, "/", /\d/, /\d/, "/", /\d/, /\d/, /\d/, /\d/]
                                         //     : []
                                         // }
-                                        value={selectedStartDate}
-                                        onChange={handleStartDateChange}                                        
+                                        value={selectedDate}
+                                        onChange={handleDateChange}                                        
                                         disableOpenOnEnter
                                         animateYearScrolling={false}
                                         autoOk={true}
@@ -435,8 +506,8 @@ function ViewSchedulePage(props) {
                                         />
                                         <div className="time-padding"></div>
                                         <TimePicker
-                                        value={selectedStartDate}
-                                        onChange={handleStartDateChange}
+                                        value={selectedStartTime}
+                                        onChange={handleStartTimeChange}
                                         />
                                         </div>
                                     </div>
@@ -455,8 +526,8 @@ function ViewSchedulePage(props) {
                                             //     ? [/\d/, /\d/, "/", /\d/, /\d/, "/", /\d/, /\d/, /\d/, /\d/]
                                             //     : []
                                             // }
-                                            value={selectedEndDate}
-                                            onChange={handleEndDateChange}
+                                            value={selectedDate}
+                                            onChange={handleDateChange}
                                             disableOpenOnEnter
                                             animateYearScrolling={false}
                                             autoOk={true}
@@ -464,14 +535,15 @@ function ViewSchedulePage(props) {
                                             />
                                             <div className="time-padding"></div>
                                             <TimePicker
-                                            value={selectedEndDate}
-                                            onChange={handleEndDateChange}
+                                            value={selectedEndTime}
+                                            onChange={handleEndTimeChange}
                                             />
                                         </div>
                                     </div>
                                 </div>
                             </div>
                     </MuiPickersUtilsProvider>
+                    
                     <div className="participants-container"> 
                         <div className="participant-selection-container">
                             <button className="add-participant-btn" onClick={handleParticipantAdd}>Add</button>
@@ -550,7 +622,7 @@ function ViewSchedulePage(props) {
                         </div>
                         <div className="meeting-box-item">
                             <div className="meeting-item-label">Time: </div>
-                            <div className="meeting-item-value">{new moment(meeting.startTime).utcOffset('+1800').format('h:mmA')} - {new moment(meeting.endTime).utcOffset('+1800').format('h:mmA')}</div>
+                            <div className="meeting-item-value">{moment(meeting.startTime).utc(meeting.startTime).local().format('h:mmA')} - {moment(meeting.endTime).utc(meeting.endTime).local().format('h:mmA')}</div>
                         </div>
                         <div className="meeting-box-item">
                             <div className="meeting-item-label">Location: </div>
@@ -621,8 +693,8 @@ function ViewSchedulePage(props) {
                                         //     ? [/\d/, /\d/, "/", /\d/, /\d/, "/", /\d/, /\d/, /\d/, /\d/]
                                         //     : []
                                         // }
-                                        value={selectedEditStartDate}
-                                        onChange={handleEditStartDateChange}                                        
+                                        value={selectedEditDate}
+                                        onChange={handleEditDateChange}                                        
                                         disableOpenOnEnter
                                         animateYearScrolling={false}
                                         autoOk={true}
@@ -630,8 +702,8 @@ function ViewSchedulePage(props) {
                                         />
                                         <div className="time-padding"></div>
                                         <TimePicker
-                                        value={selectedEditStartDate}
-                                        onChange={handleEditStartDateChange}
+                                        value={selectedEditStartTime}
+                                        onChange={handleEditStartTimeChange}
                                         />
                                         </div>
                                     </div>
@@ -650,8 +722,8 @@ function ViewSchedulePage(props) {
                                             //     ? [/\d/, /\d/, "/", /\d/, /\d/, "/", /\d/, /\d/, /\d/, /\d/]
                                             //     : []
                                             // }
-                                            value={selectedEditEndDate}
-                                            onChange={handleEditEndDateChange}
+                                            value={selectedEditDate}
+                                            onChange={handleEditDateChange}
                                             disableOpenOnEnter
                                             animateYearScrolling={false}
                                             autoOk={true}
@@ -659,8 +731,8 @@ function ViewSchedulePage(props) {
                                             />
                                             <div className="time-padding"></div>
                                             <TimePicker
-                                            value={selectedEditEndDate}
-                                            onChange={handleEditEndDateChange}
+                                            value={selectedEditEndTime}
+                                            onChange={handleEditEndTimeChange}
                                             />
                                         </div>
                                     </div>

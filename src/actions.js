@@ -942,7 +942,7 @@ export function finishChangingRole(data){
     }
 }
 
-export function beginUpdatingUserInfo(userId, address, phone, university, bio){
+export function beginUpdatingUserInfo(userId, name, email, address, phone, university, bio){
     return dispatch => {
         dispatch(setSpinner(true));
         const options = {
@@ -951,7 +951,7 @@ export function beginUpdatingUserInfo(userId, address, phone, university, bio){
                 ...authHeader(),
                 "Content-Type" : "application/json"
             },
-            body: JSON.stringify({address, phone, university, bio}),
+            body: JSON.stringify({name, email, address, phone, university, bio}),
         }
         fetch(`${host}/user/${userId}/updateInfo`, options)
         .then(checkForErrors)

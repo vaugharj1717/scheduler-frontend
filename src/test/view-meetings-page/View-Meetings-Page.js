@@ -53,7 +53,7 @@ function isParticipant(meeting, user){
 
 function groupMeetingsByDate(meetings){
     return meetings.reduce((acc, curr) => {
-        let dateString = new moment(curr.startTime).utcOffset('+0000').format('dddd MMM D, YYYY');
+        let dateString = moment(curr.startTime).utc(curr.startTime).local().format('h:mmA')
         if(!(dateString in acc))
             acc[dateString] = []
         acc[dateString].push(curr);
@@ -63,8 +63,8 @@ function groupMeetingsByDate(meetings){
 
 function getMeetingStatus(meeting){
     let nowTime = new moment();
-    let startTime = new moment(meeting.startTime);
-    let endTime = new moment(meeting.endTime);
+    let startTime = new moment(meeting.startTime).utc(meeting.startTime).local();
+    let endTime = new moment(meeting.endTime).utc(meeting.endTime).local();
     if(nowTime > startTime && nowTime < endTime){
         const diff = endTime.diff(nowTime);
         const diffDuration = moment.duration(diff);
@@ -221,7 +221,7 @@ function ViewMeetingsPage(props){
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Time: </div>
-                                        <div className="meeting-item-value">{new moment(meeting.startTime).utcOffset('+1800').format('h:mmA')} - {new moment(meeting.endTime).utcOffset('+1800').format('h:mmA')}</div>
+                                        <div className="meeting-item-value">{new moment(meeting.startTime).utc(meeting.startTime).local().format('h:mmA')} - {new moment(meeting.endTime).utc(meeting.endTime).local().format('h:mmA')}</div>
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Location: </div>
@@ -318,7 +318,7 @@ function ViewMeetingsPage(props){
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Time: </div>
-                                        <div className="meeting-item-value">{new moment(meeting.startTime).utcOffset('+1800').format('h:mmA')} - {new moment(meeting.endTime).utcOffset('+1800').format('h:mmA')}</div>
+                                        <div className="meeting-item-value">{new moment(meeting.startTime).utc(meeting.startTime).local().format('h:mmA')} - {new moment(meeting.endTime).utc(meeting.endTime).local().format('h:mmA')}</div>
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Location: </div>

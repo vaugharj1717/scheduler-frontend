@@ -76,6 +76,8 @@ function MeetingSchedulerPage(props) {
     let [selectedDepartment, setSelectedDepartment] = useState(null);
     let [focusedPositionIndex, setFocusedPositionIndex] = useState(-1);
 
+    let currentUser = useSelector(state => state.currentUser);
+
     let [name, setName] = useState('');
     let [email, setEmail] = useState('');
     let [positionName, setPositionName] = useState('');
@@ -88,6 +90,8 @@ function MeetingSchedulerPage(props) {
     const dispatch = useDispatch();
     let positionsUnsorted = useSelector(state => state.positions);
     let positions = sortPositions(positionsUnsorted);
+    if(currentUser.role === 'DEPARTMENT_ADMIN')
+        positions = positions.filter(position => position.department.departmentName === currentUser.department.departmentName);
     let candidates = useSelector(state => state.candidates);
     let departments = useSelector(state => state.departments);
 
@@ -100,6 +104,10 @@ function MeetingSchedulerPage(props) {
     let isValidInput;
     if(name.match('^[a-zA-Z|\\.|\\s]+$') && email.match('^[a-zA-Z|0-9|\\.]+@[a-zA-Z|0-9|\\.]+\\.[a-zA-Z|0-9|\\.]+$')) isValidInput = true;
     else isValidInput = false;
+
+    // if(currentUser.role === 'DEPARTMENT_ADMIN'){
+    //     setSortType('Positions');
+    // }
 
     function sortPositions(positionsUnsorted){
         if(sortType === 'Positions' && asc){
@@ -115,6 +123,8 @@ function MeetingSchedulerPage(props) {
             return positionsUnsorted.sort(sortByDepartmentDesc);
         }
     }
+
+    
     
     function handleCancel(){
         //set creatingCandidate to false
@@ -199,7 +209,7 @@ function MeetingSchedulerPage(props) {
     }
 
     function handleSortChange(){
-        if(sortType === 'Positions'){
+        if(sortType === 'Positions' && currentUser.role === 'SCHEDULER'){
             setSortType('Departments');
         }
         else{
@@ -221,7 +231,7 @@ function MeetingSchedulerPage(props) {
                 <span id="page-title">
                     All Positions
                     <div id="sorting-label">
-                        Sort By <span className="sorting-type" onClick={()=>handleSortChange()}>{sortType}</span> 
+                        Sort By <span style={{textDecoration: currentUser.role === 'SCHEDULER' ? 'underlined' : 'none', cursor: currentUser.role === 'SCHEDULER' ? 'cursor' : 'default'}}className="sorting-type" onClick={()=>handleSortChange()}>{sortType}</span> 
                         {asc &&
                         <span className="sorting-dir" onClick={()=>setAsc(false)}> &uarr;</span>
                         }
@@ -260,6 +270,7 @@ function MeetingSchedulerPage(props) {
                     variant="outlined" 
                 />
 
+                {currentUser.role === 'SCHEDULER' &&
                 <Autocomplete
                     value={selectedDepartment}
                     className={classes.root}
@@ -272,11 +283,12 @@ function MeetingSchedulerPage(props) {
                     style={{ width: '100%' }}
                     renderInput={(params) => <TextField {...params} style={{marginLeft:"10%", width:'100%', marginBottom:'5px'}} label="Select department..." variant="outlined" />}
                 />
-
-                {selectedDepartment !== null && positionName !== '' &&
-                <button className="button save-button" onClick={()=> handleCreatePosition(positionName, selectedDepartment.id)} style={{marginLeft: '3%', marginBottom: '10px'}}>SAVE</button>
                 }
-                {(selectedDepartment === null || positionName === '') &&
+
+                {(selectedDepartment !== null || currentUser.role === 'DEPARTMENT_ADMIN') && positionName !== '' &&
+                <button className="button save-button" onClick={()=> handleCreatePosition(positionName, currentUser.role === 'SCHEDULER' ? selectedDepartment.id : currentUser.department.id)} style={{marginLeft: '3%', marginBottom: '10px'}}>SAVE</button>
+                }
+                {((selectedDepartment === null && currentUser.role !== 'DEPARTMENT_ADMIN') || positionName === '') &&
                 <button className="button save-button" style={{marginLeft: '3%', marginBottom: '10px', backgroundColor:'gray', cursor:'default'}}>SAVE</button>
                 }
                 <button className="button cancel-button" onClick={()=> {handleCancelCreatingPosition()}} style={{marginLeft: '1%', marginRight: '3%', marginBottom: '10px'}}>CANCEL</button>

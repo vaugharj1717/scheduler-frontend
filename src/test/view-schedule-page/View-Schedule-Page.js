@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {Switch, Route, Link} from 'react-router-dom';
 import './View-Schedule-Page.css';
-import {setErrorMessage, setCreatingMeeting, beginDeletingMeeting, beginCreatingMeeting, beginGettingSchedule, 
+import {setErrorMessage, setCreatingMeeting, beginDeletingMeeting, beginCreatingMeeting, beginEditingMeeting, beginGettingSchedule, 
     beginGettingLocations, beginGettingParticipants, setIsViewingUser} from '../../actions.js';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
@@ -110,11 +110,23 @@ function ViewSchedulePage(props) {
     let [meetingType, setMeetingType] = useState('MEET_FACULTY')
     let [selectedEndDate, setSelectedEndDate] = useState(new moment(new moment().format("YYYY/MM/DD")));
     let [participations, setParticipations] = useState([]);
+
+    let [selectedEditLocation, setSelectedEditLocation] = useState(null);
+    let [selectedEditStartDate, setSelectedEditStartDate] = useState(new moment(new moment().format("YYYY/MM/DD")));
+    let [editMeetingType, setEditMeetingType] = useState('MEET_FACULTY')
+    let [selectedEditEndDate, setSelectedEditEndDate] = useState(new moment(new moment().format("YYYY/MM/DD")));
+    let [editParticipations, setEditParticipations] = useState([]);
+
+
     // let [isCreatingMeeting, setCreatingMeeting] = useState(false);
     let isCreatingMeeting = useSelector(state => state.isCreatingMeeting);
+    let isEditingMeeting = useSelector(state => state.isEditingMeeting);
+    let [isEditingIndex1, setIsEditingIndex1] = useState(-1);
+    let [isEditingIndex2, setIsEditingIndex2] = useState(-1);
 
     //handling participants
     let [selectedParticipant, setSelectedParticipant] = useState(null);
+    let [selectedEditParticipant, setSelectedEditParticipant] = useState(null);
     let participants = useSelector(state => state.participants);
 
     //let meetingsGroupedByDate = groupMeetingsByDate(schedule.meetings);
@@ -122,6 +134,8 @@ function ViewSchedulePage(props) {
     const dispatch = useDispatch();
     useEffect(()=>{
         dispatch(beginGettingSchedule(props.candidacy.schedule.id))
+        dispatch(beginGettingLocations());
+        dispatch(beginGettingParticipants());
     }, []);
 
     useEffect(()=>{
@@ -132,37 +146,97 @@ function ViewSchedulePage(props) {
     }, [schedule]);
 
     function handleCancelMeetingCreation(){
-        dispatch(setCreatingMeeting(false));
+        dispatch(setCreatingMeeting(false, false));
         setSelectedLocation(null);
         setSelectedStartDate(new moment());
         setSelectedEndDate(new moment());
         setParticipations([]);
     }
 
+    function handleCancelMeetingEdit(){
+        dispatch(setCreatingMeeting(false, false));
+        setSelectedEditLocation(null);
+        setSelectedEditStartDate(new moment());
+        setSelectedEditEndDate(new moment());
+        setEditParticipations([]);
+    }
+
+    function handleEditMeeting(meeting, i, j){
+        dispatch(setErrorMessage(''));
+        dispatch(setCreatingMeeting(false, true));
+        setIsEditingIndex1(i);
+        setIsEditingIndex2(j);
+
+        setSelectedEditLocation(meeting.location);
+        setSelectedEditStartDate(new moment(meeting.startTime));
+        setSelectedEditEndDate(new moment(meeting.endTime));
+        setEditMeetingType(meeting.meetingType);
+        // setEditParticipations(meeting.participations);
+
+        setEditParticipations(meeting.participations.map(participation => {
+            const participant = participation.participant;
+            console.log(participation);
+            return {role: participant.role, participantId: participant.id, name: participant.name, 
+                canLeaveFeedback: participation.canLeaveFeedback, 
+                canViewFeedback: participation.canViewFeedback}}));
+    }
+
+
     function handleStartDateChange(startDate, isDateChange){
+        console.log(startDate.date());
         setSelectedStartDate(startDate);
-        if(isDateChange){
+        // if(isDateChange){
             setSelectedEndDate(endDate => {
             endDate.date(startDate.date());
             endDate.month(startDate.month());
             endDate.year(startDate.year());
             return endDate;
-        })}
+        })
     }
 
     function handleEndDateChange(endDate, isDateChange){
         setSelectedEndDate(endDate);
-        if(isDateChange){
+        // if(isDateChange){
             setSelectedStartDate(startDate => {
                 startDate.date(endDate.date());
                 startDate.month(endDate.month());
                 startDate.year(endDate.year());
                 return startDate;
-        })}
+        })
     }
+
+    function handleEditStartDateChange(startDate, isDateChange){
+        setSelectedEditStartDate(startDate);
+
+        // if(isDateChange){
+            setSelectedEditEndDate(endDate => {
+            console.log(endDate);
+            endDate.date(startDate.date());
+            endDate.month(startDate.month());
+            endDate.year(startDate.year());
+            return endDate;
+            });
+    }
+
+    function handleEditEndDateChange(endDate, isDateChange){
+        setSelectedEditEndDate(endDate);
+        // if(isDateChange){
+            setSelectedEditStartDate(startDate => {
+                startDate.date(endDate.date());
+                startDate.month(endDate.month());
+                startDate.year(endDate.year());
+                return startDate;
+            });
+    }
+
+    
 
     function handleParticipantDelete(participantId){
         setParticipations(participations => participations.filter((participation) => participation.participantId !== participantId))
+    }
+
+    function handleEditParticipantDelete(participantId){
+        setEditParticipations(participations => participations.filter((participation) => participation.participantId !== participantId))
     }
 
     function handleParticipantAdd(){
@@ -180,8 +254,32 @@ function ViewSchedulePage(props) {
         }
     }
 
+    function handleEditParticipantAdd(){
+        if(selectedEditParticipant != null){
+            for(let i = 0; i < editParticipations.length; i++){
+                if(editParticipations[i].participantId == selectedEditParticipant.id){
+                    return;
+                }
+            }
+            setEditParticipations(participations => 
+                [...participations, {role: selectedEditParticipant.role, participantId: selectedEditParticipant.id, name: selectedEditParticipant.name, 
+                    canLeaveFeedback: selectedEditParticipant.role === 'DEPARTMENT_ADMIN' ? true : false, 
+                    canViewFeedback: selectedEditParticipant.role === 'DEPARTMENT_ADMIN' ? true : false}]);
+            setSelectedEditParticipant(null);
+        }
+    }
+
     function handleCanViewFeedbackChange(value, i){
         setParticipations(participations => participations.map((participation => {
+            if(participation.participantId == i){
+                return {...participation, canViewFeedback: !participation.canViewFeedback}
+            }
+            else return participation
+        })))
+    }
+
+    function handleEditCanViewFeedbackChange(value, i){
+        setEditParticipations(participations => participations.map((participation => {
             if(participation.participantId == i){
                 return {...participation, canViewFeedback: !participation.canViewFeedback}
             }
@@ -198,8 +296,21 @@ function ViewSchedulePage(props) {
         })))
     }
 
+    function handleEditCanLeaveFeedbackChange(value, i){
+        setEditParticipations(participations => participations.map((participation => {
+            if(participation.participantId == i){
+                return {...participation, canLeaveFeedback: !participation.canLeaveFeedback}
+            }
+            else return participation
+        })))
+    }
+
     function handleMeetingTypeChange(type){
         setMeetingType(type);
+    }
+
+    function handleEditMeetingTypeChange(type){
+        setEditMeetingType(type);
     }
 
     function handleCreateMeeting(){
@@ -215,6 +326,26 @@ function ViewSchedulePage(props) {
         else{
             dispatch(beginCreatingMeeting(schedule.id, selectedLocation.id, meetingType, 
             selectedStartDate.format('YYYY/MM/DD HH:mm:ss'), selectedEndDate.format('YYYY/MM/DD HH:mm:ss'), participations));
+        }
+        // setSelectedLocation(null);
+        // setSelectedEndDate(new moment(new moment().format("YYYY/MM/DD")));
+        // setSelectedStartDate(new moment(new moment().format("YYYY/MM/DD")));
+        // setParticipations([]);
+    }
+
+    function handleSendEditMeeting(meeting){
+        if(selectedEditLocation === null || selectedEditLocation === '' || selectedEditLocation === undefined){
+            dispatch(setErrorMessage("Error: Must select a location."))
+        }
+        else if(editParticipations.length == 0){
+            dispatch(setErrorMessage("Error: Must select at least one participant."))
+        }
+        else if(selectedEditStartDate.valueOf() >= selectedEditEndDate.valueOf()){
+            dispatch(setErrorMessage("Error: Start time must be before end time."))
+        }
+        else{
+            dispatch(beginEditingMeeting(meeting.id, selectedEditLocation.id, editMeetingType, 
+            selectedEditStartDate.format('YYYY/MM/DD HH:mm:ss'), selectedEditEndDate.format('YYYY/MM/DD HH:mm:ss'), editParticipations));
         }
         // setSelectedLocation(null);
         // setSelectedEndDate(new moment(new moment().format("YYYY/MM/DD")));
@@ -246,9 +377,8 @@ function ViewSchedulePage(props) {
             {/* NEW MEETINGS */}
             {!isCreatingMeeting &&
             <button className="create-meeting-open" onClick={()=>{
-                dispatch(setCreatingMeeting(true));
-                dispatch(beginGettingLocations())
-                dispatch(beginGettingParticipants())
+                dispatch(setErrorMessage(''));
+                dispatch(setCreatingMeeting(true, false));
                 }}>
             Create Meeting +
             </button>
@@ -398,12 +528,14 @@ function ViewSchedulePage(props) {
                 {Object.keys(meetings).map((meetingDate, i) => (
                     <div key={i}>
                         <div className="meeting-date">{meetingDate}</div>
-                        {meetings[meetingDate].map((meeting, i) => 
-                        <div key={i} className="view-meetings-meeting-box">
+                        {meetings[meetingDate].map((meeting, j) => {
+                        if(!isEditingMeeting || isEditingIndex1 !== i || isEditingIndex2 !== j) return (
+                        <div key={j} className="view-meetings-meeting-box">
                                     
                         {/* PARTICIPANT FEEDBACK CONTROLS */}
                         <div className="meeting-box-feedback-btns-container">
                             <button className="scheduler-delete-meeting-btn" onClick={()=>handleDeleteMeeting(meeting)}>Delete</button>
+                            <button className="scheduler-delete-meeting-btn" onClick={()=>handleEditMeeting(meeting, i, j)}>Edit</button>
                         </div>
                         {/*********************************/}
 
@@ -444,6 +576,149 @@ function ViewSchedulePage(props) {
                         </div>
                         {/*********************************/}
                     </div>
+                    )
+                else return (
+                <div key={j}>
+                    <div className="creating-meeting-box">
+                        <div className="cancel-meeting-btn-container">
+                            <button className="cancel-meeting-btn" onClick={()=>handleCancelMeetingEdit()}>Cancel Edit</button>
+                        </div>
+                    <div>
+                    <div className="meeting-type-container" >
+                        <div onChange={(e)=>handleEditMeetingTypeChange(e.target.value)}>
+                            <input type="radio" value='MEET_FACULTY' id="meeting-faculty" name="meeting-type" checked={editMeetingType=='MEET_FACULTY'} />
+                            <label htmlFor="meeting-faculty">Meeting with Faculty</label>
+                            <input type="radio" value='PRESENTATION' id="presentation-students" name="meeting-type" checked={editMeetingType=='PRESENTATION'}  />
+                            <label htmlFor="presentation-students">Presentation to students</label>
+                        </div>
+                    </div>
+                    <div className="location-container">
+                        <Autocomplete
+                        value={selectedEditLocation}
+                        onChange={(event, location) => {
+                            setSelectedEditLocation(location);
+                        }}
+                        id="location-selection-box"
+                        options={locations}
+                        getOptionLabel={(location) => location.buildingName + " - " + location.roomNumber}
+                        style={{ width: '100%' }}
+                        renderInput={(params) => <TextField {...params} style={{}} label="Select location..." variant="outlined" />}
+                        />
+                    </div>
+                    <MuiPickersUtilsProvider utils={MomentUtils}>
+                            <div className="date-picker-container">
+                                <div>
+                                    <div className="start-time-container">
+                                        <div>Start time: </div>
+                                        <div>
+                                        <DatePicker
+                                        keyboard
+                                        placeholder="MM/DD/YYYY"
+                                        format={"MM/DD/YYYY"}
+                                        // handle clearing outside => pass plain array if you are not controlling value outside
+                                        // mask={value =>
+                                        //     value
+                                        //     ? [/\d/, /\d/, "/", /\d/, /\d/, "/", /\d/, /\d/, /\d/, /\d/]
+                                        //     : []
+                                        // }
+                                        value={selectedEditStartDate}
+                                        onChange={handleEditStartDateChange}                                        
+                                        disableOpenOnEnter
+                                        animateYearScrolling={false}
+                                        autoOk={true}
+                                        clearable
+                                        />
+                                        <div className="time-padding"></div>
+                                        <TimePicker
+                                        value={selectedEditStartDate}
+                                        onChange={handleEditStartDateChange}
+                                        />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="end-time-container">
+                                        <div>End time: </div>
+                                        <div>
+                                            <DatePicker
+                                            keyboard
+                                            placeholder="MM/DD/YYYY"
+                                            format={"MM/DD/YYYY"}
+                                            // handle clearing outside => pass plain array if you are not controlling value outside
+                                            // mask={value =>
+                                            //     value
+                                            //     ? [/\d/, /\d/, "/", /\d/, /\d/, "/", /\d/, /\d/, /\d/, /\d/]
+                                            //     : []
+                                            // }
+                                            value={selectedEditEndDate}
+                                            onChange={handleEditEndDateChange}
+                                            disableOpenOnEnter
+                                            animateYearScrolling={false}
+                                            autoOk={true}
+                                            clearable
+                                            />
+                                            <div className="time-padding"></div>
+                                            <TimePicker
+                                            value={selectedEditEndDate}
+                                            onChange={handleEditEndDateChange}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </MuiPickersUtilsProvider>
+                    <div className="participants-container"> 
+                        <div className="participant-selection-container">
+                            <button className="add-participant-btn" onClick={handleEditParticipantAdd}>Add</button>
+                            <Autocomplete
+                                value={selectedEditParticipant}
+                                onChange={(event, participant) => {
+                                    setSelectedEditParticipant(participant)
+                                }}
+                                id="participant-selection-box"
+                                options={participants}
+                                getOptionLabel={(participants) => participants.name}
+                                style={{width: '100%'}}
+                                renderInput={(params) => <TextField {...params} style={{}} label="Select participant..." variant="outlined" />}
+                            />   
+                        </div>                   
+                        {editParticipations.map( (participation, i) => 
+                        <div className="participant-row" key={i}>
+                            <button className="participant-delete-btn" onClick={()=>handleEditParticipantDelete(participation.participantId)}>Delete</button>
+                            <span className="participant-name">{participation.name}</span>
+                            
+                            {participation.role !== 'DEPARTMENT_ADMIN' &&
+                            <span>
+                                <input checked={participation.canViewFeedback} className="can-view-feedback-box" type="checkbox" onChange={(e) => handleEditCanViewFeedbackChange(e.target.value, participation.participantId)} id={`canViewFeedback${i}`} name="canViewFeedback"></input>
+                                <span>Can view feedback</span>
+                                <input check={participation.canLeaveFeedback} type="checkbox" onChange={(e) => handleEditCanLeaveFeedbackChange(e.target.value, participation.participantId)} id={`canLeaveFeedback${i}`} name="canLeaveFeedback"></input>
+                                <span>Can leave feedback</span>
+                                <span>{participation.canViewFeedback}</span>
+                            </span>
+                            }
+                            {participation.role === 'DEPARTMENT_ADMIN' &&
+                            <span>
+                                <input disabled checked className="can-view-feedback-box" type="checkbox"  id={`canViewFeedback${i}`} name="canViewFeedback"></input>
+                                <span>Can view feedback</span>
+                                <input disabled checked type="checkbox" id={`canLeaveFeedback${i}`} name="canLeaveFeedback"></input>
+                                <span>Can leave feedback</span>
+                                <span>{participation.canViewFeedback}</span>
+                            </span>
+                            }
+                        </div>
+                        )} 
+                        <div className="meeting-creation-error-msg">
+                            {errorMsg}
+                        </div>   
+                    </div>
+                </div>
+                <div className="create-meeting-btn-container">
+                    <button onClick={()=>handleSendEditMeeting(meeting)}>Edit Meeting</button>
+                </div>
+            </div>
+                        </div>
+                    )
+                    }
                         )}
                     </div>
                 ))}

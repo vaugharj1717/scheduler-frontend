@@ -14,6 +14,7 @@ export const Action = Object.freeze({
     GetLocations: "GetLocations",
     GetParticipants: "GetParticipants",
     CreateMeeting: "CreateMeeting",
+    EditMeeting: "EditMeeting",
     DeleteMeeting: "DeleteMeeting",
     SelectCandidacy: "SelectCandidacy",
     LogIn: "LogIn",
@@ -51,6 +52,7 @@ export const Action = Object.freeze({
     SetCandidateAlert: "SetCandidateAlert",
     SelectUser: "SelectUser",
     SetCreatingMeeting: "SetCreatingMeeting",
+    SetEditingMeeting: "SetEditingMeeting",
     SetUserToMessage: "SetUserToMessage",
     SetUserPosition: "SetUserPosition",
 
@@ -557,7 +559,6 @@ export function selectCandidacy(candidacy, position){
 }
 
 export function beginCreatingMeeting(scheduleId, locationId, meetingType, startTime, endTime, participations){
-    console.log(meetingType);
     return dispatch => {
         dispatch(setSpinner(true));
         const options = {
@@ -572,16 +573,47 @@ export function beginCreatingMeeting(scheduleId, locationId, meetingType, startT
         .then(checkForErrors)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             dispatch(finishCreatingMeeting(data))
-            dispatch(setCreatingMeeting(false));
+            dispatch(setCreatingMeeting(false, false));
             dispatch(setErrorMessage(""));
         })
         .catch(err => {
-            console.log(err.message);
             dispatch(setErrorMessage(err.message));
         })
         .finally(result => dispatch(setSpinner(false)));
+    }
+}
+
+export function beginEditingMeeting(meetingId, locationId, meetingType, startTime, endTime, participations){
+    return dispatch => {
+        dispatch(setSpinner(true));
+        const options = {
+            method: "PATCH",
+            headers: {
+                ...authHeader(),
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify({locationId, meetingType, startTime, endTime, participations}),
+        }
+        fetch(`${host}/meeting/${meetingId}`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            dispatch(finishEditMeeting(data))
+            dispatch(setCreatingMeeting(false, false));
+            dispatch(setErrorMessage(""));
+        })
+        .catch(err => {
+            dispatch(setErrorMessage(err.message));
+        })
+        .finally(result => dispatch(setSpinner(false)));
+    }
+}
+
+export function finishEditMeeting(meeting){
+    return{
+        type: Action.EditMeeting,
+        payload: meeting
     }
 }
 
@@ -1307,12 +1339,13 @@ export function selectUser(user){
     }
 }
 
-export function setCreatingMeeting(val){
+export function setCreatingMeeting(val, editingVal){
     return{
         type: Action.SetCreatingMeeting,
-        payload: val
+        payload: {creating: val, editing: editingVal}
     }
 }
+
 
 export function setUserToMessage(user){
     return{

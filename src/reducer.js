@@ -48,6 +48,7 @@ const initialState = {
     errorMessage: "",
     selectedUser: null,
     isCreatingMeeting: false,
+    isEditingMeeting: false,
     userToMessage: null,
 };
 
@@ -73,7 +74,8 @@ function reducer(state = initialState, action){
         case Action.SetCreatingMeeting:
             return{
                 ...state,
-                isCreatingMeeting: action.payload,
+                isCreatingMeeting: action.payload.creating,
+                isEditingMeeting: action.payload.editing
             }
         case Action.SetSpinner:
             return{
@@ -392,6 +394,19 @@ function reducer(state = initialState, action){
             return{
                 ...state,
                 currentSchedule: {...state.currentSchedule, meetings: [...state.currentSchedule.meetings, action.payload].sort(meetingSorter)}
+            }
+        case Action.EditMeeting:
+            return{
+                ...state,
+                currentSchedule: {...state.currentSchedule, meetings: state.currentSchedule.meetings.map(meeting => {
+                    if(meeting.id === action.payload.id){
+                        return action.payload;
+                    }
+                    else{
+                        return meeting;
+                    }
+                }).sort(meetingSorter)
+                }
             }
         case Action.DeleteMeeting:
             return{

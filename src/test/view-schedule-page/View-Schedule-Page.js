@@ -56,7 +56,7 @@ const useStyles = makeStyles({
 })
 function groupMeetingsByDate(meetings){
     return meetings.reduce((acc, curr) => {
-        let dateString = new moment(curr.startTime).utc(curr.startTime).local().format('dddd MMM D, YYYY');
+        let dateString = new moment.utc(curr.startTime).local().format('dddd MMM D, YYYY');
         if(!(dateString in acc))
             acc[dateString] = []
         acc[dateString].push(curr);
@@ -67,8 +67,8 @@ function groupMeetingsByDate(meetings){
 
 function getMeetingStatus(meeting){
     let nowTime = new moment();
-    let startTime = new moment(meeting.startTime).utc(meeting.startTime).local();
-    let endTime = new moment(meeting.endTime).utc(meeting.endTime).local();
+    let startTime = new moment.utc(meeting.startTime).local();
+    let endTime = new moment.utc(meeting.endTime).local();
     if(nowTime > startTime && nowTime < endTime){
         const diff = endTime.diff(nowTime);
         const diffDuration = moment.duration(diff);
@@ -178,15 +178,14 @@ function ViewSchedulePage(props) {
         setIsEditingIndex2(j);
 
         setSelectedEditLocation(meeting.location);
-        setSelectedEditDate(moment(meeting.startTime).utc(meeting.startTime).local());
-        setSelectedEditStartTime(moment(meeting.startTime).utc(meeting.startTime).local());
-        setSelectedEditEndTime(moment(meeting.endTime).utc(meeting.endTime).local());
+        setSelectedEditDate(moment.utc(meeting.startTime).local());
+        setSelectedEditStartTime(moment.utc(meeting.startTime).local());
+        setSelectedEditEndTime(moment.utc(meeting.endTime).local());
         setEditMeetingType(meeting.meetingType);
         // setEditParticipations(meeting.participations);
 
         setEditParticipations(meeting.participations.map(participation => {
             const participant = participation.participant;
-            console.log(participation);
             return {role: participant.role, participantId: participant.id, name: participant.name, 
                 canLeaveFeedback: participation.canLeaveFeedback, 
                 canViewFeedback: participation.canViewFeedback}}));
@@ -622,7 +621,7 @@ function ViewSchedulePage(props) {
                         </div>
                         <div className="meeting-box-item">
                             <div className="meeting-item-label">Time: </div>
-                            <div className="meeting-item-value">{moment(meeting.startTime).utc(meeting.startTime).local().format('h:mmA')} - {moment(meeting.endTime).utc(meeting.endTime).local().format('h:mmA')}</div>
+                            <div className="meeting-item-value">{moment.utc(meeting.startTime).local().format('h:mmA')} - {moment.utc(meeting.endTime).local().format('h:mmA')}</div>
                         </div>
                         <div className="meeting-box-item">
                             <div className="meeting-item-label">Location: </div>

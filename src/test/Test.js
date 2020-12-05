@@ -8,6 +8,7 @@ import ViewMeetingsPage from './view-meetings-page/View-Meetings-Page.js';
 import AdminPage from './admin-page/Admin-Page.js';
 import LoginPage from './login-page/Login-Page.js';
 import FilePane from './file-pane/File-Pane.js';
+import ViewAllMeetingsPage from './view-all-meetings-page/View-All-Meetings-Page.js';
 import UserInfoPane from './user-info-pane/User-Info-Pane.js';
 import FeedbackPane from './feedback-pane/Feedback-Pane.js';
 import Spinner from './spinner/Spinner.js';
@@ -59,7 +60,7 @@ function App() {
           <Route exact path="/test/login">
             <LoginPage/>
           </Route>
-          <Route path="/test">
+          <Route path="/">
             <Redirect to="/test/login"/>
           </Route>
         </Switch>
@@ -133,6 +134,14 @@ function App() {
             }
           </Route>
 
+          <Route exact path="/test/view-all-meetings">
+            {(currentUser.role == 'SCHEDULER' || currentUser.role == 'DEPARTMENT_ADMIN') ?
+            <ViewAllMeetingsPage user={currentUser}></ViewAllMeetingsPage>
+            :
+            <Redirect to="/test"/>
+            }
+          </Route>
+
           
           {/*CANDIDATE*/}
           <Route exact path="/test/candidate">
@@ -188,7 +197,7 @@ function App() {
           </Route>
 
           {/*Redirect to home page if no match*/}
-          <Route path="/test">
+          <Route path="/">
             <Redirect to="/test"></Redirect>
           </Route>
         </Switch>

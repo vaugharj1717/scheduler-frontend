@@ -42,6 +42,8 @@ const initialState = {
     possibleRecipients: [],
     files: [],
     pastMeetings: [],
+    allUpcomingMeetings: [],
+    allPastMeetings:[],
     upcomingMeetings: [],
     feedback: [],
     isSpinning: false,
@@ -123,11 +125,23 @@ function reducer(state = initialState, action){
                         else return meeting;
                     })
             }
-        case Action.GetUpcomingMeetingsForUser:
+        case Action.GetUpcomingMeetings:
             let sortedMeetings = action.payload.sort(meetingSorter);
             return{
                 ...state,
-                upcomingMeetings: sortedMeetings
+                allUpcomingMeetings: sortedMeetings
+            }
+        case Action.GetPastMeetings:
+            let sortedMeetings2 = action.payload.sort(meetingSorterDesc);
+            return{
+                ...state,
+                allPastMeetings: sortedMeetings2
+            }
+        case Action.GetUpcomingMeetingsForUser:
+            let sortedMeetings3 = action.payload.sort(meetingSorter);
+            return{
+                ...state,
+                upcomingMeetings: sortedMeetings3
             }
         case Action.GetPastMeetingsForUser:
             let sortedMeetingsDesc = action.payload.sort(meetingSorterDesc);

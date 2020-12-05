@@ -13,13 +13,6 @@ function App() {
   //if new state depends on old state, pass function into it (toggle)
   //setCreatingCandidate(creatingCandidate => !creatingCandidate)
 
-  {/* If user is not logged in... */}
-  if(currentUser == null){
-    return(
-      <Test></Test>
-    )
-  }
-
   {/* If user is logged in... */}
   return(
     <Test></Test>

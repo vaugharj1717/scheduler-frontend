@@ -415,7 +415,7 @@ function ViewSchedulePage(props) {
         }
         else{
             dispatch(beginEditingMeeting(meeting.id, selectedEditLocation.id, editMeetingType, 
-            composedStartDate.format('YYYY/MM/DD HH:mm:ss'), composedEndDate.format('YYYY/MM/DD HH:mm:ss'), editParticipations));
+            composedStartDate.utc().format('YYYY/MM/DD HH:mm:ss'), composedEndDate.utc().format('YYYY/MM/DD HH:mm:ss'), editParticipations));
         }
         // setSelectedLocation(null);
         // setSelectedEndDate(new moment(new moment().format("YYYY/MM/DD")));

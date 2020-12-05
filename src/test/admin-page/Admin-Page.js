@@ -167,7 +167,7 @@ export default function AdminPage(props){
             <div onClick={()=>dispatch(beginLoggingOut())} className='admin-logout-btn'>Logout</div>
             }
             {currentUser.role === 'DEPARTMENT_ADMIN' &&
-            <Nav style='scheduler'/>
+            <Nav page="admin" style='scheduler'/>
             }
             <div id="admin-header">ADMINISTRATOR</div>
             {currentUser.role !== "DEPARTMENT_ADMIN" &&
@@ -253,7 +253,7 @@ export default function AdminPage(props){
             <div onClick={()=>dispatch(beginLoggingOut())} className='admin-logout-btn'>Logout</div>
             }
             {currentUser.role === 'DEPARTMENT_ADMIN' &&
-            <Nav style='scheduler'/>
+            <Nav page="admin" style='scheduler'/>
             }
             <div id="admin-header">ADMINISTRATOR</div>
             {currentUser.role !== "DEPARTMENT_ADMIN" &&
@@ -300,7 +300,7 @@ export default function AdminPage(props){
             <div onClick={()=>dispatch(beginLoggingOut())} className='admin-logout-btn'>Logout</div>
             }
             {currentUser.role === 'DEPARTMENT_ADMIN' &&
-            <Nav style='scheduler'/>
+            <Nav page="admin" style='scheduler'/>
             }
             <div id="admin-header">ADMINISTRATOR</div>
             {currentUser.role !== "DEPARTMENT_ADMIN" &&

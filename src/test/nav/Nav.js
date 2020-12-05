@@ -5,7 +5,7 @@ import {setMap, beginLoggingOut, setIsViewingMessages, setIsViewingUser} from '.
 import './Nav.css';
 
 
-export default function LoginPage(props){
+export default function Nav(props){
     let dispatch = useDispatch();
     let currentUser = useSelector(state => state.currentUser);
     let showNotifier = useSelector(state => state.showUnseenMessagesNotifier);
@@ -14,6 +14,7 @@ export default function LoginPage(props){
     let [toAdmin, setToAdmin] = useState(false);
     let [toSchedule, setToSchedule] = useState(false);
     let style = props.style;
+    let page = props.page;
 
     function handleDropdownClick(val){
         if(val === 'admin'){
@@ -60,11 +61,11 @@ export default function LoginPage(props){
                     <div className="burger-message-notifier">!</div>
                 }
                 </div>
-                {currentUser.role === 'DEPARTMENT_ADMIN' && style !== 'scheduler' &&
+                {currentUser.role === 'DEPARTMENT_ADMIN' && page === 'scheduler' &&
                 <Link to='/test/department-admin/admin' className="nav-btn"><span className="nav-txt">Admin</span></Link>
                 }
-                {currentUser.role === 'DEPARTMENT_ADMIN' && style === 'scheduler' &&
-                <Link to='/test/department-admin' className="nav-btn"><span className="nav-txt">Schedule</span></Link>
+                {currentUser.role === 'DEPARTMENT_ADMIN' && page === 'admin' &&
+                <Link to='/test/meeting-scheduler' className="nav-btn"><span className="nav-txt">Scheduler</span></Link>
                 }
                 <div className="nav-btn" onClick={()=>handleAccount()  }><span className="nav-txt">Account</span></div>
                 <div className="nav-btn" onClick={()=>dispatch(setMap(true, true))}><span className="nav-txt">Map</span></div>

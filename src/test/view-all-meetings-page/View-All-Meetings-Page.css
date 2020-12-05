@@ -1,7 +1,3 @@
-.choose-candidate-page-root{
-    
-}
-
 .schedule-header{
     margin-top: 80px;
     color: white;
@@ -266,4 +262,19 @@ a:hover{
     .to-positions-link{
         top: 120px;
     }
+}
+
+.all-meetings-back{
+    position: absolute;
+    top: 80px;
+    left: 10px;
+    cursor: pointer;
+    color: white;
+    font-family: sans-serif;
+    z-index: 5;
+    text-decoration: none;
+}
+
+.all-meetings-back:hover, .all-meetings-back:focus{
+    color: black;
 }

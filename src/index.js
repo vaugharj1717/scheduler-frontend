@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App.js';
+import Test from './test/Test.js';
 import {Provider} from 'react-redux';
 import storeExport from './store.js';
 import {BrowserRouter} from 'react-router-dom'
@@ -18,7 +19,7 @@ ReactDOM.render(
       <PersistGate loading={null} persistor={storeExportVals.persistor}>
         <BrowserRouter>
           <MessageChecker/>
-          <App />
+          <Test />
         </BrowserRouter>
       </PersistGate>
     </Provider>

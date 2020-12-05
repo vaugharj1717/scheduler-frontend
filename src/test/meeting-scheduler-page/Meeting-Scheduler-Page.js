@@ -219,7 +219,7 @@ function MeetingSchedulerPage(props) {
     
     return(
         <div className="meeting-scheduler-page-container">
-        <Nav style='scheduler' />
+        <Nav page="scheduler" style='scheduler' />
         <div className="meeting-scheduler-page-root">
             {/* MENU NAV BUTTON */}
             {/* <div id="menu-nav">
@@ -248,6 +248,8 @@ function MeetingSchedulerPage(props) {
             {!addingNewPosition &&
             <div className="more-buttons-container">
                 <button className="button button2 top-button" onClick={()=>handleAddNewPosition()}>Add New Position +</button>
+                <Link className="button button2 top-button" to="/test/view-all-meetings">View all Meetings</Link>
+
             </div>
             }
             {addingNewPosition &&

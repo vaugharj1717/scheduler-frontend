@@ -43,6 +43,8 @@ export const Action = Object.freeze({
     UploadFile: "UploadFile",
 
     UpdateUserInfo: "UpdateUserInfo",
+    GetUpcomingMeetings: "GetUpcomingMeetings",
+    GetPastMeetings: "GetPastMeetings",
     GetUpcomingMeetingsForUser: "GetUpcomingMeetingsForUser",
     GetPastMeetingsForUser: "GetPastMeetingsForUser",
     SetAlert: "SetAlert",
@@ -184,8 +186,61 @@ export function finishGettingPositions(data){
     }
 }
 
+export function beginGettingUpcomingMeetings(){
+    const options = {
+        headers: authHeader()
+    };
+    return dispatch => {
+        dispatch(setSpinner(true));
+        fetch(`${host}/meeting/getUpcoming`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            dispatch(finishGettingUpcomingMeetings(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+        .finally(result => dispatch(setSpinner(false)));
+    }
+}
+
+export function finishGettingUpcomingMeetings(data){
+    return{
+        type: Action.GetUpcomingMeetings,
+        payload: data
+    }
+}
+
+export function beginGettingPastMeetings(){
+    const options = {
+        headers: authHeader()
+    };
+    return dispatch => {
+        dispatch(setSpinner(true));
+        fetch(`${host}/meeting/getPast`, options)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            dispatch(finishGettingPastMeetings(data))
+        })
+        .catch(err => {
+            console.error(err);
+        })
+        .finally(result => dispatch(setSpinner(false)));
+    }
+}
+
+export function finishGettingPastMeetings(data){
+    return{
+        type: Action.GetPastMeetings,
+        payload: data
+    }
+}
+
 export function beginGettingUpcomingMeetingsForUser(id){
-    console.log("here");
     const options = {
         headers: authHeader()
     };

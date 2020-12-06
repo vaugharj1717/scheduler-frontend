@@ -43,7 +43,7 @@ export default function Nav(props){
         <Redirect to="/test/department-admin/admin"></Redirect>
     )
     if(toSchedule) return (
-        <Redirect to="/test/department-admin"></Redirect>
+        <Redirect to="/test/meeting-scheduler"></Redirect>
     )
     return(
         <div className="nav-root" style={{backgroundColor : style === 'scheduler' ? '#08101b' : 'black'}}>

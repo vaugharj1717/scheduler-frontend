@@ -49,6 +49,7 @@ export const Action = Object.freeze({
     GetPastMeetingsForUser: "GetPastMeetingsForUser",
     SetAlert: "SetAlert",
     GetFeedback: "GetFeedback",
+    SubmitFeedback: "SubmitFeedback",
     SetSpinner: "SetSpinner",
     SetErrorMessage: "SetErrorMessage",
     SetCandidateAlert: "SetCandidateAlert",
@@ -59,6 +60,7 @@ export const Action = Object.freeze({
     SetUserPosition: "SetUserPosition",
 
     SetMap: "SetMap",
+    SetIsDropped: "SetIsDropped",
 });
 
 export const host = 'http://localhost:8444';
@@ -78,6 +80,12 @@ async function checkForErrors(response){
     } 
 }
 
+export function setIsDropped(val){
+    return{
+        type: Action.SetIsDropped,
+        payload: val
+    }
+}
 export function beginLoggingIn(email, password){
     const options = {
         method: "Post",
@@ -997,7 +1005,7 @@ export function finishChangingRole(data){
     }
 }
 
-export function beginUpdatingUserInfo(userId, name, email, address, phone, university, bio){
+export function beginUpdatingUserInfo(userId, name, email, address, phone, university, bio, departmentId){
     return dispatch => {
         dispatch(setSpinner(true));
         const options = {
@@ -1006,7 +1014,7 @@ export function beginUpdatingUserInfo(userId, name, email, address, phone, unive
                 ...authHeader(),
                 "Content-Type" : "application/json"
             },
-            body: JSON.stringify({name, email, address, phone, university, bio}),
+            body: JSON.stringify({name, email, address, phone, university, bio, departmentId}),
         }
         fetch(`${host}/user/${userId}/updateInfo`, options)
         .then(checkForErrors)
@@ -1269,10 +1277,20 @@ export function beginSubmittingFeedback(feedback, participationId){
         };
         fetch(`${host}/participation/setFeedback/${participationId}`, options)
         .then(checkForErrors)
+        .then(data => {
+            dispatch(finishSubmittingFeedback(feedback, participationId));
+        })
         .catch(err => {
             console.error(err);
         })
         .finally(result => dispatch(setSpinner(false)));
+    }
+}
+
+export function finishSubmittingFeedback(feedback, participationId){
+    return{
+        type: Action.SubmitFeedback,
+        payload: {feedback, participationId}
     }
 }
 

@@ -101,6 +101,8 @@ function ViewSchedulePage(props) {
     
     let candidate = props.candidacy.candidate;
     let position = props.position;
+    console.log(candidate);
+    console.log(position);
     let schedule = useSelector(state => state.currentSchedule);
     let locations = useSelector(state => state.locations);
     let errorMsg = useSelector(state => state.errorMessage);
@@ -436,12 +438,15 @@ function ViewSchedulePage(props) {
             {/* TOP BAR AREA */}
             <div className="schedule-header">
                 <span className="schedule-page-title">
-                    <b className="schedule-candidate" onClick={()=>dispatch(setIsViewingUser(true, candidate.id))}><u>{candidate.name}</u></b>: {position.positionName} for {position.department.departmentName} Department
+                    <b className="schedule-candidate" onClick={()=>dispatch(setIsViewingUser(true, candidate.id))}><u>{candidate.name}</u></b>: {position.positionName} for {position.department !== null ? position.department.departmentName : "[DELETED]"} Department
                 </span>
             </div>
 
             <div className="to-positions-link-container">
-                <Link className="to-positions-link" to='/test/meeting-scheduler'><span className="positions-back-arrow" style={{fontSize:'24px'}}>&#171;</span> Back to Positions</Link>
+                <Link className="to-positions-link" to='/test/meeting-scheduler'><span className="positions-back-arrow" style={{fontSize:'24px'}}>&#171;</span> To Positions Page</Link>
+            </div>
+            <div className="to-all-meetings-link-container">
+                <Link className="to-all-meetings-link" to='/test/view-all-meetings'><span className="positions-back-arrow" style={{fontSize:'24px'}}>&#171;</span> View All Meetings</Link>
             </div>
 
             {/* NEW MEETINGS */}
@@ -475,7 +480,7 @@ function ViewSchedulePage(props) {
                         }}
                         id="location-selection-box"
                         options={locations}
-                        getOptionLabel={(location) => location.buildingName + " - " + location.roomNumber}
+                        getOptionLabel={(location) => location.buildingName + " - " + location.roomNumber.toString().padStart(3, '0')}
                         style={{ width: '100%' }}
                         renderInput={(params) => <TextField {...params} style={{}} label="Select location..." variant="outlined" />}
                         />
@@ -625,7 +630,7 @@ function ViewSchedulePage(props) {
                         </div>
                         <div className="meeting-box-item">
                             <div className="meeting-item-label">Location: </div>
-                            <div className="meeting-item-value">{meeting.location.buildingName} {meeting.location.roomNumber.toString().padStart(3, '0')}</div>
+                            <div className="meeting-item-value">{meeting.location !== null ? meeting.location.buildingName : "[DELETED]"} {meeting.location !== null ? meeting.location.roomNumber.toString().padStart(3, '0') : ""}</div>
                         </div>
                         <div className="meeting-box-item">
                             <div className="meeting-item-label">Participants: </div>
@@ -671,7 +676,7 @@ function ViewSchedulePage(props) {
                         }}
                         id="location-selection-box"
                         options={locations}
-                        getOptionLabel={(location) => location.buildingName + " - " + location.roomNumber}
+                        getOptionLabel={(location) => location.buildingName + " - " + location.roomNumber.toString().padStart(3, '0')}
                         style={{ width: '100%' }}
                         renderInput={(params) => <TextField {...params} style={{}} label="Select location..." variant="outlined" />}
                         />

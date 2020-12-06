@@ -38,7 +38,7 @@ function FilePane(props) {
             <div onClick={()=> dispatch(setIsViewingFiles(false))} id="file-pane-exit">X</div>
             <div id="file-pane-container">
                 <div onClick={handleGoToUserInfo} className="files-user-info-link">See user info</div>
-                {(currentUser.id === userId || currentUser.role === 'SCHEDULER') &&
+                {(currentUser.id === userId || currentUser.role === 'SCHEDULER' || currentUser.role === 'ADMIN' || currentUser.role === 'SUPER_ADMIN' || (currentUser.role === 'DEPARTMENT_ADMIN' && currentUser.department !== null && currentUser.department.id === userId)) &&
                 <div>
                     <input onChange={(e)=>{handleFileUpload(userId, e)}}type="file" id="upload-file"></input>
                     <label htmlFor="upload-file" className="upload-file-label">Add File</label>
@@ -46,7 +46,7 @@ function FilePane(props) {
                 }
                 {files.map((file, i) => (
                     <div key={i} className="file-pane-item">
-                        {(currentUser.id === userId || currentUser.role === 'SCHEDULER') &&
+                        {(currentUser.id === userId || currentUser.role === 'SCHEDULER' || currentUser.role === 'DEPARTMENT_ADMIN') &&
                         <button onClick={()=>handleFileDelete(file.id)} className="file-delete">Delete</button>
                         }
                         <a href={`${host}/user/downloadFile/${file.id}`} download className="file-link">Download {file.filename}</a>

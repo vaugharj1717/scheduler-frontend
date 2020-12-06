@@ -10,6 +10,19 @@
   border-top-left-radius: 0px;
   padding-bottom: 20px;
   border: 1px solid black;
+  cursor: pointer;
+}
+
+.click-to-message{
+  display: none;
+  position: absolute;
+  right: 10px;
+  text-align: center;
+  font-family: sans-serif;
+  color: white;
+}
+.received-message-root:hover .click-to-message{
+  display: block;
 }
 
 .received-message-header{

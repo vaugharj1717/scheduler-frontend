@@ -210,6 +210,15 @@ a:hover{
     top: 120px;
     left: 10px;
     text-decoration: none;
+    font-family: sans-serif;
+}
+
+.to-all-meetings-link{
+    position: absolute;
+    top: 145px;
+    left: 10px;
+    text-decoration: none;
+    font-family: sans-serif;
 }
 
 .meeting-box-participant-name{

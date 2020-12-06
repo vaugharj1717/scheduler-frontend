@@ -5,7 +5,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import {makeStyles, createMuiTheme} from "@material-ui/core/styles";
-import {setIsViewingUser} from '../../../actions.js';
+import {setIsViewingUser, setUserToMessage} from '../../../actions.js';
 import moment from 'moment';
 
 
@@ -20,7 +20,8 @@ export default function ReceivedMessage(props) {
     }
 
     return(
-        <div className="received-message-root">
+        <div onClick={()=>dispatch(setUserToMessage(message.sender))} className="received-message-root">
+            <div className="click-to-message">Click to set as recipient</div>
             {wasSentToday(message) ?
             <div className="received-message-header">
                 Sent by <b className="message-receive-name" onClick={() => dispatch(setIsViewingUser(true, message.sender.id))}>{message.sender.name}</b> at <b>{new moment(message.sentTime).utcOffset('+0000').format('hh:mmA')}</b>

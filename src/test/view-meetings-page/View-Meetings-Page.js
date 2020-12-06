@@ -139,6 +139,15 @@ function ViewMeetingsPage(props){
         }
     }
 
+    function getUsersFeedback(meeting, user){
+        for(let i = 0; i < meeting.participations.length; i++){
+            if(meeting.participations[i].participant.id === user.id){
+                return meeting.participations[i].feedback;
+            }
+        }
+        return "";
+    }
+
     return (
         <div className="meetings-page-root">
             {/* <div className="meetings-page-background"></div> */}
@@ -169,7 +178,7 @@ function ViewMeetingsPage(props){
                                     {/* PARTICIPANT FEEDBACK CONTROLS */}
                                     <div className="meeting-box-feedback-btns-container">
                                     {(mode === 'PARTICIPANT' || mode === 'DEPARTMENT_ADMIN') && canLeaveFeedback(meeting, currentUser) && (focusedMeetingIndex !== j || focusedMeetingOuterIndex !== i) &&
-                                        <div onClick={()=>{setFocusedMeetingIndex(j); setFocusedMeetingOuterIndex(i)}} className="leave-feedback-btn">Leave Feedback</div>
+                                        <div onClick={()=>{setFocusedMeetingIndex(j); setFocusedMeetingOuterIndex(i); setFeedback(getUsersFeedback(meeting, currentUser))}} className="leave-feedback-btn">Leave Feedback</div>
                                     }
                                     {(mode === 'PARTICIPANT' || mode === 'DEPARTMENT_ADMIN') && canLeaveFeedback(meeting, currentUser) && focusedMeetingIndex === j && focusedMeetingOuterIndex === i &&
                                         <div onClick={handleCancel} className="leave-feedback-btn">Cancel</div>
@@ -209,7 +218,7 @@ function ViewMeetingsPage(props){
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Department: </div>
-                                        <div className="meeting-item-value">{meeting.schedule.candidacy.position.department.departmentName}</div>   
+                                        <div className="meeting-item-value">{meeting.schedule.candidacy.position.department !== null ? meeting.schedule.candidacy.position.department.departmentName : "[DELETED]"}</div>   
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Activity: </div>
@@ -225,7 +234,7 @@ function ViewMeetingsPage(props){
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Location: </div>
-                                        <div className="meeting-item-value">{meeting.location.buildingName} {meeting.location.roomNumber.toString().padStart(3, '0')}</div>
+                                        <div className="meeting-item-value">{meeting.location !== null ? meeting.location.buildingName : "[DELETED]"} {meeting.location !== null ? meeting.location.roomNumber.toString().padStart(3, '0') : ""}</div>
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Participants: </div>
@@ -266,7 +275,7 @@ function ViewMeetingsPage(props){
                                     {/* PARTICIPANT FEEDBACK CONTROLS */}
                                     <div className="meeting-box-feedback-btns-container">
                                     {(mode === 'PARTICIPANT' || mode === 'DEPARTMENT_ADMIN') && canLeaveFeedback(meeting, currentUser) && (focusedMeetingIndex !== j || focusedMeetingOuterIndex !== i) &&
-                                        <div onClick={()=>{setFocusedMeetingIndex(j); setFocusedMeetingOuterIndex(i)}} className="leave-feedback-btn">Leave Feedback</div>
+                                        <div onClick={()=>{setFocusedMeetingIndex(j); setFocusedMeetingOuterIndex(i); setFeedback(getUsersFeedback(meeting, currentUser))}} className="leave-feedback-btn">Leave Feedback</div>
                                     }
                                     {(mode === 'PARTICIPANT' || mode === 'DEPARTMENT_ADMIN') && canLeaveFeedback(meeting, currentUser) && focusedMeetingIndex === j && focusedMeetingOuterIndex === i &&
                                         <div onClick={handleCancel} className="leave-feedback-btn">Cancel</div>

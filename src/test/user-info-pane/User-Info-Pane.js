@@ -2,13 +2,42 @@ import React, {useEffect, useState} from 'react';
 import './User-Info-Pane.css';
 import {useSelector, useDispatch} from 'react-redux';
 import {Link} from 'react-router-dom';
-import {setMap, setCandidateAlerts, setIsViewingUser, beginGettingUser, selectUser, setUserToMessage,
+import {beginGettingDepartments, setMap, setCandidateAlerts, setIsViewingUser, beginGettingUser, selectUser, setUserToMessage,
     setIsViewingFiles, beginUpdatingUserInfo, beginUpdatingPassword, setIsViewingMessages} from '../../actions.js';
+import {makeStyles, createMuiTheme} from "@material-ui/core/styles";
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
 
 
 
+
+
+    const useStyles = makeStyles({
+        root: {
+          "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+            borderColor: "white",
+            color: "white",
+          },
+          "& .MuiOutlinedInput-input": {
+            color: "white"
+          },
+          "& .MuiInputLabel-outlined": {
+            color: "white"
+          },
+          "& .MuiAutocomplete-popupIndicator": {
+            color: "white",
+          },
+          "& .MuiAutocomplete-clearIndicator": {
+              color: "white"
+          },
+          color: "white !important",
+          borderWidth: '1px',
+          borderColor: "white !important",
+        }
+    })
 
 function UserInfoPane(props) {
+    const classes = useStyles();
     const dispatch = useDispatch();
     let currentUser = useSelector(state => state.currentUser);
     let viewedUser = useSelector(state => state.viewedUser);
@@ -25,9 +54,15 @@ function UserInfoPane(props) {
     let [oldPass, setOldPass] = useState('');
     let [newPass, setNewPass] = useState('');
     let [newPassRep, setNewPassRep] = useState('');
+    let departments = useSelector(state => state.departments);
+    let [selectedDepartment, setSelectedDepartment] = useState(null);
+
+
+
 
     useEffect(()=>{
         dispatch(beginGettingUser(userId));
+        dispatch(beginGettingDepartments());
     }, []);
 
     function handleViewAllMeetings(user){
@@ -39,12 +74,16 @@ function UserInfoPane(props) {
     }
 
     function handleEdit(){
+        if(viewedUser.department === null){
+            setSelectedDepartment(null)
+        }
+        else setSelectedDepartment(viewedUser.department);
         if(viewedUser.name === null)
-            setAddress('');
+            setName('');
         else setName(viewedUser.name);
         if(viewedUser.email === null)
-            setAddress('');
-        else setName(viewedUser.email);
+            setEmail('');
+        else setEmail(viewedUser.email);
         if(viewedUser.address === null)
             setAddress('');
         else setAddress(viewedUser.address);
@@ -61,7 +100,12 @@ function UserInfoPane(props) {
     }
 
     function handleSave(){
-        dispatch(beginUpdatingUserInfo(userId, name, email, address, phone, university, bio));
+        let departmentId = null;
+        if((currentUser.role === 'ADMIN' || currentUser.role === 'SUPER_ADMIN') && selectedDepartment !== null && selectedDepartment !== undefined)
+            departmentId = selectedDepartment.id;
+        else if(currentUser.department !== null)
+            departmentId = currentUser.department.id;
+        dispatch(beginUpdatingUserInfo(userId, name, email, address, phone, university, bio, departmentId));
         setIsEditing(false);
     }
 
@@ -78,7 +122,7 @@ function UserInfoPane(props) {
             <div id="user-info-pane-header">User Info</div>
             <div onClick={()=> dispatch(setIsViewingUser(false))} id="user-info-pane-exit">X</div>
             <div id="user-info-pane-container">
-                {(currentUser.id === viewedUser.id || currentUser.role === 'SCHEDULER' || (currentUser.role === 'DEPARTMENT_ADMIN' && (viewedUser.role === 'CANDIDATE' || viewedUser.department === currentUser.department)) ) &&
+                {(currentUser.id === viewedUser.id || currentUser.role === "ADMIN" || currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'SCHEDULER' || (currentUser.role === 'DEPARTMENT_ADMIN' && (viewedUser.role === 'CANDIDATE' || viewedUser.department === currentUser.department)) ) &&
                 <button className="user-info-edit-btn" onClick={()=>handleEdit()}>Edit</button>
                 }
                 {currentUser.id === viewedUser.id &&
@@ -105,12 +149,21 @@ function UserInfoPane(props) {
                     <span className="user-info-label">Email:</span> 
                     <span className="user-info-data">{viewedUser.email}</span>
                 </div>
-                {viewedUser.department !== null && viewedUser.department !== undefined &&
+                {(viewedUser.department !== null && viewedUser.department !== undefined) ?
                 <div className="user-info-item">
                     <span className="user-info-label">Department:</span> 
                     <span className="user-info-data">{viewedUser.department.departmentName}</span>
                 </div>
+                :
+                viewedUser.role === 'CANDIDATE' ?
+                <div></div>
+                :
+                <div className="user-info-item">
+                    <span className="user-info-label">Department:</span> 
+                    <span className="user-info-data">N/A</span>
+                </div>
                 }
+                
                 <div className="user-info-item">
                     <span className="user-info-label">Address:</span> 
                     <span className="user-info-data">{viewedUser.address}</span>
@@ -159,6 +212,24 @@ function UserInfoPane(props) {
                     <span className="user-info-label">Email:</span> 
                     <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} className="user-info-input" />
                 </div>
+                {(currentUser.role === 'ADMIN' || currentUser.role === 'SUPER_ADMIN') && (viewedUser.role !== 'CANDIDATE' && viewedUser.role !== 'ADMIN' && viewedUser.role !== 'SUPER_ADMIN') &&
+                <div className="user-info-item">
+                    <span className="user-info-label">Department:</span> 
+                    <Autocomplete
+                    value={selectedDepartment}
+                    size="small"
+                    className={classes.root}
+                    onChange={(event, selectedDepartment) => {
+                    setSelectedDepartment(selectedDepartment);
+                    }}
+                    id="department-selection-box"
+                    options={departments}
+                    getOptionLabel={(option) => option.departmentName}
+                    style={{ width: '100%' }}
+                    renderInput={(params) => <TextField {...params} style={{marginLeft: '18px', width:'75%', marginBottom:'5px'}} label="Select department..." variant="outlined" />}
+                    />
+                </div>
+                }
                 <div className="user-info-item">
                     <span className="user-info-label">Address:</span> 
                     <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} className="user-info-input" />
@@ -178,6 +249,8 @@ function UserInfoPane(props) {
             </div>
         </div>
         </div>
+
+
     )
     else if (isChangingPassword) return(
         <div id="user-info-darken-background">
@@ -206,7 +279,8 @@ function UserInfoPane(props) {
                         <span className="user-info-label pass-form-item">Confirm Password:</span> 
                         <input type="password" value={newPassRep} onChange={(e) => setNewPassRep(e.target.value)} className="user-info-input" />
                     </div>
-                    <div className="password-change-error-msg">
+                    
+                    <div style={{color: errorMessage === 'Password change successful' ? 'white' : 'red'}} className="password-change-error-msg">
                         {errorMessage}
                     </div>
                 </div>

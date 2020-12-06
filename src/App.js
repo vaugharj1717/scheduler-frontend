@@ -3,7 +3,7 @@ import './App.css';
 import {Switch, Route, Link, Redirect} from 'react-router-dom';
 import Test from './test/Test.js';
 // import LoginPage from './login-page/Login-Page.js';
-import {beginLoggingOut} from './actions.js'
+import {setIsDropped} from './actions.js'
 import {useSelector, useDispatch} from 'react-redux';
 
 function App() {
@@ -15,7 +15,9 @@ function App() {
 
   {/* If user is logged in... */}
   return(
+    <div onClick={setIsDropped(false)}>
     <Test></Test>
+    </div>
   );
 }
 

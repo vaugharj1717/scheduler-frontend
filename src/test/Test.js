@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Switch, Route, Link, Redirect} from 'react-router-dom';
 // import './Test.css'
 import MeetingSchedulerPage from './meeting-scheduler-page/Meeting-Scheduler-Page.js';
@@ -15,7 +15,7 @@ import Spinner from './spinner/Spinner.js';
 import PositionWatcher from './map/PositionWatcher.js';
 import Map from './map/Map.js';
 import {useSelector, useDispatch} from 'react-redux';
-import {beginLoggingOut, setIsViewingMessages, setIsViewingFiles, setIsViewingUser, setIsViewingFeedback} from '../actions.js';
+import {setIsDropped, beginLoggingOut, setIsViewingMessages, setIsViewingFiles, setIsViewingUser, setIsViewingFeedback} from '../actions.js';
 
 function App() {
   const dispatch = useDispatch();
@@ -48,6 +48,15 @@ function App() {
   function viewUserInfo(id){
     dispatch(setIsViewingUser(true, id));
   }
+
+  function handleWindowClick(){
+    dispatch(setIsDropped(false));
+  }
+
+  useEffect(()=>{
+    window.addEventListener("click", handleWindowClick);
+    // return () => window.removeEventListener("click", handleWindowClick);
+  }, [])
 
   //REDIRECT TO LOGIN IF NOT LOGGED IN
   if(currentUser == null){

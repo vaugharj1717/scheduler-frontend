@@ -100,6 +100,21 @@
     justify-content: center;
 }
 
+.view-meetings-schedule{
+    width: 100%;
+    text-align: center;
+}
+
+.see-schedule-link{
+    font-family: sans-serif;
+    color: white;
+    font-size: 18px;
+}
+
+.view-meetings-schedule{
+    margin-bottom: 10px;
+}
+
 .start-time-container{
     margin-right: 20px;
 }

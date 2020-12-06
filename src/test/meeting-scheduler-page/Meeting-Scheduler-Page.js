@@ -91,7 +91,7 @@ function MeetingSchedulerPage(props) {
     let positionsUnsorted = useSelector(state => state.positions);
     let positions = sortPositions(positionsUnsorted);
     if(currentUser.role === 'DEPARTMENT_ADMIN')
-        positions = positions.filter(position => position.department.departmentName === currentUser.department.departmentName);
+        positions = positions.filter(position => position.department !== null && position.department.departmentName === currentUser.department.departmentName);
     let candidates = useSelector(state => state.candidates);
     let departments = useSelector(state => state.departments);
 
@@ -288,7 +288,7 @@ function MeetingSchedulerPage(props) {
                 }
 
                 {(selectedDepartment !== null || currentUser.role === 'DEPARTMENT_ADMIN') && positionName !== '' &&
-                <button className="button save-button" onClick={()=> handleCreatePosition(positionName, currentUser.role === 'SCHEDULER' ? selectedDepartment.id : currentUser.department.id)} style={{marginLeft: '3%', marginBottom: '10px'}}>SAVE</button>
+                <button className="button save-button" onClick={()=> handleCreatePosition(positionName, currentUser.role === 'SCHEDULER' ? selectedDepartment.id : currentUser.department !== null ? currentUser.department.id : null)} style={{marginLeft: '3%', marginBottom: '10px'}}>SAVE</button>
                 }
                 {((selectedDepartment === null && currentUser.role !== 'DEPARTMENT_ADMIN') || positionName === '') &&
                 <button className="button save-button" style={{marginLeft: '3%', marginBottom: '10px', backgroundColor:'gray', cursor:'default'}}>SAVE</button>
@@ -302,7 +302,7 @@ function MeetingSchedulerPage(props) {
             <div className="positions-panel" key={i}>
                 <button className="positions-delete-button" onClick={()=>handleDeletePosition(position.id)}>DELETE POSITION</button>
                 <div className="positions-label">
-                    <span className="b">{position.positionName}</span> for the <span className="b">{position.department.departmentName}</span> Department
+                    <span className="b">{position.positionName}</span> for the <span className="b">{position.department !== null ? position.department.departmentName : "[DELETED]"}</span> Department
                 </div>
                 <div className="scrollbox">
                     <table className="positions-table">
@@ -407,6 +407,13 @@ function MeetingSchedulerPage(props) {
             }
             </div>
             )})}
+            {(positions === null || positions === undefined || positions.length === 0) && (currentUser.department !== null || currentUser.role !== 'DEPARTMENT_ADMIN') && (
+                <div className="nothing-to-show-positions">No Positions To Show...</div>
+            )
+            }
+            {currentUser.role === 'DEPARTMENT_ADMIN' && currentUser.department === null &&
+                <div className="nothing-to-show-positions">You do not have an assigned department. Please contact an administrator to be assigned to a department...</div>
+            }
             {/* END OF PANEL INSTANCE SHOWING OPEN POSITIONS */}
             
             

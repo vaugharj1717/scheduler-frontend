@@ -44,6 +44,7 @@ function MessagingPane(props) {
     let possibleRecipients = useSelector(state => state.possibleRecipients);
     let [selectedRecipient, setSelectedRecipient] = useState(null);
 
+
     useEffect(()=>{
         dispatch(beginGettingRecipients());
     }, [])

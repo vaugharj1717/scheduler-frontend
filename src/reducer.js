@@ -52,6 +52,7 @@ const initialState = {
     isCreatingMeeting: false,
     isEditingMeeting: false,
     userToMessage: null,
+    isDropped: false,
 };
 
 function reducer(state = initialState, action){
@@ -152,7 +153,31 @@ function reducer(state = initialState, action){
         case Action.GetFeedback:
             return{
                 ...state,
-                feedback: action.payload
+                feedback: action.payload,
+            }
+        case Action.SubmitFeedback:
+            return{
+                ...state,
+                upcomingMeetings: state.upcomingMeetings.map(meeting => {return {
+                    ...meeting, participations: meeting.participations.map(participation => {
+                        if(participation.id === action.payload.participationId){
+                            return {...participation, feedback: action.payload.feedback}
+                        }
+                        else{
+                            return participation;
+                        }
+                    })
+                }}),
+                pastMeetings: state.pastMeetings.map(meeting => {return {
+                    ...meeting, participations: meeting.participations.map(participation => {
+                        if(participation.id === action.payload.participationId){
+                            return {...participation, feedback: action.payload.feedback}
+                        }
+                        else{
+                            return participation;
+                        }
+                    })
+                }})
             }
         
         case Action.GetRecipients:
@@ -377,6 +402,11 @@ function reducer(state = initialState, action){
             return{
                 ...state,
                 positions: [...state.positions, {...action.payload, candidacies: []}]
+            }
+        case Action.SetIsDropped:
+            return{
+                ...state,
+                isDropped: action.payload,
             }
         case Action.SelectCandidacy:
             return{

@@ -60,12 +60,12 @@ function MapContainer(props) {
       <div className="map-exit" onClick={()=>dispatch(setMap(false, true))}>EXIT MAP
       {(userIsSelected && isStaleLocation) && !viewingSelf &&
       <div className="map-disclaimer">
-          This user's location date is outdated or unavailable.
+          This user's location data is outdated or unavailable.
       </div>
       }
       {(userIsSelected && !isStaleLocation) && !viewingSelf &&
       <div className="map-disclaimer">
-          {selectedUser.name}'s location last updated: <div>{new moment(selectedUser.coordsLastUpdate).utcOffset('+1800').format('MM/DD h:mma')}</div>
+          {selectedUser.name}'s location last updated: <div>{new moment().utc(selectedUser.coordsLastUpdate).local().format('MM/DD h:mma')}</div>
       </div>
       }
 

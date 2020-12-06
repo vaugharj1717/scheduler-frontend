@@ -96,15 +96,23 @@ function getMeetingStatus(meeting){
     }
 }
 
+function getCandidacyFromMeeting(meeting){
+    let candidacy = {candidate: meeting.schedule.candidacy.candidate, schedule: meeting.schedule};
+    return candidacy;
+}
+
 function ViewAllMeetingsPage(props) {
     const classes = useStyles();
 
-    let upcomingMeetings = useSelector(state => state.allUpcomingMeetings);
-    let pastMeetings = useSelector(state => state.allPastMeetings);
+    let currentUser = useSelector(state => state.currentUser);
+    let upMeetings = useSelector(state => state.allUpcomingMeetings);
+    let paMeetings = useSelector(state => state.allPastMeetings);
+    let upcomingMeetings = currentUser.role !== 'DEPARTMENT_ADMIN' ? upMeetings : upMeetings.filter(meeting => meeting.schedule.candidacy.position.department.id === currentUser.department.id);
+    let pastMeetings = currentUser.role !== 'DEPARTMENT_ADMIN' ? paMeetings : paMeetings.filter(meeting => meeting.schedule.candidacy.position.department.id === currentUser.department.id)
+
     let [whichMeetings, setWhichMeetings] = useState('upcoming');
     let upcomingMeetingsByDate = groupMeetingsByDate(upcomingMeetings);
     let pastMeetingsByDate = groupMeetingsByDate(pastMeetings);
-    let currentUser = useSelector(state => state.currentUser);
 
     function handleCandidacySelect(candidacy, position){
         dispatch(selectCandidacy(candidacy, position));
@@ -119,7 +127,7 @@ function ViewAllMeetingsPage(props) {
 
     return (
         <div className="meetings-page-root">
-            <Link className="all-meetings-back" to='/test/meeting-scheduler'><span className="positions-back-arrow" style={{fontSize:'24px'}}>&#171;</span> Back to Positions</Link>
+            <Link className="all-meetings-back" to='/test/meeting-scheduler'><span className="positions-back-arrow" style={{fontSize:'24px'}}>&#171;</span> To Positions Page</Link>
             <Nav/>
             {whichMeetings === "upcoming" ?
             <div className="meetings-page-header">ALL UPCOMING MEETINGS</div>
@@ -139,6 +147,9 @@ function ViewAllMeetingsPage(props) {
                             <div className="meetings-date-header">{upcomingMeetingDate}</div>
                             {upcomingMeetingsByDate[upcomingMeetingDate].map((meeting, j) => (
                                 <div key={i} className="view-meetings-meeting-box">
+                                    <div className="view-meetings-schedule">
+                                        <Link to="meeting-scheduler/view-schedule" onClick={()=>{dispatch(selectCandidacy(getCandidacyFromMeeting(meeting), meeting.schedule.candidacy.position))}} className="see-schedule-link">View Schedule</Link>
+                                    </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Candidate: </div>
                                         <div onClick={()=>dispatch(setIsViewingUser(true, meeting.schedule.candidacy.candidate.id))} className="meeting-item-value meeting-candidate">{meeting.schedule.candidacy.candidate.name}</div>
@@ -149,7 +160,7 @@ function ViewAllMeetingsPage(props) {
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Department: </div>
-                                        <div className="meeting-item-value">{meeting.schedule.candidacy.position.department.departmentName}</div>   
+                                        <div className="meeting-item-value">{meeting.schedule.candidacy.position.department !== null ? meeting.schedule.candidacy.position.department.departmentName : "[DELETED]"}</div>   
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Activity: </div>
@@ -165,7 +176,7 @@ function ViewAllMeetingsPage(props) {
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Location: </div>
-                                        <div className="meeting-item-value">{meeting.location.buildingName} {meeting.location.roomNumber.toString().padStart(3, '0')}</div>
+                                        <div className="meeting-item-value">{meeting.location !== null ? meeting.location.buildingName : "[DELETED]"} {meeting.location !== null ? meeting.location.roomNumber.toString().padStart(3, '0') : ""}</div>
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Participants: </div>
@@ -202,6 +213,9 @@ function ViewAllMeetingsPage(props) {
                             <div className="meetings-date-header">{pastMeetingDate}</div>
                             {pastMeetingsByDate[pastMeetingDate].map((meeting, j) => (
                                 <div key={i} className="view-meetings-meeting-box">
+                                    <div className="view-meetings-schedule">
+                                        <Link to="meeting-scheduler/view-schedule" onClick={()=>{dispatch(selectCandidacy(getCandidacyFromMeeting(meeting), meeting.schedule.candidacy.position))}} className="see-schedule-link">View Schedule</Link>
+                                    </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Candidate: </div>
                                         <div onClick={()=>dispatch(setIsViewingUser(true, meeting.schedule.candidacy.candidate.id))} className="meeting-item-value meeting-candidate">{meeting.schedule.candidacy.candidate.name}</div>

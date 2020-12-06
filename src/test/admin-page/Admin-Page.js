@@ -186,7 +186,7 @@ export default function AdminPage(props){
                         <div id="admin-create-new-text">
                             <label>Name: <input type="text" value={name} onChange={e=>handleNameChange(e.target.value)} /></label>
                             <label>Email: <input type="text" value={email} onChange={e=>handleEmailChange(e.target.value)} /></label>
-                            {currentUser.role !== 'DEPARTMENT_ADMIN' &&
+                            {currentUser.role !== 'DEPARTMENT_ADMIN' && role !== 'CANDIDATE' &&
                             <Autocomplete
                                 value={selectedDepartment}
                                 size="small"

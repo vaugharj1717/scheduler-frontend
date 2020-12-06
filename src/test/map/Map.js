@@ -65,7 +65,7 @@ function MapContainer(props) {
       }
       {(userIsSelected && !isStaleLocation) && !viewingSelf &&
       <div className="map-disclaimer">
-          {selectedUser.name}'s location last updated: <div>{new moment().utc(selectedUser.coordsLastUpdate).local().format('MM/DD h:mma')}</div>
+          {selectedUser.name}'s location last updated: <div>{new moment.utc(selectedUser.coordsLastUpdate).local().format('MM/DD h:mma')}</div>
       </div>
       }
 

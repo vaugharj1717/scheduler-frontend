@@ -37,9 +37,9 @@ function FilePane(props) {
             <div id="file-pane-header">Files</div>
             <div onClick={()=> dispatch(setIsViewingFiles(false))} id="file-pane-exit">X</div>
             <div id="file-pane-container">
-                <div onClick={handleGoToUserInfo} className="files-user-info-link">See user info</div>
+                <div onClick={handleGoToUserInfo} className="files-user-info-link"><span>&#171;</span> Back</div>
                 {(currentUser.id === userId || currentUser.role === 'SCHEDULER' || currentUser.role === 'ADMIN' || currentUser.role === 'SUPER_ADMIN' || (currentUser.role === 'DEPARTMENT_ADMIN' && currentUser.department !== null && currentUser.department.id === userId)) &&
-                <div>
+                <div className="add-file-button">
                     <input onChange={(e)=>{handleFileUpload(userId, e)}}type="file" id="upload-file"></input>
                     <label htmlFor="upload-file" className="upload-file-label">Add File</label>
                 </div>

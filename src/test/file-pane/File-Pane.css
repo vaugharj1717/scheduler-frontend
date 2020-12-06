@@ -80,6 +80,11 @@
     margin-right: 5px;
     cursor: pointer;
   }
+
+  .add-file-button{
+    margin-bottom: 15px;
+    margin-top: 10px;
+  }
   .upload-file-label{
     margin-left: 5px;
     cursor: pointer;
@@ -98,11 +103,12 @@
   }
 
   .files-user-info-link{
+    position: absolute;
+    top: -40px;
     font-family: sans-serif;
     color: white;
     margin-left: 5px;
     cursor: pointer;
-    text-decoration: underline;
     margin-bottom: 10px;
   }
 

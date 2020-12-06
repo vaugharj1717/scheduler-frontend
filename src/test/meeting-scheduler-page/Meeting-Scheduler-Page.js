@@ -40,12 +40,18 @@ function sortByPositionAsc(x, y){
     if(x.positionName > y.positionName){
         return 1;
     }
+    else if(x.positionName === y.positionName){
+        return 0;
+    }
     else return -1;
 }
 
 function sortByPositionDesc(x, y){
     if(x.positionName < y.positionName){
         return 1;
+    }
+    else if(x.positionName === y.positionName){
+        return 0;
     }
     else return -1;
 }
@@ -54,12 +60,18 @@ function sortByDepartmentAsc(x, y){
     if(x.department.departmentName > y.department.departmentName){
         return 1;
     }
+    else if(x.department.departmentName === y.department.departmentName){
+        return 0;
+    }
     else return -1;
 }
 
 function sortByDepartmentDesc(x, y){
     if(x.department.departmentName < y.department.departmentName){
         return 1;
+    }
+    else if(x.department.departmentName === y.department.departmentName){
+        return 0;
     }
     else return -1;
 }

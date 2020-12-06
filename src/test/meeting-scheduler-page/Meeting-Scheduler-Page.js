@@ -103,7 +103,7 @@ function MeetingSchedulerPage(props) {
     let positionsUnsorted = useSelector(state => state.positions);
     let positions = sortPositions(positionsUnsorted);
     if(currentUser.role === 'DEPARTMENT_ADMIN')
-        positions = positions.filter(position => position.department !== null && position.department.departmentName === currentUser.department.departmentName);
+        positions = positions.filter(position => position.department !== null && currentUser.department !== null && position.department.departmentName === currentUser.department.departmentName);
     let candidates = useSelector(state => state.candidates);
     let departments = useSelector(state => state.departments);
 

@@ -108,7 +108,7 @@ export default function AdminPage(props){
             return;
         }
         else{
-            const departmentId = role === 'CANDIDATE' ? null : selectedDepartment.id;
+            const departmentId = role === 'CANDIDATE' ? null : selectedDepartment !== null ? selectedDepartment.id : null;
             dispatch(beginCreatingUser(name, email, role, departmentId));
             resetPageState();
         }
@@ -186,7 +186,7 @@ export default function AdminPage(props){
                         <div id="admin-create-new-text">
                             <label>Name: <input type="text" value={name} onChange={e=>handleNameChange(e.target.value)} /></label>
                             <label>Email: <input type="text" value={email} onChange={e=>handleEmailChange(e.target.value)} /></label>
-                            {currentUser.role !== 'DEPARTMENT_ADMIN' && role !== 'CANDIDATE' &&
+                            {currentUser.role !== 'DEPARTMENT_ADMIN' && role !== 'CANDIDATE' && role !== 'ADMIN' &&
                             <Autocomplete
                                 value={selectedDepartment}
                                 size="small"

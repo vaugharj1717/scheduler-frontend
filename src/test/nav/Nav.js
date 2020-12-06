@@ -88,6 +88,7 @@ export default function Nav(props){
                 <div onClick={()=>handleDropdownClick('schedule')} className="drop-btn"><span className="drop-txt">Schedule</span></div>
                 }
                 <div className="drop-btn" onClick={()=>handleAccount()  }><span className="drop-txt">Account</span></div>
+                <div className="drop-btn" onClick={()=>dispatch(setMap(true, true))}><span className="drop-txt">Map</span></div>
                 <div className="drop-btn" onClick={()=>handleMessenger()  }><span className="drop-txt">Messenger</span>
                 {showNotifier &&
                     <div className="drop-message-notifier">!</div>

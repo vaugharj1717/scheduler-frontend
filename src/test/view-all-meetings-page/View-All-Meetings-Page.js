@@ -148,7 +148,7 @@ function ViewAllMeetingsPage(props) {
                             {upcomingMeetingsByDate[upcomingMeetingDate].map((meeting, j) => (
                                 <div key={i} className="view-meetings-meeting-box">
                                     <div className="view-meetings-schedule">
-                                        <Link to="meeting-scheduler/view-schedule" onClick={()=>{dispatch(selectCandidacy(getCandidacyFromMeeting(meeting), meeting.schedule.candidacy.position))}} className="see-schedule-link">View Schedule</Link>
+                                        <Link to="meeting-scheduler/view-schedule" onClick={()=>{dispatch(selectCandidacy(getCandidacyFromMeeting(meeting), meeting.schedule.candidacy.position))}} className="see-schedule-link">View Schedule For This Meeting</Link>
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Candidate: </div>

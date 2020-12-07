@@ -249,7 +249,7 @@ export default function AdminPage(props){
                             <span className="admin-row-info admin-user-email">{user.email}</span>
                             <span className="admin-row-info admin-user-role">{user.role}</span>
                             {user.role !== 'CANDIDATE' &&
-                            <span className="admin-row-info admin-user-department">{user.department !== null ? user.department.departmentName : "[DELETED]"}</span>
+                            <span style={{fontFamily:"sans-serif"}} className="admin-row-info admin-user-department">{user.department !== null ? user.department.departmentName : "[DELETED]"}</span>
                             }
                             {user.role === 'CANDIDATE' &&
                             <span style={{fontFamily:"sans-serif"}} className="admin-row-info admin-user-department">{"Not Applicable"}</span>

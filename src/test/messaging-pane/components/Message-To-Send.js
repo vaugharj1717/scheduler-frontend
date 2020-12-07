@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef} from 'react';
 import './Message-To-Send.css';
-import {beginSendingMessage, beginGettingRecipients} from '../../../actions.js';
+import {setIsViewingUser, beginSendingMessage, beginGettingRecipients} from '../../../actions.js';
 import {Switch, Route, Link} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -55,6 +55,9 @@ export default function MessageToSend(props) {
                 style={{ width: '100%' }}
                 renderInput={(params) => <TextField {...params} style={{marginLeft:"15px", width:'80%'}} label="Select recipient..." variant="outlined" />}
                 />
+                {selectedRecipient !== null && selectedRecipient !== undefined &&
+                <span onClick={()=>dispatch(setIsViewingUser(true, selectedRecipient.id))} className="see-recipient-user-info">User Info</span>
+                }
             </div>
             <div className="send-message-body">
                 <div ref={sendMessageBodyRef} className="send-message-content" contenteditable="true"></div>

@@ -46,3 +46,12 @@
   border: 1px solid black;
   cursor:pointer;
 }
+
+.see-recipient-user-info{
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.see-recipient-user-info:hover, .see-recipient-user-info:focus{
+  text-decoration: underline;
+}

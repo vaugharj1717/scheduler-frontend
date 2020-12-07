@@ -251,6 +251,9 @@ export default function AdminPage(props){
                             {user.role !== 'CANDIDATE' &&
                             <span className="admin-row-info admin-user-department">{user.department !== null ? user.department.departmentName : "[DELETED]"}</span>
                             }
+                            {user.role === 'CANDIDATE' &&
+                            <span style={{fontFamily:"sans-serif"}} className="admin-row-info admin-user-department">{"Not Applicable"}</span>
+                            }
                             {/* <span onChange={(e)=>handleRoleChange(user.id, e.target.value)} className="admin-user-role-btn-grp">
                                 <input type="radio" onClick={(e)=>handleRoleClick(i, e.target.value)} value='PARTICIPANT' id={`participant${i}`} name={`role${i}`} checked={users[i].role=='PARTICIPANT'} />
                                 <label htmlFor={`participant${i}`}>Participant</label>

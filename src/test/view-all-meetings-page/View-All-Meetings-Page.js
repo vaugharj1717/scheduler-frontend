@@ -107,8 +107,8 @@ function ViewAllMeetingsPage(props) {
     let currentUser = useSelector(state => state.currentUser);
     let upMeetings = useSelector(state => state.allUpcomingMeetings);
     let paMeetings = useSelector(state => state.allPastMeetings);
-    let upcomingMeetings = currentUser.role !== 'DEPARTMENT_ADMIN' ? upMeetings : upMeetings.filter(meeting => meeting.schedule.candidacy.position.department.id === currentUser.department.id);
-    let pastMeetings = currentUser.role !== 'DEPARTMENT_ADMIN' ? paMeetings : paMeetings.filter(meeting => meeting.schedule.candidacy.position.department.id === currentUser.department.id)
+    let upcomingMeetings = currentUser.role !== 'DEPARTMENT_ADMIN' ? upMeetings : upMeetings.filter(meeting => meeting.schedule.candidacy.position.department !== null && currentUser.department !== null && meeting.schedule.candidacy.position.department.id === currentUser.department.id);
+    let pastMeetings = currentUser.role !== 'DEPARTMENT_ADMIN' ? paMeetings : paMeetings.filter(meeting => meeting.schedule.candidacy.position.department !== null && currentUser.department !== null && meeting.schedule.candidacy.position.department.id === currentUser.department.id)
 
     let [whichMeetings, setWhichMeetings] = useState('upcoming');
     let upcomingMeetingsByDate = groupMeetingsByDate(upcomingMeetings);
@@ -226,7 +226,7 @@ function ViewAllMeetingsPage(props) {
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Department: </div>
-                                        <div className="meeting-item-value">{meeting.schedule.candidacy.position.department.departmentName}</div>   
+                                        <div className="meeting-item-value">{meeting.schedule.candidacy.position.department !== null ? meeting.schedule.candidacy.position.department.departmentName : null}</div>   
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Activity: </div>

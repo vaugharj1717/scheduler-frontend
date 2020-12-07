@@ -315,8 +315,7 @@ function ViewMeetingsPage(props){
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Department: </div>
-                                        <div className="meeting-item-value">{meeting.schedule.candidacy.position.department.departmentName}</div>   
-                                    </div>
+                                        {meeting.schedule.candidacy.position.department !== null ? meeting.schedule.candidacy.position.department.departmentName : "[DELETED]"}                                    </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Activity: </div>
                                         {meeting.meetingType === 'MEET_FACULTY' ? 

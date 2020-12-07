@@ -57,7 +57,9 @@ function sortByPositionDesc(x, y){
 }
 
 function sortByDepartmentAsc(x, y){
-    if(x.department.departmentName > y.department.departmentName){
+    if(x.department == null) return -1
+    else if(y.department == null) return 1
+    else if(x.department.departmentName > y.department.departmentName){
         return 1;
     }
     else if(x.department.departmentName === y.department.departmentName){
@@ -67,7 +69,9 @@ function sortByDepartmentAsc(x, y){
 }
 
 function sortByDepartmentDesc(x, y){
-    if(x.department.departmentName < y.department.departmentName){
+    if(x.department == null) return 1
+    else if(y.department == null) return -1
+    else if(x.department.departmentName < y.department.departmentName){
         return 1;
     }
     else if(x.department.departmentName === y.department.departmentName){

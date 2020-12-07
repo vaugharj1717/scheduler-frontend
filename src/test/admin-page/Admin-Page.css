@@ -157,7 +157,7 @@
 }
 
 .admin-logout-btn{
-    position: fixed;
+    position: absolute;
     width: 100px;
     left: calc(100% - 250px);
     top: 20px;
@@ -169,6 +169,13 @@
     cursor: pointer;
     border-radius: 20px;
     border: 2px solid black;
+}
+
+@media only screen and (max-width: 900px) {
+    .admin-logout-btn{
+        left: unset;
+        right: 5px;
+    }
 }
 
 .admin-logout-btn:hover{

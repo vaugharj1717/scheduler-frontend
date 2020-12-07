@@ -21,7 +21,7 @@ export default function AdminPage(props){
     let currentUser = useSelector(state => state.currentUser);
 
     let users = currentUser.role !== 'DEPARTMENT_ADMIN' ? usersFromSelector : usersFromSelector.filter(
-        user => (user.department !== undefined && user.department !== null && user.department.id === currentUser.department.id) || user.role === 'CANDIDATE'
+        user => (currentUser.department !== null && user.department !== undefined && user.department !== null && user.department.id === currentUser.department.id) || user.role === 'CANDIDATE'
     )
 
     users = users.sort((x, y) => {

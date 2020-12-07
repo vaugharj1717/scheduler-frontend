@@ -248,10 +248,10 @@ export default function AdminPage(props){
                             <span onClick={()=>dispatch(setIsViewingUser(true, user.id))} className="admin-row-info admin-user-name">{user.name}</span>
                             <span className="admin-row-info admin-user-email">{user.email}</span>
                             <span className="admin-row-info admin-user-role">{user.role}</span>
-                            {user.role !== 'CANDIDATE' &&
+                            {user.role !== 'CANDIDATE' && user.role !== 'ADMIN' &&
                             <span style={{fontFamily:"sans-serif"}} className="admin-row-info admin-user-department">{user.department !== null ? user.department.departmentName : "[DELETED]"}</span>
                             }
-                            {user.role === 'CANDIDATE' &&
+                            {(user.role === 'CANDIDATE' || user.role === 'ADMIN') &&
                             <span style={{fontFamily:"sans-serif"}} className="admin-row-info admin-user-department">{"Not Applicable"}</span>
                             }
                             {/* <span onChange={(e)=>handleRoleChange(user.id, e.target.value)} className="admin-user-role-btn-grp">

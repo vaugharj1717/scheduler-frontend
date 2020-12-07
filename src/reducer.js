@@ -245,9 +245,16 @@ function reducer(state = initialState, action){
         case Action.UpdateUserInfo:
             return{
                 ...state,
-                viewedUser: action.payload
+                viewedUser: action.payload,
+                users: state.users.map(user => {
+                    if(user.id === action.payload.id){
+                        return action.payload;
+                    }
+                    else{
+                        return user;
+                    }
+                })
             }
-
         case Action.SetIsViewingUser:
             return{
                 ...state,

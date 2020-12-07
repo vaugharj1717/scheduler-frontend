@@ -20,17 +20,9 @@ export default function AdminPage(props){
     
     let currentUser = useSelector(state => state.currentUser);
 
-    let users = currentUser.role !== 'DEPARTMENT_ADMIN' ? usersFromSelector : usersFromSelector.filter(
-        user => (currentUser.department !== null && user.department !== undefined && user.department !== null && user.department.id === currentUser.department.id) || user.role === 'CANDIDATE'
-    )
-
-    users = users.sort((x, y) => {
-        if(x.name.toUpperCase() > y.name.toUpperCase()) return 1;
-        else return -1;
-    });
+    
 
     let errorMsg = useSelector(state => state.errorMessage);
-    let [usersState, setUsersState] = useState(users);
     let [selectedView, setSelectedView] = useState("user");
     let [creatingNew, setCreatingNew] = useState(false);
     let [selectedDepartment, setSelectedDepartment] = useState(null);
@@ -40,8 +32,18 @@ export default function AdminPage(props){
     let [departmentName, setDepartmentName] = useState("");
     let [buildingName, setBuildingName] = useState("");
     let [roomNumber, setRoomNumber] = useState("");
-
+    let [sortRole, setSortRole] = useState("ALL");
     
+    let users = currentUser.role !== 'DEPARTMENT_ADMIN' ? usersFromSelector : usersFromSelector.filter(
+        user => (currentUser.department !== null && user.department !== undefined && user.department !== null && user.department.id === currentUser.department.id) || user.role === 'CANDIDATE'
+    )
+
+    users = sortRole === 'ALL' ? users : users.filter(user => user.role === sortRole);
+
+    users = users.sort((x, y) => {
+        if(x.name.toUpperCase() > y.name.toUpperCase()) return 1;
+        else return -1;
+    });
 
     useEffect(()=>{
         dispatch(beginGettingUsers());
@@ -68,13 +70,6 @@ export default function AdminPage(props){
         setSelectedView(view);
         resetPageState();
         dispatch(setErrorMessage(""));
-    }
-
-    function handleRoleClick(index, role){
-        setUsersState(userState => {
-            userState[index].role = role;
-            return userState;
-        })
     }
 
     function handleRoleChange(id, role){
@@ -185,7 +180,7 @@ export default function AdminPage(props){
                     <div id="admin-create-new">
                         <div id="admin-create-new-text">
                             <label>Name: <input type="text" value={name} onChange={e=>handleNameChange(e.target.value)} /></label>
-                            <label>Email: <input type="text" value={email} onChange={e=>handleEmailChange(e.target.value)} /></label>
+                            <label style={{marginLeft: "8px"}}>Email: <input type="text" value={email} onChange={e=>handleEmailChange(e.target.value)} /></label>
                             {currentUser.role !== 'DEPARTMENT_ADMIN' && role !== 'CANDIDATE' && role !== 'ADMIN' &&
                             <Autocomplete
                                 value={selectedDepartment}
@@ -215,12 +210,37 @@ export default function AdminPage(props){
                         </div>
                         <div>
                         <button onClick={()=>handleCreateUser()}>Create</button>
-                        <button onClick={()=>setCreatingNew(false)}>Cancel</button>
+                        <button style={{marginLeft: "8px"}} onClick={()=>setCreatingNew(false)}>Cancel</button>
                         </div>
                     </div>   
                     }
+                    {!creatingNew &&
+                    <span onChange={(e)=>setSortRole(e.target.value)} id="admin-sort-by-role">
+                            <span>Filter by role: </span>
+                            <input type="radio" value="ALL" name="newRole" checked={sortRole === "ALL"} /> All
+                            <input type="radio" value="PARTICIPANT" name="newRole" checked={sortRole === "PARTICIPANT"} /> Participant
+                            <input type="radio" value="CANDIDATE" name="newRole" checked={sortRole === "CANDIDATE"}/> Candidate
+                            <input type="radio" value="SCHEDULER" name="newRole" checked={sortRole === "SCHEDULER"}/> Scheduler
+                            <input type="radio" value="DEPARTMENT_ADMIN" name="newRole" checked={sortRole === "DEPARTMENT_ADMIN"}/> Department Admin
+                            {currentUser.role === 'SUPER_ADMIN' &&
+                            <span>
+                                <input type="radio" value="ADMIN" name="newRole" checked={sortRole === "ADMIN"}/>
+                                Admin
+                            </span>
+                            }
+                    </span>
+                    }
                     <div className="admin-error-msg">
                         {errorMsg}
+                    </div>
+                    <div className="userRow" >
+                            <button style={{visibility: "hidden"}} className="admin-user-delete-btn">DELETE</button>
+                            <span style={{fontSize: '19px', textDecoration: "underline", fontWeight: "bold", color: "black"}} className="admin-row-info admin-user-name">Name</span>
+                            <span style={{fontSize: '19px', textDecoration: "underline", fontWeight: "bold", color: "black"}} className="admin-row-info admin-user-email">Email</span>
+                            <span style={{fontSize: '19px', textDecoration: "underline", fontWeight: "bold", color: "black"}}className="admin-row-info admin-user-role">Role</span>
+                            {sortRole !== 'CANDIDATE' &&
+                            <span style={{fontSize: '19px',textDecoration: "underline", fontWeight: "bold", color: "black"}}className="admin-row-info admin-user-department">Department</span>
+                            }
                     </div>
                     {users.map((user, i) => (
                         <div className="userRow" key={i}>
@@ -228,6 +248,9 @@ export default function AdminPage(props){
                             <span onClick={()=>dispatch(setIsViewingUser(true, user.id))} className="admin-row-info admin-user-name">{user.name}</span>
                             <span className="admin-row-info admin-user-email">{user.email}</span>
                             <span className="admin-row-info admin-user-role">{user.role}</span>
+                            {user.role !== 'CANDIDATE' &&
+                            <span className="admin-row-info admin-user-department">{user.department !== null ? user.department.name : "[DELETED]"}</span>
+                            }
                             {/* <span onChange={(e)=>handleRoleChange(user.id, e.target.value)} className="admin-user-role-btn-grp">
                                 <input type="radio" onClick={(e)=>handleRoleClick(i, e.target.value)} value='PARTICIPANT' id={`participant${i}`} name={`role${i}`} checked={users[i].role=='PARTICIPANT'} />
                                 <label htmlFor={`participant${i}`}>Participant</label>
@@ -271,7 +294,7 @@ export default function AdminPage(props){
                     <div id="admin-create-new">
                         <div id="admin-create-new-text">
                             <label>Building: <input type="text" value={buildingName} onChange={e=>handleBuildingNameChange(e.target.value)} /></label>
-                            <label>Room #: <input type="text" value={roomNumber} onChange={e=>handleRoomNumberChange(e.target.value)} /></label>
+                            <label style={{marginLeft: "8px"}}>Room #: <input type="text" value={roomNumber} onChange={e=>handleRoomNumberChange(e.target.value)} /></label>
                         </div>
                         <div>
                             <button className="admin-btn-end" onClick={()=>handleCreateLocation()}>Create</button>
@@ -281,6 +304,11 @@ export default function AdminPage(props){
                     }
                     <div className="admin-error-msg">
                         {errorMsg}
+                    </div>
+                    <div className="userRow" >
+                            <button style={{visibility: "hidden"}} className="admin-user-delete-btn">DELETE</button>
+                            <span style={{fontSize: '19px', textDecoration: "underline", fontWeight: "bold", color: "black"}} className="admin-row-info admin-user-email">Building</span>
+                            <span style={{fontSize: '19px', textDecoration: "underline", fontWeight: "bold", color: "black"}} className="admin-row-info admin-user-email">Room #</span>
                     </div>
                     {locations.map((location, i) => (
                         <div className="userRow" key={i}>
@@ -327,6 +355,10 @@ export default function AdminPage(props){
                     }
                     <div className="admin-error-msg">
                         {errorMsg}
+                    </div>
+                    <div className="userRow" >
+                            <button style={{visibility: "hidden"}} className="admin-user-delete-btn">DELETE</button>
+                            <span style={{fontSize: '19px', textDecoration: "underline", fontWeight: "bold", color: "black"}} className="admin-row-info admin-user-email">Department Name</span>
                     </div>
                     {departments.map((department, i) => (
                         <div className="userRow" key={i}>

@@ -137,6 +137,7 @@
 }
 
 .admin-user-role{
+    width: 170px;
     font-family: sans-serif;
 }
 
@@ -170,4 +171,10 @@
 
 .admin-logout-btn:hover{
     background-color: darkgray;
+}
+
+#admin-sort-by-role{
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
 }

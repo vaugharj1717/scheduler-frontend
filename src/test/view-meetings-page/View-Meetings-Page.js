@@ -330,7 +330,7 @@ function ViewMeetingsPage(props){
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Location: </div>
-                                        <div className="meeting-item-value">{meeting.location.buildingName} {meeting.location.roomNumber.toString().padStart(3, '0')}</div>
+                                        <div className="meeting-item-value">{meeting.location !== null ? meeting.location.buildingName : "[DELETED]"} {meeting.location.roomNumber.toString().padStart(3, '0')}</div>
                                     </div>
                                     <div className="meeting-box-item">
                                         <div className="meeting-item-label">Participants: </div>

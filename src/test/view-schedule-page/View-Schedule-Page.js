@@ -443,7 +443,7 @@ function ViewSchedulePage(props) {
             </div>
 
             <div className="to-positions-link-container">
-                <Link className="to-positions-link" to='/test/meeting-scheduler'><span className="positions-back-arrow" style={{fontSize:'24px'}}>&#171;</span> To Positions Page</Link>
+                <Link className="to-positions-link-scheduler" to='/test/meeting-scheduler'><span className="positions-back-arrow" style={{fontSize:'24px'}}>&#171;</span> To Positions Page</Link>
             </div>
             <div className="to-all-meetings-link-container">
                 <Link className="to-all-meetings-link" to='/test/view-all-meetings'><span className="positions-back-arrow" style={{fontSize:'24px'}}>&#171;</span> View All Meetings</Link>

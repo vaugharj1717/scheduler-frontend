@@ -205,9 +205,9 @@ a:hover{
     display: flex;
     justify-content: center;
 } */
-.to-positions-link{
+.to-positions-link-scheduler{
     position: absolute;
-    top: 120px;
+    top: 85px;
     left: 10px;
     text-decoration: none;
     font-family: sans-serif;
@@ -215,7 +215,7 @@ a:hover{
 
 .to-all-meetings-link{
     position: absolute;
-    top: 145px;
+    top: 110px;
     left: 10px;
     text-decoration: none;
     font-family: sans-serif;
@@ -269,10 +269,4 @@ a:hover{
 .meeting-creation-error-msg{
     font-family: sans-serif;
     color: red;
-}
-
-@media only screen and (max-width: 1000px){
-    .to-positions-link{
-        top: 120px;
-    }
 }

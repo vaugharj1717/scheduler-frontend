@@ -133,7 +133,7 @@ function reducer(state = initialState, action){
                 allUpcomingMeetings: sortedMeetings
             }
         case Action.GetPastMeetings:
-            let sortedMeetings2 = action.payload.sort(meetingSorterDesc);
+            let sortedMeetings2 = action.payload.sort(meetingSorter);
             return{
                 ...state,
                 allPastMeetings: sortedMeetings2
@@ -145,7 +145,7 @@ function reducer(state = initialState, action){
                 upcomingMeetings: sortedMeetings3
             }
         case Action.GetPastMeetingsForUser:
-            let sortedMeetingsDesc = action.payload.sort(meetingSorterDesc);
+            let sortedMeetingsDesc = action.payload.sort(meetingSorter);
             return{
                 ...state,
                 pastMeetings: sortedMeetingsDesc

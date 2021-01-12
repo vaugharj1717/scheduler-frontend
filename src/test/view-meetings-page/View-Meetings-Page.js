@@ -81,12 +81,15 @@ function getMeetingStatus(meeting){
         // get the difference between the moments
         const diff = startTime.diff(nowTime);
         const diffDuration = moment.duration(diff);
-        const diffHours = Math.floor(diffDuration / 60);
-        const diffMinutes = diffDuration % 60;
+        
+        const years = diffDuration.years() === 0 ? '' : diffDuration.years() + ' years';
+        const months = diffDuration.months() === 0 ? '' : diffDuration.months() + ' months';
         const days = diffDuration.days() === 0 ? '' : diffDuration.days() + ' days';
         const hours = diffDuration.hours() === 0 ? '' : diffDuration.hours() + ' hours';
         const minutes = diffDuration.minutes() === 0 ? '' : diffDuration.minutes() + ' minutes';
-        if(diffDuration.days() > 1) return "Meeting starts in " + days;
+        if(diffDuration.years() > 0) return "Meeting starts in " + years + ' ' + months;
+        else if(diffDuration.months() > 0) return "Meeting starts in " + months + ' ' + days;
+        else if(diffDuration.days() > 1) return "Meeting starts in " + days;
         else if (diffDuration.days() === 1) return "Meeting starts in " + days + ' ' + hours;
         else return "Meeting starts in " + days + ' ' + hours + ' ' + minutes;
     }

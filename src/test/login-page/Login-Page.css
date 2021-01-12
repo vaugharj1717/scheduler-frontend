@@ -83,6 +83,7 @@
 }
 
 #login-form-container{
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -101,4 +102,44 @@
     text-align: center;
     color: white;
     font-family: sans-serif;
+}
+
+#login-tooltip-btn{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    top: 5px;
+    right: 25px;
+    border-radius: 10px;
+    border: 1px solid black;
+    cursor: pointer;
+    color: red;
+    text-align: center;
+}
+
+#login-tooltip-txt{
+    visibility: hidden;
+    position: absolute;
+    width: 375px;
+    background-color: white;
+    border-radius: 20px;
+    border: 1px solid black;
+    top: 25px;
+    left: 50%;
+    padding: 5px 20px;
+    transform: translateX(-50%);
+    font-family: sans-serif;
+    font-size: 12px;
+    color: black;
+    z-index: 20;
+}
+
+#login-tooltip-btn:hover #login-tooltip-txt{
+    visibility: visible;
+}
+
+#login-tooltip-credentials{
+    text-align: left;
+    margin-left: 2px;
 }
